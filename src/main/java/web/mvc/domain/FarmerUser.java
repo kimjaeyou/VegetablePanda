@@ -50,5 +50,5 @@ public class FarmerUser {
     private Streaming streamings;
 
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
-    private List<Like> likes;
+    private List<Likes> likes;
 }
