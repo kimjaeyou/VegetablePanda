@@ -13,11 +13,15 @@ public class FarmerUser {
     @Column(name = "user_seq")
     private Integer user_seq;
 
+
     @Column(name = "farmer_id", nullable = false, length = 60, unique = true)
     private String farmerId;
 
     @Column(name = "pw", nullable = false, length = 60)
     private String pw;
+
+    @Column(name= "name", nullable = false)
+    private String name;
 
     @Column(name = "address", nullable = false, length = 300)
     private String address;
@@ -36,6 +40,9 @@ public class FarmerUser {
 
     @Column(name = "acount", length = 60)
     private String account;
+
+    @Column(name= "nick_name", nullable = false, unique = true)
+    private String nickName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fammer_grade_fammer_grade_seq", nullable = false)
