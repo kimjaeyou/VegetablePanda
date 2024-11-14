@@ -27,9 +27,4 @@ public class Streaming {
 
     @Column(name = "state")
     private Integer state;
-
-
-    @OneToOne
-    @JoinColumn(name = "farmer_seq", nullable = false)
-    private FarmerUser farmerUser;
 }
