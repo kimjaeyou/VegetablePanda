@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 import web.mvc.config.ApiDataCofig;
 import web.mvc.domain.Member;
 import web.mvc.dto.GarakAuctionRslt;
+import web.mvc.dto.GarakDTO;
 import web.mvc.security.CustomMemberDetails;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 @RestController
 @Slf4j
@@ -45,10 +45,15 @@ public class AdminController {
     }
 
     @GetMapping("/test/testAPI")
-    public String testAPI() throws IOException {
-        ApiDataCofig apiDataCofig = new ApiDataCofig();
-        GarakAuctionRslt gList= apiDataCofig.Test("1","1000");
+    public String testAPI() throws Exception {
+        long beforeTime = System.currentTimeMillis();
 
+        ApiDataCofig apiDataCofig = new ApiDataCofig();
+        List<GarakDTO> list= ApiDataCofig.calcGarakAvg();//가락 시장 api데이터 평균 계산 결과값 리턴
+        long afterTime = System.currentTimeMillis();
+        long secDiffTime = (afterTime - beforeTime)/1000;
+        System.out.println(list);//두 시간에 차 계산
+        System.out.println("소요시간(s) : "+secDiffTime);
         return "testAPI";
     }
 

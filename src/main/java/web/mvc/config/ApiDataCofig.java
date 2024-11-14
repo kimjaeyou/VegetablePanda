@@ -1,29 +1,20 @@
 package web.mvc.config;
 
-import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-import web.mvc.dto.GarakAuctionRslt;
-import web.mvc.dto.RESULT;
-import web.mvc.dto.row;
+import web.mvc.dto.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 @Configuration
@@ -31,14 +22,19 @@ public class ApiDataCofig {
 
     private List<row> dataList = new ArrayList<>();
 
-    public static GarakAuctionRslt Test(String start, String end) throws IOException {
+    public static GarakStructList Test(String start, String end) throws IOException {
+
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String strYesterdayDate = yesterday.format(formatter);
+
         StringBuilder urlBuilder = new StringBuilder("http://openapi.seoul.go.kr:8088");
         urlBuilder.append("/" + URLEncoder.encode("5a776b4843776f6436364e49554347", "UTF-8"));
         urlBuilder.append("/" + URLEncoder.encode("json", "UTF-8"));
         urlBuilder.append("/" + URLEncoder.encode("GarakAuctionRslt", "UTF-8"));
         urlBuilder.append("/" + URLEncoder.encode(start, "UTF-8"));
         urlBuilder.append("/" + URLEncoder.encode(end, "UTF-8"));
-        urlBuilder.append("/" + URLEncoder.encode("%20/20241101", "UTF-8"));
+        urlBuilder.append("/" + URLEncoder.encode("%20/"+strYesterdayDate, "UTF-8"));
         URL url = new URL(urlBuilder.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
@@ -58,7 +54,6 @@ public class ApiDataCofig {
         }
         rd.close();
         conn.disconnect();
-        System.out.println(sb.toString());
 
         // JSON 파싱
         try {
@@ -88,27 +83,25 @@ public class ApiDataCofig {
                             row rowItem = new row();
                             rowItem.setPUM_NAME(rowObject.optString("PUM_NAME", ""));
                             strSet.add(rowObject.optString("PUM_NAME", ""));
+                            double kg= Double.parseDouble(rowObject.optString("UUN", "").split("k")[0]);
+                            rowItem.setUUN(kg);
 
-                            rowItem.setUUN(rowObject.optString("UUN", ""));
                             rowItem.setDDD(rowObject.optString("DDD", ""));
                             rowItem.setPPRICE(rowObject.optLong("PPRICE", 1000));
                             rowItem.setSSANGI(rowObject.optString("SSANGI", ""));
                             rowItem.setINJUNG_GUBUN(rowObject.optString("INJUNG_GUBUN", ""));
                             rowItem.setADJ_DT(rowObject.optString("ADJ_DT", ""));
                             rowList.add(rowItem);
+                            System.out.println(rowItem.toString());
                         }
                     }
                     dto.setRow(rowList);
 
                 }
 
-                // dto에 파싱된 데이터가 들어간 상태
-                System.out.println(dto);
-                System.out.println(dto.getRow());
-                System.out.println("sys:::::::::::::"+strSet.toString());
 
-
-                return dto;
+                GarakStructList list=new GarakStructList(strSet,dto);
+                return list;
             } else {
                 System.out.println("GarakAuctionRslt 데이터가 없습니다.");
             }
@@ -120,22 +113,79 @@ public class ApiDataCofig {
         return null;
         }
 
-    public static void calcGarak() throws Exception{
+    public static GarakAvgPrice calcGarak() throws Exception{
 
-        GarakAuctionRslt dto= Test("1", "1000");
+        GarakStructList dto= Test("1", "1000");
+        List<row> rList= new ArrayList<>();
+
+        Set<String>nameList= dto.getGarakNameList();
+        rList=dto.getGarakAuctionRslt().getRow();
 
 
         if(dto!=null){
-            int num = dto.getList_total_count()/1000;
-            int num2 =  dto.getList_total_count()%1000;
+            int num = dto.getGarakAuctionRslt().getList_total_count()/1000;
+            int num2 =  dto.getGarakAuctionRslt().getList_total_count()%1000;
+
             if(num<2 && num2>1){
-                Test("1001",num2+"");
-            }
-            else if(num>=2){
+                dto=Test("1001",(1000+num2)+"");
+                for(row r:dto.getGarakAuctionRslt().getRow()){
+                    nameList.add(r.getPUM_NAME());
+                    rList.add(r);
+                }
 
             }
+            else if(num>=2){
+                for(int i=1; i<num; i++){
+                    dto=Test(((i*1000)+1)+"",((i+1)*1000)+"");
+                    for(row r:dto.getGarakAuctionRslt().getRow()){
+                        nameList.add(r.getPUM_NAME());
+                        rList.add(r);
+                    }
+
+                }
+            }
+        }//if-end
+        return new GarakAvgPrice(nameList,rList);
+    }//calcGarak-end
+
+    public static List<GarakDTO> calcGarakAvg() throws Exception {
+        GarakAvgPrice gp=calcGarak();
+        List<row> rList= gp.getRowList();
+        Set<String> nameList= gp.getNameList();
+        List<GarakDTO> garakDTOList= new ArrayList<>();
+
+        for(String name:nameList){
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","특(1등)"));
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","상(2등)"));
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","중(3등)"));
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","4등"));
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","5등"));
+            //garakDTOList.add(new GarakDTO(name,0,0,"일반","6등"));
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","9등(등외)"));
+
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","특(1등)"));
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","상(2등)"));
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","중(3등)"));
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","4등"));
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","5등"));
+            //garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","6등"));
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","9등(등외)"));
+
         }
-    }
+
+        for(row r:rList){
+            for (GarakDTO g:garakDTOList){
+                if(r.getPUM_NAME().equals(g.getGarak_name())
+                        &&r.getDDD().equals(g.getGarak_grade())
+                        &&r.getINJUNG_GUBUN().equals(g.getGarak_type())){
+                    g.setGarak_price((g.getGarak_price()+(r.getPPRICE()/r.getUUN())));
+                    g.setGarak_count(g.getGarak_count()+1);
+                    break;
+                }
+            }//inner -for-end
+        }//outer -for-end
+        return garakDTOList;
+    }//calcGarakAvg-end
 }
 
 

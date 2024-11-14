@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class row {
     private String PUM_NAME;
-    private String UUN;
+    private double UUN;
     private String DDD;
     private Long PPRICE;
     private String SSANGI;

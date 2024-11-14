@@ -11,16 +11,6 @@ import lombok.Setter;
 @Builder
 public class StockDTO {
 
-    String stock_seq;
 
-    String content;
-
-    int count;
-
-    StockGradeDTO stockGradeDTO;
-
-    StockOrganicDTO stockOrganicDTO;
-
-    FarmerUserDTO farmerUserDTO;
 
 }
