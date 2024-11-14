@@ -17,7 +17,7 @@ public class StockTest {
 
     @Autowired
     private StockRepository stockRepository;
-    private Stock stock;
+    //private Stock stock;
 
     /**
      * 상품 샘플 등록
@@ -26,10 +26,10 @@ public class StockTest {
     @Rollback(value = false)
     @Disabled
     public void stockInsert () {
-        stock.setProduct(new Product(1));
+        //stock.setProduct(new Product(1));
 
-        log.info("Stock 정보 : {}", stock);
-        //stockRepository.save(Stock.builder().content("알감자").count(500).product(Product.builder().productSeq(1).build()));
+        log.info("Stock 정보 : ");
+        stockRepository.save(Stock.builder().content("알감자").count(500).product(Product.builder().productSeq(1).build()).build());
 
     }
 }

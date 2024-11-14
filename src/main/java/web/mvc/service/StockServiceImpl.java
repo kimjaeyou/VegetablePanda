@@ -27,8 +27,15 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public int updateStock(Stock stock) {
-        return 0;
+    public Stock updateStock(Stock stock) {
+        log.info("updateStock call...");
+
+        Stock dbStock = stockRepository.findById(stock.getStockSeq()).orElseThrow(null);
+        dbStock.setProduct(stock.getProduct());
+        dbStock.setCount(stock.getCount());
+        dbStock.setContent(stock.getContent());
+        stockRepository.save(dbStock);
+        return dbStock;
     }
 
     @Override
