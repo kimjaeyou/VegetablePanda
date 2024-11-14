@@ -56,6 +56,7 @@ public class SecurityConfig{
                 .requestMatchers("/index","/members","/members/**","boards").permitAll()
                 .requestMatchers("/swagger-ui", "/swagger-ui/**",
                         "/api/logistics","/api/swagger-config","/v3/api-docs/**").permitAll()
+                .requestMatchers("/stocks", "/stocks/**").permitAll()
                 .requestMatchers("/test/**","http://openapi.seoul.go.kr:8088/**").permitAll()
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated()
