@@ -1,5 +1,9 @@
 package web.mvc.config;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -18,9 +22,25 @@ import java.util.*;
 
 
 @Configuration
-public class ApiDataCofig {
+@WebListener
+public class ApiDataCofig implements ServletContextListener {
 
     private List<row> dataList = new ArrayList<>();
+
+
+    @Override
+    public void contextInitialized(ServletContextEvent e) {
+        List<GarakDTO> dto=null;
+        ServletContext app=e.getServletContext();
+        try {
+            dto= calcGarakAvg();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+        app.setAttribute("garakData",dto);
+    }
+
 
     public static GarakStructList Test(String start, String end) throws IOException {
 
@@ -99,7 +119,6 @@ public class ApiDataCofig {
 
                 }
 
-
                 GarakStructList list=new GarakStructList(strSet,dto);
                 return list;
             } else {
@@ -145,8 +164,35 @@ public class ApiDataCofig {
                 }
             }
         }//if-end
+        System.out.println(nameList.toString());
         return new GarakAvgPrice(nameList,rList);
     }//calcGarak-end
+
+    public static int findSet(String name){
+        List<String> mealSet= Arrays.asList(new String[]{"감자","고구마","버섯","호박","벼","보리","조"});
+        List<String> yupVeg= Arrays.asList(new String[]{"부추","갓","기타엽체","고추","피망","오이","쑥갓","시금치","깻잎","상추","배추","아욱","적채"});
+        List<String> gwaSet= Arrays.asList(new String[]{"모과","토마토","수박","파인애플","딸기"});
+        List<String> gunSet=Arrays.asList(new String[]{"양파","파","무","당근","비트","생강","마늘"});
+        List<String> yangSet=Arrays.asList(new String[]{"브로커리","파세리","세러리","기타양채","양상추","양배추","빈스","칼라후라워"});
+        List<String> fruitSet=Arrays.asList(new String[]{"대추","감","아보카도","감귤","포도","사과","블루베리",
+                "람부탄","메론","오렌지","배","복숭아","레몬","기타과일","바나나","곶감","용과","유자","키위"});
+
+        if(mealSet.contains(name)){
+         return 1;
+        }else if(yupVeg.contains(name)){
+            return 2;
+        } else if (gwaSet.contains(name)) {
+            return 3;
+        } else if (gunSet.contains(name)) {
+            return 4;
+        } else if (yangSet.contains(name)) {
+            return 5;
+        } else if (fruitSet.contains(name)) {
+            return 6;
+        }
+
+        return 7;
+    }
 
     public static List<GarakDTO> calcGarakAvg() throws Exception {
         GarakAvgPrice gp=calcGarak();
@@ -154,22 +200,25 @@ public class ApiDataCofig {
         Set<String> nameList= gp.getNameList();
         List<GarakDTO> garakDTOList= new ArrayList<>();
 
-        for(String name:nameList){
-            garakDTOList.add(new GarakDTO(name,0,0,"일반","특(1등)"));
-            garakDTOList.add(new GarakDTO(name,0,0,"일반","상(2등)"));
-            garakDTOList.add(new GarakDTO(name,0,0,"일반","중(3등)"));
-            garakDTOList.add(new GarakDTO(name,0,0,"일반","4등"));
-            garakDTOList.add(new GarakDTO(name,0,0,"일반","5등"));
-            //garakDTOList.add(new GarakDTO(name,0,0,"일반","6등"));
-            garakDTOList.add(new GarakDTO(name,0,0,"일반","9등(등외)"));
 
-            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","특(1등)"));
-            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","상(2등)"));
-            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","중(3등)"));
-            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","4등"));
-            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","5등"));
-            //garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","6등"));
-            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","9등(등외)"));
+        for(String name:nameList){
+            int cat = findSet(name);
+
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","특(1등)",cat));
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","상(2등)",cat));
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","중(3등)",cat));
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","4등",cat));
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","5등",cat));
+            //garakDTOList.add(new GarakDTO(name,0,0,"일반","6등",cat));
+            garakDTOList.add(new GarakDTO(name,0,0,"일반","9등(등외)",cat));
+
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","특(1등)",cat));
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","상(2등)",cat));
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","중(3등)",cat));
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","4등",cat));
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","5등",cat));
+            //garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","6등",cat));
+            garakDTOList.add(new GarakDTO(name,0,0,"우수농산물","9등(등외)",cat));
 
         }
 

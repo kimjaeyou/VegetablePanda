@@ -11,7 +11,7 @@ public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stock_seq")
-    private Integer stockSeq;
+    private long stockSeq;
 
     @Column(name = "content", nullable = false, length = 45)
     private String content;
@@ -29,6 +29,11 @@ public class Stock {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_grade_seq", nullable = false)
     private StockGrade stockGrade;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "famer_user_seq", nullable = false)
+    private long user_seq;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_organic_seq", nullable = false)

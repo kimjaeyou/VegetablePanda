@@ -11,8 +11,10 @@ import java.util.List;
 public class FarmerUser {
     @Id
     @Column(name = "user_seq")
-    private Integer user_seq;
+    private long user_seq;
 
+    @OneToMany(mappedBy = "Stock",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Stock> stockList;
 
     @Column(name = "farmer_id", nullable = false, length = 60, unique = true)
     private String farmerId;
