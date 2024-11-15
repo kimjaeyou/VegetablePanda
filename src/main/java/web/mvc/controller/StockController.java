@@ -49,9 +49,9 @@ public class StockController {
     }
 
     // 상품 수정
-    @PostMapping("/stocks/updateForm")
+    @PutMapping("/stocks/{id}")
     //public ResponseEntity<?> updateForm(Integer productCategorySeq, Integer productSeq, Integer stockGradeSeq, Integer stockOrganicSeq, Long farmerUserSeq, @RequestBody StockDTO stockDTO) {
-    public ResponseEntity<?> updateForm(@RequestBody StockDTO stockDTO) {
+    public ResponseEntity<?> updateForm(@PathVariable int id, @RequestBody StockDTO stockDTO) {
         System.out.println(stockDTO.getProductDTO().getProductSeq());
         System.out.println(stockDTO.getProductDTO().getProductCategoryDTO().getProductCategorySeq());
         System.out.println(stockDTO.getStockGradeDTO().getStockGradeSeq());
@@ -66,7 +66,7 @@ public class StockController {
 //        stock.getProduct().setProductCategory(new ProductCategory(productCategorySeq));
 
         log.info("Stock updateForm : {}", stock);
-        return new ResponseEntity<>(stockService.updateStock(stock), HttpStatus.OK);
+        return new ResponseEntity<>(stockService.updateStock(id, stock), HttpStatus.OK);
     }
 
     // 상품 삭제

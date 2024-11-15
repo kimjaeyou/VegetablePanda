@@ -34,10 +34,10 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Stock updateStock(Stock stock) {
+    public Stock updateStock(int id, Stock stock) {
         log.info("updateStock call... / stock.getStockSeq()={}", stock.getStockSeq());
 
-        Stock dbStock = stockRepository.findById(stock.getStockSeq()).orElseThrow(null);
+        Stock dbStock = stockRepository.findById(id).orElseThrow(null);
         //dbStock.setProduct(stock.getProduct());
         // Product 넣기
         //dbStock.setProduct(new Product(stock.getProduct().getProductSeq()));

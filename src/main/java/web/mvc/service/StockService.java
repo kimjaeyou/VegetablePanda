@@ -19,7 +19,7 @@ public interface StockService {
     /**
      * 상품 수정
      */
-    public Stock updateStock(Stock stock);
+    public Stock updateStock(int id, Stock stock);
 
     /**
      * 상품 삭제
