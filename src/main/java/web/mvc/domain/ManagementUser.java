@@ -38,7 +38,7 @@ public class ManagementUser {
     private List<Bid> bids;
     
     @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
-    private List<Like> likes;
+    private List<Likes> likes;
     
     @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
     private List<CalcPoint> calcPoints;

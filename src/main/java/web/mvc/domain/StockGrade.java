@@ -5,17 +5,18 @@ import lombok.Data;
 import java.util.List;
 
 @Entity
-@Table(name = "product_grade")
+@Table(name = "stock_grade")
 @Data
-public class ProductGrade {
+public class StockGrade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_grade_seq")
+    @Column(name = "stock_grade_seq")
     private Integer productGradeSeq;
 
     @Column(name = "grade", nullable = false, length = 45)
     private String grade;
 
-    @OneToMany(mappedBy = "productGrade",fetch = FetchType.LAZY)
-    private List<Product> products;
+    @OneToMany(mappedBy = "stockGrade",fetch = FetchType.LAZY)
+    private List<Stock> stocks;
+
 }

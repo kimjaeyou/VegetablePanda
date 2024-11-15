@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import web.mvc.config.ApiDataCofig;
 import web.mvc.domain.Member;
+import web.mvc.dto.GarakAuctionRslt;
 import web.mvc.security.CustomMemberDetails;
 
 import java.io.IOException;
@@ -46,7 +47,8 @@ public class AdminController {
     @GetMapping("/test/testAPI")
     public String testAPI() throws IOException {
         ApiDataCofig apiDataCofig = new ApiDataCofig();
-        apiDataCofig.Test("딸기");
+        GarakAuctionRslt gList= apiDataCofig.Test("1","1000");
+
         return "testAPI";
     }
 
