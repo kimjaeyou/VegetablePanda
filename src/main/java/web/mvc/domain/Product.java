@@ -1,14 +1,12 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "product")
-@Data
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,4 +23,7 @@ public class Product {
     @JoinColumn(name = "product_category_product_category_seq", nullable = false)
     private ProductCategory productCategory;
 
+    public Product (int productSeq) {
+        this.productSeq = productSeq;
+    }
 }

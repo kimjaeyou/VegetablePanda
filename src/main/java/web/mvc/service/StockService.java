@@ -14,7 +14,7 @@ public interface StockService {
     /**
      * 상품 조회
      */
-    public List<Stock> findProductsById(int id);
+    public List<Stock> findStocksById(long id);
 
     /**
      * 상품 수정
@@ -24,5 +24,5 @@ public interface StockService {
     /**
      * 상품 삭제
      */
-    public int deleteStock(Stock stock);
+    public int deleteStock(int id);
 }

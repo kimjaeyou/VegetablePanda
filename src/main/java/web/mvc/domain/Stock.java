@@ -1,19 +1,19 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.List;
 
 @Entity
 @Table(name = "stock")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
 public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,5 +40,9 @@ public class Stock {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_organic_seq", nullable = false)
     private StockOrganic stockOrganic;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "famer_user_seq", nullable = false)
+    private FarmerUser farmerUser;
 
 }
