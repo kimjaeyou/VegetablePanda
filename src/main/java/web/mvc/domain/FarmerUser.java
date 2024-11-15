@@ -51,6 +51,7 @@ public class FarmerUser {
 
     private String role;
 
+    @Column(name = "fammer_grade", nullable = false)
     private int fammerGrade;
 
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
@@ -59,7 +60,7 @@ public class FarmerUser {
 
     public FarmerUser(Long user_seq,String farmerId,String name, String pw,
                       String address,String code,String account,String phone,
-                      String email,int state,String role,int grade) {
+                      String email,int state,String role) {
         this.user_seq = user_seq;
         this.farmerId = farmerId;
         this.name = name;
@@ -71,7 +72,7 @@ public class FarmerUser {
         this.email = email;
         this.state = state;
         this.role = role;
-        this.fammerGrade=grade;
+        this.fammerGrade= 0;
         this.regDate = LocalDateTime.now();
     }
 }

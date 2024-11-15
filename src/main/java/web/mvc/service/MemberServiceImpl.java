@@ -56,16 +56,10 @@ public class MemberServiceImpl implements MemberService {
                             user.getPhone(),
                             user.getEmail(),
                             0,
-                            "ROLE_FAMMER",
-                            0
+                            "ROLE_FAMMER"
                     );
             fammerRepository.save(fuser);
 
         }
-
-
-
-
-
     }
 }
