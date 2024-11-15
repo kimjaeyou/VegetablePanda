@@ -2,11 +2,15 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
 @Entity
 @Table(name = "stock")
-@Data
+@Getter
+@Setter
 public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +36,7 @@ public class Stock {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "famer_user_seq", nullable = false)
-    private long user_seq;
+    private FarmerUser farmerUser;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

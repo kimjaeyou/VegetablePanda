@@ -2,11 +2,17 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
 @Entity
 @Table(name = "fammer_grade")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class FammerGrade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

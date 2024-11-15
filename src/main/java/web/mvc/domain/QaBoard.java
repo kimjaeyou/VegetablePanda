@@ -2,12 +2,16 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "qa_board")
-@Data
+@Getter
+@Setter
 public class QaBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

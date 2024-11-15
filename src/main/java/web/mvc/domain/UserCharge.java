@@ -1,8 +1,12 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class UserCharge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

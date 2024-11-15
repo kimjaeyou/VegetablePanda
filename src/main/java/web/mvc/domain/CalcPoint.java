@@ -2,11 +2,14 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "calc_point")
-@Data
+@Getter @Setter
 public class CalcPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

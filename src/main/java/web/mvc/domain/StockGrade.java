@@ -2,11 +2,15 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
 @Entity
 @Table(name = "stock_grade")
-@Data
+@Getter
+@Setter
 public class StockGrade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
