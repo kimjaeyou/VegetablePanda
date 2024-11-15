@@ -10,6 +10,7 @@ import java.util.List;
 @Table(name = "stock")
 @Getter
 @Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

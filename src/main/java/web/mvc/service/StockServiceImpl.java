@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import web.mvc.domain.Product;
 import web.mvc.domain.ProductCategory;
 import web.mvc.domain.Stock;
+import web.mvc.exception.ErrorCode;
+import web.mvc.exception.StockException;
 import web.mvc.repository.StockRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -27,25 +30,22 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<Stock> findStocksById(long id) {
-        List<Stock> stockList = stockRepository.findStocksById(id);
+    public List<Stock> findStocksById(long farmerSeq) {
+        List<Stock> stockList = stockRepository.findStocksById(farmerSeq);
         log.info("");
-        return null;
+        return stockList;
     }
 
     @Override
-    public Stock updateStock(int id, Stock stock) {
+    public Stock updateStock(long farmerUserSeq, int id, Stock stock) {
         log.info("updateStock call... / stock.getStockSeq()={}", stock.getStockSeq());
 
-        Stock dbStock = stockRepository.findById(id).orElseThrow(null);
-        //dbStock.setProduct(stock.getProduct());
+        // 예외처리 필요
+        Stock dbStock = stockRepository.findById(id).orElseThrow(()-> new StockException(ErrorCode.UPDATE_FAILED));
+
         // Product 넣기
-        //dbStock.setProduct(new Product(stock.getProduct().getProductSeq()));
         dbStock.setProduct(stock.getProduct());
-        //dbStock.getProduct().getProductCategory().setProductCategorySeq(stock.getProduct().getProductCategory().getProductCategorySeq());
         // ProductCategory 넣기
-        //dbStock.getProduct().setProductCategory(new ProductCategory(stock.getProduct().getProductCategory().getProductCategorySeq()));
-        //dbStock.getProduct().getProductCategory().setProductCategorySeq(stock.getProduct().getProductCategory().getProductCategorySeq());
         dbStock.getProduct().setProductCategory(stock.getProduct().getProductCategory());
 
         dbStock.setCount(stock.getCount());

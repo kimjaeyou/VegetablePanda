@@ -74,7 +74,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
 
         //토큰생성과정...이때 password는 JWTUtil에서 안담았다.
         String token = jwtUtil.createJwt(
-                customMemberDetails.getMember(), role, 1000L*60*10L);//1초*60*10 10분
+                customMemberDetails.getMember(), role, 1000L*60*100L);//1초*60*10 10분
         System.out.println("@@@@@@@@@@@@@@@@@@ getMember "+ customMemberDetails.getMember() +" @@@@@@@@@@@@@@@@@@"+token);
         //응답할 헤더를 설정
         //베어러 뒤에 공백을 준다. 관례적인  prefix
