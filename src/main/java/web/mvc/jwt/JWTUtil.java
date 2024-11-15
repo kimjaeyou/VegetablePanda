@@ -1,10 +1,9 @@
 package web.mvc.jwt;
-
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import web.mvc.domain.Member;
+import web.mvc.domain.User;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -67,12 +66,12 @@ public class JWTUtil {
     //Bearer : JWT 혹은 Oauth에 대한 토큰을 사용
     //public String createJwt(String username, String role, Long expiredMs) {
     //claim은 payload에 해당하는 정보
-    public String createJwt(Member member, String role, Long expiredMs) {
+    public String createJwt(User user, String role, Long expiredMs) {
         log.info("createJwt  call");
         return Jwts.builder()
-                .claim("memeberNo",Long.toString(member.getMemberNo()))
-                .claim("username", member.getName()) //이름
-                .claim("id", member.getId()) //아이디
+                .claim("user_no",Long.toString(user.getUserSeq())) // 시퀀스
+                .claim("name", user.getName()) //이름
+                .claim("id", user.getId()) //아이디
                 .claim("role", role) //Role
                 .issuedAt(new Date(System.currentTimeMillis())) //현재로그인된 시간
                 .expiration(new Date(System.currentTimeMillis() + expiredMs)) //만료시간

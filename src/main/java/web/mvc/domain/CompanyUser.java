@@ -1,15 +1,21 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "company_user")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CompanyUser {
     @Id
     @Column(name = "user_seq")
-    private Integer userSeq;
+    private Long userSeq;
 
     @Column(name = "company_id", nullable = false, length = 45)
     private String companyId;
@@ -31,6 +37,11 @@ public class CompanyUser {
 
     @Column(name = "code", nullable = false, length = 100)
     private String code;
+
+    @Column(name = "state", nullable = false, length = 10)
+    private Integer state;
+
+    private String role;
 
     @OneToOne(fetch = FetchType.EAGER)
     @MapsId
