@@ -2,11 +2,14 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "like")
-@Data
-public class Like {
+@Table(name = "likes")
+@Getter
+@Setter
+public class Likes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_seq")

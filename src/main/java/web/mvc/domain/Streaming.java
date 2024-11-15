@@ -2,10 +2,13 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "streaming")
-@Data
+@Getter
+@Setter
 public class Streaming {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,8 +21,13 @@ public class Streaming {
     @Column(name = "server_address")
     private String serverAddress;
 
+    //state까지 추가한 부분
+    @Column(name = "chat_api_url")
+    private String chatUrl;
 
-    @OneToOne
-    @JoinColumn(name = "farmer_seq", nullable = false)
-    private FarmerUser farmerUser;
+    @Column(name = "chat_room_id")
+    private String chatRoomId;
+
+    @Column(name = "state")
+    private Integer state;
 }

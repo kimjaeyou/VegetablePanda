@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -46,9 +47,4 @@ public class User {
     private LocalDateTime regDate;
 
     private String role;
-
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "user_seq")
-    private ManagementUser managementUser;
 }

@@ -2,10 +2,13 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "product")
-@Data
+@Getter
+@Setter
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +22,4 @@ public class Product {
     @JoinColumn(name = "product_category_product_category_seq", nullable = false)
     private ProductCategory productCategory;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_grade_product_grade_seq", nullable = false)
-    private ProductGrade productGrade;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_organic_product_organic", nullable = false)
-    private ProductOrganic productOrganic;
 }
