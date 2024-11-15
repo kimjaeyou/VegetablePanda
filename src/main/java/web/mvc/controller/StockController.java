@@ -34,6 +34,7 @@ public class StockController {
     @GetMapping("/stocks/list")
     public void stock() {
         log.info("상품 목록 조회");
+
     }
 
     // 상품 수정

@@ -7,6 +7,8 @@ import web.mvc.domain.Product;
 import web.mvc.domain.Stock;
 import web.mvc.repository.StockRepository;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class StockServiceImpl implements StockService {
@@ -22,7 +24,8 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Stock findAllProducts() {
+    public List<Stock> findProductsById(int id) {
+        stockRepository.findById(id);
         return null;
     }
 

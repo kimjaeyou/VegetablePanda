@@ -3,6 +3,8 @@ package web.mvc.service;
 import web.mvc.domain.Product;
 import web.mvc.domain.Stock;
 
+import java.util.List;
+
 public interface StockService {
     /**
      * 상품 등록
@@ -12,7 +14,7 @@ public interface StockService {
     /**
      * 상품 조회
      */
-    public Stock findAllProducts();
+    public List<Stock> findProductsById(int id);
 
     /**
      * 상품 수정
