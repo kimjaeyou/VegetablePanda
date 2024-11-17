@@ -8,6 +8,7 @@ import web.mvc.domain.Product;
 import web.mvc.domain.ProductCategory;
 import web.mvc.domain.Stock;
 import web.mvc.exception.ErrorCode;
+import web.mvc.exception.ProductException;
 import web.mvc.exception.StockException;
 import web.mvc.repository.StockRepository;
 
@@ -41,7 +42,7 @@ public class StockServiceImpl implements StockService {
         log.info("updateStock call... / stock.getStockSeq()={}", stock.getStockSeq());
 
         // 예외처리 필요
-        Stock dbStock = stockRepository.findById(id).orElseThrow(()-> new StockException(ErrorCode.UPDATE_FAILED));
+        Stock dbStock = stockRepository.findById(id).orElseThrow(()-> new StockException(ErrorCode.STOCK_UPDATE_FAILED));
 
         // Product 넣기
         dbStock.setProduct(stock.getProduct());
@@ -57,9 +58,9 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public int deleteStock(int id) {
-        Stock stock = stockRepository.findById(id).orElseThrow(null);
+        Stock stock = stockRepository.findById(id).orElseThrow(()-> new StockException(ErrorCode.STOCK_NOTFOUND));
         log.info("delect stock : {}", stock);
         stockRepository.deleteById(id);
-        return 0;
+        return 1;
     }
 }

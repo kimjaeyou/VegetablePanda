@@ -12,5 +12,6 @@ import web.mvc.domain.ProductCategory;
 public class ProductDTO {
     private int productSeq;
     private String productName;
-    private ProductCategoryDTO productCategoryDTO;
+    private int productCategorySeq;
+
 }

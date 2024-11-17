@@ -14,6 +14,7 @@ import web.mvc.dto.StockDTO;
 import web.mvc.service.StockService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,7 +37,10 @@ public class StockController {
         stock.setFarmerUser(new FarmerUser(farmerSeq));
 
         log.info("Stock 정보 : {}", stock);
-        Stock result = stockService.addStock(stock);
+
+        StockDTO result = modelMapper.map(stockService.addStock(stock), StockDTO.class);
+
+        //Stock result = stockService.addStock(stock);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -46,18 +50,20 @@ public class StockController {
         log.info("상품 목록 조회");
 
         List<Stock> stockList = stockService.findStocksById(userSeq);
+        List<StockDTO> stockDTOList = stockList.stream().map(data -> modelMapper.map(data, StockDTO.class)).toList();
         System.out.println("stocklist 값" + stockList);
-        return new ResponseEntity<>(stockList, HttpStatus.OK);
+        return new ResponseEntity<>(stockDTOList, HttpStatus.OK);
     }
 
     // 상품 수정 -> userId와 StockDTO 에 정보를 담아 가져간다
     @PutMapping("/stock/{farmerSeq}")
     //public ResponseEntity<?> updateForm(Integer productCategorySeq, Integer productSeq, Integer stockGradeSeq, Integer stockOrganicSeq, Long farmerUserSeq, @RequestBody StockDTO stockDTO) {
-    public ResponseEntity<?> updateForm(@PathVariable long farmerSeq, @RequestBody StockDTO stockDTO) {
-        System.out.println(stockDTO.getProductDTO().getProductSeq());
-        System.out.println(stockDTO.getProductDTO().getProductCategoryDTO().getProductCategorySeq());
-        System.out.println(stockDTO.getStockGradeDTO().getStockGradeSeq());
-        System.out.println(stockDTO.getStockOrganicDTO().getStockOrganicSeq());
+    public ResponseEntity<?> update(@PathVariable long farmerSeq, @RequestBody StockDTO stockDTO) {
+        // 값 확인용
+        System.out.println(stockDTO.getProductSeq());
+        //System.out.println(stockDTO.getProductDTO().getProductCategorySeq());
+        System.out.println(stockDTO.getStockGradeSeq());
+        System.out.println(stockDTO.getStockOrganicSeq());
 
         int id = stockDTO.getStockSeq();
 
@@ -65,8 +71,10 @@ public class StockController {
 
         stock.setFarmerUser(new FarmerUser(farmerSeq));
 
+        StockDTO result = modelMapper.map(stockService.updateStock(farmerSeq, id, stock), StockDTO.class);
+
         log.info("Stock update : {}", stock);
-        return new ResponseEntity<>(stockService.updateStock(farmerSeq, id, stock), HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 

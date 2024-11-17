@@ -5,6 +5,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StockDTO {
 
     int stockSeq;
@@ -13,12 +15,15 @@ public class StockDTO {
 
     int count;
 
-    ProductDTO productDTO;
-
-    StockGradeDTO stockGradeDTO;
-
-    StockOrganicDTO stockOrganicDTO;
-
-    FarmerUserDTO farmerUserDTO;
+    int productSeq;
+    String stockGradeSeq;
+    String stockOrganicSeq;
+//    ProductDTO productDTO;
+//
+//    StockGradeDTO stockGradeDTO;
+//
+//    StockOrganicDTO stockOrganicDTO;
+//
+//    FarmerUserDTO farmerUserDTO;
 
 }
