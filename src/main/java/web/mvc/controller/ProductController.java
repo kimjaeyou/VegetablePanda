@@ -38,8 +38,9 @@ public class ProductController {
     }
 
     // 상품 수정
-    @PutMapping("/product")
-    public ResponseEntity<?> updateProduct (@RequestBody ProductDTO productDTO) {
+    @PutMapping("/product/{productSeq}")
+    public ResponseEntity<?> updateProduct (@PathVariable int productSeq, @RequestBody ProductDTO productDTO) {
+        log.info("{} 번 재고 정보 수정", productSeq);
         log.info("Update Product : {}", productDTO);
 
         Product product = modelMapper.map(productDTO, Product.class);

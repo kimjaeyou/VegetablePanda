@@ -44,7 +44,7 @@ public class StockController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    // 상품 조회
+    // 상품 조회 (판매자 재고 보기)
     @GetMapping("/stock/{userSeq}")
     public ResponseEntity<?> findStocksById(@PathVariable long userSeq) {
         log.info("상품 목록 조회");
@@ -56,9 +56,9 @@ public class StockController {
     }
 
     // 상품 수정 -> userId와 StockDTO 에 정보를 담아 가져간다
-    @PutMapping("/stock/{farmerSeq}")
+    @PutMapping("/stock")
     //public ResponseEntity<?> updateForm(Integer productCategorySeq, Integer productSeq, Integer stockGradeSeq, Integer stockOrganicSeq, Long farmerUserSeq, @RequestBody StockDTO stockDTO) {
-    public ResponseEntity<?> update(@PathVariable long farmerSeq, @RequestBody StockDTO stockDTO) {
+    public ResponseEntity<?> update(@RequestBody StockDTO stockDTO) {
         // 값 확인용
         System.out.println(stockDTO.getProductSeq());
         //System.out.println(stockDTO.getProductDTO().getProductCategorySeq());
@@ -69,9 +69,9 @@ public class StockController {
 
         Stock stock = modelMapper.map(stockDTO, Stock.class);
 
-        stock.setFarmerUser(new FarmerUser(farmerSeq));
+        //stock.setFarmerUser(new FarmerUser(farmerSeq));
 
-        StockDTO result = modelMapper.map(stockService.updateStock(farmerSeq, id, stock), StockDTO.class);
+        StockDTO result = modelMapper.map(stockService.updateStock(id, stock), StockDTO.class);
 
         log.info("Stock update : {}", stock);
         return new ResponseEntity<>(result, HttpStatus.OK);

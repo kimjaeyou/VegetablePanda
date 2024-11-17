@@ -38,7 +38,8 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public Stock updateStock(long farmerUserSeq, int id, Stock stock) {
+    //public Stock updateStock(long farmerUserSeq, int id, Stock stock) {
+    public Stock updateStock(int id, Stock stock) {
         log.info("updateStock call... / stock.getStockSeq()={}", stock.getStockSeq());
 
         // 예외처리 필요
