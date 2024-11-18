@@ -6,16 +6,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-<<<<<<< HEAD
+import web.mvc.config.ApiDataCofig;
 import web.mvc.domain.User;
+import web.mvc.dto.GarakDTO;
 import web.mvc.security.CustomMemberDetails;
 
 import java.util.Collection;
 import java.util.Iterator;
-=======
-//import web.mvc.config.ApiDataCofig;
+import java.util.List;
 
->>>>>>> Integration
 
 @RestController
 @Slf4j
@@ -43,21 +42,18 @@ public class AdminController {
 
         return "admin 입니다.";
     }
-<<<<<<< HEAD
-=======
 
-//    @GetMapping("/test/testAPI")
-//    public String testAPI() throws Exception {
-//        long beforeTime = System.currentTimeMillis();
-//
-//        ApiDataCofig apiDataCofig = new ApiDataCofig();
-//        List<GarakDTO> list= ApiDataCofig.calcGarakAvg();//가락 시장 api데이터 평균 계산 결과값 리턴
-//        long afterTime = System.currentTimeMillis();
-//        long secDiffTime = (afterTime - beforeTime)/1000;
-//        System.out.println(list);//두 시간에 차 계산
-//        System.out.println("소요시간(s) : "+secDiffTime);
-//        return "testAPI";
-//    }
 
->>>>>>> Integration
+    @GetMapping("/test/testAPI")
+    public String testAPI() throws Exception {
+        long beforeTime = System.currentTimeMillis();
+
+        ApiDataCofig apiDataCofig = new ApiDataCofig();
+        List<GarakDTO> list= ApiDataCofig.calcGarakAvg();//가락 시장 api데이터 평균 계산 결과값 리턴
+        long afterTime = System.currentTimeMillis();
+        long secDiffTime = (afterTime - beforeTime)/1000;
+        System.out.println(list);//두 시간에 차 계산
+        System.out.println("소요시간(s) : "+secDiffTime);
+        return "testAPI";
+    }
 }

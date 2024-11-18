@@ -3,7 +3,7 @@ import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import web.mvc.domain.User;
+import web.mvc.domain.ManagementUser;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -66,7 +66,7 @@ public class JWTUtil {
     //Bearer : JWT 혹은 Oauth에 대한 토큰을 사용
     //public String createJwt(String username, String role, Long expiredMs) {
     //claim은 payload에 해당하는 정보
-    public String createJwt(User user, String role, Long expiredMs) {
+    public String createJwt(ManagementUser user, String role, Long expiredMs) {
         log.info("createJwt  call");
         return Jwts.builder()
                 .claim("user_no",Long.toString(user.getUserSeq())) // 시퀀스

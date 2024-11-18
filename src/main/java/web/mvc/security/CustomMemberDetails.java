@@ -1,6 +1,6 @@
 package web.mvc.security;
 
-import lombok.Data;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,11 +12,15 @@ import web.mvc.domain.User;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Data
+@Getter
+@Setter
 @Slf4j // log.info()
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class CustomMemberDetails implements UserDetails {
 
     private final ManagementUser managementUser;
+    private User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

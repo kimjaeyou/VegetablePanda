@@ -13,7 +13,7 @@ import web.mvc.domain.UserBuy;
 public class UserBuyReq {
     private Integer buySeq;
     private Integer stockSeq;
-    private Integer userSeq; // user pk
+    private Long userSeq; // user pk
     private Integer state;
     private Integer stockPrice;
     private Integer stockDiscount;
