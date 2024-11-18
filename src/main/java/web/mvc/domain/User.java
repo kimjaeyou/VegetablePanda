@@ -2,8 +2,10 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.Builder;
+import org.hibernate.annotations.ColumnDefault;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -11,7 +13,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 @Builder
 public class User {
     @Id
@@ -21,7 +22,7 @@ public class User {
     @Column(name = "user_id", nullable = false, length = 60, unique = true)
     private String id;
 
-    @Column(name = "pw", nullable = false, length = 60)
+    @Column(name = "pw", nullable = false, length = 100)
     private String pw;
 
     @Column(name = "name", nullable = false, length = 60)
@@ -45,5 +46,23 @@ public class User {
     @Column(name = "reg_date", nullable = false)
     private LocalDateTime regDate;
 
+
     private String role;
+
+    public User(Long user_seq,String userId,String name, String pw,
+                String address,String gender,String phone,
+                String email,int state,String role) {
+        this.userSeq = user_seq;
+        this.id = userId;
+        this.name = name;
+        this.pw = pw;
+        this.address = address;
+        this.gender = gender;
+        this.phone = phone;
+        this.email = email;
+        this.state = state;
+        this.role = role;
+        this.regDate = LocalDateTime.now();
+    }
+
 }

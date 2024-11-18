@@ -4,68 +4,63 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import web.mvc.domain.CompanyUser;
-import web.mvc.domain.FarmerUser;
-import web.mvc.domain.ManagementUser;
-import web.mvc.domain.User;
+import web.mvc.dto.GetAllUserDTO;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Getter
+@Slf4j
 @Setter
-@Slf4j // log.info()
-@RequiredArgsConstructor
-@AllArgsConstructor
-public class CustomMemberDetails implements UserDetails {
+@Getter
+public class CustomMemberDetails implements UserDetails{
+    private final GetAllUserDTO user;
 
-    private final ManagementUser managementUser;
-    private User user;
+    public CustomMemberDetails(GetAllUserDTO getUser) {
+        this.user = getUser;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        log.info("getAuthorities...");
-
+        log.info("getAuthorities!!!!!");
         Collection<GrantedAuthority> collection = new ArrayList<GrantedAuthority>();
-
-        collection.add(() -> managementUser.getContent()); //Role_어쩌구에 저장
-
+        collection.add(()->user.getRole());
         return collection;
     }
 
     @Override
     public String getPassword() {
-        log.info("getPassword...");
+        log.info("getPassword!!!!!");
+
         return user.getPw();
     }
 
     @Override
     public String getUsername() {
-        log.info("getUsername...");
+        log.info("getUsername!!!!!");
         return user.getId();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        log.info("isAccountNonExpired...");
+        log.info("isAccountNonExpired!!!!!");
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        log.info("isAccountNonLocked...");
+        log.info("isAccountNonLocked!!!!!");
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        log.info("isCredentialsNonExpired...");
+        log.info("isCredentialsNonExpired!!!!!");
         return true;
     }
 
     @Override
     public boolean isEnabled() {
-        log.info("isEnabled...");
+        log.info("isEnabled!!!!!");
         return true;
     }
 }
