@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import web.mvc.domain.Member;
+import web.mvc.dto.GetAllUserDTO;
 import web.mvc.security.CustomMemberDetails;
 
 import java.io.IOException;
@@ -55,21 +56,22 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         //토큰에서 username과 role 획득
-        String memberNo=jwtUtil.getUserNo(token);
-        System.out.println("!!!!!!!!!!!"+memberNo+"!!!!!!!");
+        String user_seq=jwtUtil.getUserSeq(token);
         String username = jwtUtil.getUsername(token);
         String id = jwtUtil.getId(token);
         String role = jwtUtil.getRole(token);
 				
         //userEntity를 생성하여 값 set
-        Member member = new Member();
-        //member.setMemberNo(Long.parseLong(memberNo));
-        member.setId(id);
-        member.setName(username);
-        member.setRole(role);
-				
+
+        GetAllUserDTO userDTO = new GetAllUserDTO();
+        userDTO.setUser_seq(Long.parseLong(user_seq));
+        userDTO.setName(username);
+        userDTO.setId(id);
+        userDTO.setRole(role);
+
+
         //UserDetails에 회원 정보 객체 담기
-        CustomMemberDetails customMemberDetails = new CustomMemberDetails(member);
+        CustomMemberDetails customMemberDetails = new CustomMemberDetails(userDTO);
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken =

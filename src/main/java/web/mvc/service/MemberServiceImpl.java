@@ -13,7 +13,7 @@ import web.mvc.dto.GetAllUserDTO;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.MemberAuthenticationException;
 import web.mvc.repository.CompanyUserRepository;
-import web.mvc.repository.FammerUserRepository;
+import web.mvc.repository.FarmerUserRepository;
 import web.mvc.repository.NormalUserRepository;
 import web.mvc.repository.UserRepository;
 
@@ -22,7 +22,7 @@ import web.mvc.repository.UserRepository;
 @Slf4j
 public class MemberServiceImpl implements MemberService {
     private final UserRepository userRepository;
-    private final FammerUserRepository fammerRepository;
+    private final FarmerUserRepository farmerRepository;
     private final NormalUserRepository normalUserRepository;
     private final CompanyUserRepository companyUserRepository;
     private final PasswordEncoder passwordEncoder;
@@ -41,15 +41,17 @@ public class MemberServiceImpl implements MemberService {
         if(userRepository.existsById(user.getId())>0) {
             throw new MemberAuthenticationException(ErrorCode.DUPLICATED);
         }else{
-            ManagementUser managementUser = new ManagementUser(user.getContent(),user.getId());
+            ManagementUser managementUser = new ManagementUser(user.getId(),user.getContent());
             ManagementUser m=userRepository.save(managementUser);
             log.info("member = "+m);
-            if(user.getContent().equals("fammer")){
+            if(user.getContent().equals("farmer")){
                fammerIn(m,user);
             }else if (user.getContent().equals("user")) {
                 userIn(m,user);
             }else if (user.getContent().equals("company")) {
                 companyIn(m,user);
+            }else{
+                throw new MemberAuthenticationException(ErrorCode.WRONG_PASS);
             }
 
 
@@ -69,9 +71,9 @@ public class MemberServiceImpl implements MemberService {
                         user.getPhone(),
                         user.getEmail(),
                         0,
-                        "ROLE_FAMMER"
+                        "ROLE_FARMER"
                 );
-        fammerRepository.save(fuser);
+        farmerRepository.save(fuser);
     }
 
     public void userIn(ManagementUser m,GetAllUserDTO user){

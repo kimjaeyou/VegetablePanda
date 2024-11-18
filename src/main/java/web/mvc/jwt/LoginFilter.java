@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import web.mvc.domain.Member;
+import web.mvc.dto.GetAllUserDTO;
 import web.mvc.security.CustomMemberDetails;
 
 import java.io.IOException;
@@ -74,19 +75,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
 
         //토큰생성과정...이때 password는 JWTUtil에서 안담았다.
         String token = jwtUtil.createJwt(
-                customMemberDetails.getMember(), role, 1000L*60*10L);//1초*60*10 10분
-        System.out.println("@@@@@@@@@@@@@@@@@@ getMember "+ customMemberDetails.getMember() +" @@@@@@@@@@@@@@@@@@"+token);
+                customMemberDetails.getUser(), role, 1000L*60*10L);//1초*60*10 10분
         //응답할 헤더를 설정
         //베어러 뒤에 공백을 준다. 관례적인  prefix
         response.addHeader("Authorization", "Bearer " + token);
 
         Map<String, Object> map = new HashMap<>();
-        Member member= customMemberDetails.getMember();
-        map.put("memberNo",Long.toString(member.getMemberNo()));
-        map.put("id", member.getId());
-        map.put("name", member.getName());
-        map.put("address", member.getAddress());
-        map.put("role", member.getRole());
+        GetAllUserDTO user= customMemberDetails.getUser();
+        map.put("user_seq",Long.toString(user.getUser_seq()));
+        map.put("id", user.getId());
+        map.put("name", user.getName());
+        map.put("role", user.getRole());
 
         Gson gson= new Gson();
         String arr = gson.toJson(map);

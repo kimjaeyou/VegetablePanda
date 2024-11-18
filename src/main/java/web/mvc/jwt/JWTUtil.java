@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import web.mvc.domain.Member;
+import web.mvc.dto.GetAllUserDTO;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -27,9 +28,9 @@ public class JWTUtil {
     }
 
     //유저no검증s
-    public String getUserNo(String token) {
+    public String getUserSeq(String token) {
         log.info("getRole(String token)  call");
-        String re = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("memberNo", String.class);
+        String re = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("user_seq", String.class);
         log.info("getRole(String token)  re = {} " , re);
         return re;
     }
@@ -37,7 +38,7 @@ public class JWTUtil {
     //검증 Username
     public String getUsername(String token) {
          log.info("getUsername(String token)  call");
-        String re = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+        String re = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("name", String.class);
         log.info("getUsername(String token)  re = {}" ,re);
         return re;
     }
@@ -67,12 +68,12 @@ public class JWTUtil {
     //Bearer : JWT 혹은 Oauth에 대한 토큰을 사용
     //public String createJwt(String username, String role, Long expiredMs) {
     //claim은 payload에 해당하는 정보
-    public String createJwt(Member member, String role, Long expiredMs) {
+    public String createJwt(GetAllUserDTO user, String role, Long expiredMs) {
         log.info("createJwt  call");
         return Jwts.builder()
-                .claim("memeberNo",Long.toString(member.getMemberNo()))
-                .claim("username", member.getName()) //이름
-                .claim("id", member.getId()) //아이디
+                .claim("user_seq",Long.toString(user.getUser_seq()))
+                .claim("name", user.getName()) //이름
+                .claim("id", user.getId()) //아이디
                 .claim("role", role) //Role
                 .issuedAt(new Date(System.currentTimeMillis())) //현재로그인된 시간
                 .expiration(new Date(System.currentTimeMillis() + expiredMs)) //만료시간

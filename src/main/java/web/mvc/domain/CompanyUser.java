@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "company_user")
@@ -64,6 +65,7 @@ public class CompanyUser {
         this.email = email;
         this.state = state;
         this.role = role;
+        this.regDate= LocalDateTime.now();
     }
 
 }

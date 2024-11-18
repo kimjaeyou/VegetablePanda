@@ -14,6 +14,7 @@ import web.mvc.domain.Board;
 import web.mvc.domain.Member;
 import web.mvc.dto.BoardReq;
 import web.mvc.dto.BoardRes;
+import web.mvc.dto.GetAllUserDTO;
 import web.mvc.security.CustomMemberDetails;
 import web.mvc.service.BoardService;
 import web.mvc.service.BoardServiceImpl;
@@ -43,7 +44,7 @@ public class BoardController {
 		log.info("Authentication  authentication.getPrincipal() =  {} " ,  authentication.getPrincipal());
 		if(name!=null && !name.equals("anonymousUser")) {
 			CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
-			Member m = customMemberDetails.getMember();
+			GetAllUserDTO m = customMemberDetails.getUser();
 			log.info("customMemberDetails =  {} ,{} ,{} ", m.getId(), m.getName(), m.getRole());
 
 

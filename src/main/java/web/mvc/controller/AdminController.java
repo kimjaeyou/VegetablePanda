@@ -7,10 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-//import web.mvc.config.ApiDataCofig;
-import web.mvc.domain.Member;
-import web.mvc.dto.GarakAuctionRslt;
-import web.mvc.dto.GarakDTO;
+
+import web.mvc.dto.GetAllUserDTO;
 import web.mvc.security.CustomMemberDetails;
 
 import java.io.IOException;
@@ -28,7 +26,7 @@ public class AdminController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomMemberDetails customMemberDetails = (CustomMemberDetails)authentication.getPrincipal();
-        Member m = customMemberDetails.getMember();
+        GetAllUserDTO m = customMemberDetails.getUser();
         log.info("customMemberDetails =  {} ,{} ,{} " , m.getId(), m.getName(), m.getRole());
 
 
