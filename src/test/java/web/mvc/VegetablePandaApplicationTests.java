@@ -19,14 +19,7 @@ class VegetablePandaApplicationTests {
     private PasswordEncoder passwordEncoder;
     @Test
     void memberInsert() {
-    String encodePassword = passwordEncoder.encode("1234");
-    userRepository.save(User.builder()
-                    .id("admin")
-                    .pw(encodePassword)
-                    .role("ROLE_ADMIN")
-                    .address("Ori")
-                    .name("admin")
-            .build());
+
     }
 
 }

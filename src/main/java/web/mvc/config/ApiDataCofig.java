@@ -44,7 +44,7 @@
 //
 //    public static GarakStructList Test(String start, String end) throws IOException {
 //
-//        LocalDate yesterday = LocalDate.now().minusDays(1);
+//        LocalDate yesterday = LocalDate.now().minusDays(2);
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 //        String strYesterdayDate = yesterday.format(formatter);
 //
@@ -112,7 +112,6 @@
 //                            rowItem.setINJUNG_GUBUN(rowObject.optString("INJUNG_GUBUN", ""));
 //                            rowItem.setADJ_DT(rowObject.optString("ADJ_DT", ""));
 //                            rowList.add(rowItem);
-//                            System.out.println(rowItem.toString());
 //                        }
 //                    }
 //                    dto.setRow(rowList);

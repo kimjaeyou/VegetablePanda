@@ -1,16 +1,16 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
 @Table(name = "product_category")
 @Getter
 @Setter
+@NoArgsConstructor
 public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +22,8 @@ public class ProductCategory {
 
     @OneToMany(mappedBy = "productCategory",fetch = FetchType.LAZY)
     private List<Product> products;
+
+    public ProductCategory(int productCategorySeq) {
+        this.productCategorySeq = productCategorySeq;
+    }
 }

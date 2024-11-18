@@ -4,9 +4,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import web.mvc.domain.CompanyUser;
 import web.mvc.domain.FarmerUser;
-import web.mvc.domain.ManagementUser;
 import web.mvc.domain.User;
 
 import java.util.ArrayList;

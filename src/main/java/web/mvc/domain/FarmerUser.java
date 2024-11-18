@@ -58,7 +58,7 @@ public class FarmerUser {
     private List<Likes> likes;
 
 
-    public FarmerUser(Long user_seq,String farmerId,String name, String pw,
+    public FarmerUser(Long user_seq,String farmerId, String pw,String name,
                       String address,String code,String account,String phone,
                       String email,int state,String role) {
         this.user_seq = user_seq;
@@ -75,4 +75,8 @@ public class FarmerUser {
         this.fammerGrade= 0;
         this.regDate = LocalDateTime.now();
     }
+    public FarmerUser (long farmerSeq){
+        this.user_seq = farmerSeq;
+    }
 }
+
