@@ -36,12 +36,13 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void signUp(GetAllUserDTO getAllUserDTO) {
 
-        if (userRepository.existsById(getAllUserDTO.getId()) > 0) {
+        if (managementRepository.existsById(getAllUserDTO.getId()) > 0) {
             throw new MemberAuthenticationException(ErrorCode.DUPLICATED);
         } else {
             ManagementUser managementUser = new ManagementUser(getAllUserDTO.getId(), getAllUserDTO.getContent());
             ManagementUser m = managementRepository.save(managementUser);
             log.info("member = " + m);
+
             if (getAllUserDTO.getContent().equals("farmer")) {
                 fammerIn(m, getAllUserDTO);
             } else if (getAllUserDTO.getContent().equals("user")) {
@@ -51,13 +52,11 @@ public class MemberServiceImpl implements MemberService {
             } else {
                 throw new MemberAuthenticationException(ErrorCode.WRONG_PASS);
             }
-
-
         }
     }
 
     public void fammerIn(ManagementUser m, GetAllUserDTO user) {
-        FarmerUser fuser =
+        FarmerUser farmerUser =
                 new FarmerUser(
                         m.getUserSeq(),
                         user.getId(),
@@ -71,7 +70,7 @@ public class MemberServiceImpl implements MemberService {
                         0,
                         "ROLE_FARMER"
                 );
-        farmerRepository.save(fuser);
+        farmerRepository.save(farmerUser);
     }
 
     public void userIn(ManagementUser m, GetAllUserDTO user) {
