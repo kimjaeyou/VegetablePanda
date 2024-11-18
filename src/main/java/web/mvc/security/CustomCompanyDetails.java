@@ -14,31 +14,30 @@ import java.util.Collection;
 
 @Data
 @Slf4j // log.info()
-public class CustomMemberDetails implements UserDetails {
+public class CustomCompanyDetails implements UserDetails {
 
-    private final ManagementUser managementUser;
+    private final CompanyUser companyUser;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         log.info("getAuthorities...");
 
-        Collection<GrantedAuthority> collection = new ArrayList<GrantedAuthority>();
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(() -> "ROLE_" + companyUser.getRole().toUpperCase());
 
-        collection.add(() -> managementUser.getContent()); //Role_어쩌구에 저장
-
-        return collection;
+        return authorities;
     }
 
     @Override
     public String getPassword() {
         log.info("getPassword...");
-        return user.getPw();
+        return companyUser.getPw();
     }
 
     @Override
     public String getUsername() {
         log.info("getUsername...");
-        return user.getId();
+        return companyUser.getCompanyId();
     }
 
     @Override

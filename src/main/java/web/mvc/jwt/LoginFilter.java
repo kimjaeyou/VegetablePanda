@@ -42,8 +42,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter { //폼값
         String username = super.obtainUsername(request); // id
         String password = super.obtainPassword(request); // password
 
-        log.info("username = {}", username); // 뭔지 찍어보자
-        log.info("password = {}", password); // 뭔지 찍어보자
+        log.info("username = {}", username); // 아이디
+        log.info("password = {}", password); // 비밀번호
 
         // 2. 스프링 시큐러티에서는 username, password를 검증하기 위해서 ~~token에 담는다.
         // 지금은 authorization은 없어서  null 로 담았다. // 근데 나중에는 있을라나...?
@@ -66,7 +66,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter { //폼값
         response.setContentType("text/html;charset=UTF-8");
         log.info("로그인 성공 ......");
 
-        // UserDetails
+        // 이걸 어떻게 수정해야 할까...
         CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
 
         /*
@@ -85,12 +85,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter { //폼값
 
         // 토큰생성과정...이때 password는 JWTUtil에서 안담았다.
         // 왜 안담았는가...ㅠ
-
         String token = jwtUtil.createJwt(
                 customMemberDetails.getManagementUser(), role, 1000L * 60 * 10L);// 1초*60*10 10분
 
         System.out.println("token = " + token);
-        System.out.println("@@@@@@@@@@@@@@@@@@ getMember " + customMemberDetails.getManagementUser() + " @@@@@@@@@@@@@@@@@@");
 
         // 응답할 헤더를 설정
         // 베어러 뒤에 공백을 준다. 관례적인  prefix

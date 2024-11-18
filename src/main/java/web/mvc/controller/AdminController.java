@@ -6,16 +6,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-<<<<<<< HEAD
 import web.mvc.domain.User;
-import web.mvc.security.CustomMemberDetails;
 
 import java.util.Collection;
 import java.util.Iterator;
-=======
 //import web.mvc.config.ApiDataCofig;
 
->>>>>>> Integration
 
 @RestController
 @Slf4j
@@ -43,8 +39,6 @@ public class AdminController {
 
         return "admin 입니다.";
     }
-<<<<<<< HEAD
-=======
 
 //    @GetMapping("/test/testAPI")
 //    public String testAPI() throws Exception {
@@ -59,5 +53,4 @@ public class AdminController {
 //        return "testAPI";
 //    }
 
->>>>>>> Integration
 }

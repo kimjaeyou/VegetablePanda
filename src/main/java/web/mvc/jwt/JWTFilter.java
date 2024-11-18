@@ -9,8 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import web.mvc.domain.CompanyUser;
-import web.mvc.domain.FarmerUser;
 import web.mvc.domain.User;
 import web.mvc.security.CustomMemberDetails;
 
