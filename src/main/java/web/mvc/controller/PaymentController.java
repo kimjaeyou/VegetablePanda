@@ -1,31 +1,76 @@
 package web.mvc.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.modelmapper.ModelMapper;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import web.mvc.domain.UserBuy;
+import web.mvc.domain.UserCharge;
 import web.mvc.dto.UserBuyReq;
+import web.mvc.dto.UserChargeDTO;
 import web.mvc.service.PaymentService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController("/order/payment")
 @Slf4j
+@RequiredArgsConstructor
 public class PaymentController {
 
-    @Autowired
-    PaymentService paymentService;
+    private final PaymentService paymentService;
+    private final ModelMapper modelMapper;
 
-    // 결제
+    // API 결제 : 주문 객체를 받아서 결제 진행
     public Map<Object, Object> paymentInsert(UserBuyReq userBuyReq) {
-        // 주문상품 seq, 주문 유저 seq, 상태값?, 구매 수량, 총 주문 가격, 할인율
-        // 경매 상품 결제
+        // 주문 seq, 주문 유저 seq, 상태값, 총 주문 가격 : 주문정보
+        // 주문 상품 리스트, 상품명, 가격, 수량, 할인율 : 주문 품목 정보
+        // 경매 상품 선금 결제 : 경매 물품명(name:물품명+선금), 가격, 수량
+        // 경매 상품 잔금 결제 : 경매 물품명(name:물품명+잔금)
+
         log.info("paymentInsert 호출");
 
+        UserBuy userBuy = modelMapper.map(userBuyReq, UserBuy.class);
+
         // UserBuy 정보 insert
-        paymentService.paymentInsert(userBuyReq);
+        paymentService.paymentInsert(userBuy);
 
 
         return null;
     }
+
+    // 포인트 충전 // 프론트에서 결제 진행한 후 DB에 포인트 충전 진행
+    @PostMapping("/payment/charge")
+    public Map<Object, Object> chargePoint(@RequestBody UserChargeDTO userChargeDTO) {
+        // 충전 날짜
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = format.format(new Date());
+        System.out.println("충전일자 : " + date);
+        userChargeDTO.setChargeDate(date);
+
+        UserCharge userCharge = modelMapper.map(userChargeDTO, UserCharge.class);
+        //UserChargeDTO result = modelMapper.map(paymentService.chargePoint(userCharge), UserChargeDTO.class);
+        int result = paymentService.saveCharge(userCharge);
+        Map<Object, Object> map = new HashMap<>();
+        if(result > 0){
+            map.put("cnt", 1);
+            //map.put(("userChargeSeq",))
+            UserCharge charge = paymentService.getLastCharge();
+            map.put("userChargeSeq", charge.getUserChargeSeq());
+            map.put("chargePrice", charge.getPrice());
+            map.put("chargeDate", charge.getChargeDate());
+        } else {
+            map.put("cnt", 0);
+            map.put("msg", "충전에 실패했습니다. 다시 시도해주세요.");
+        }
+
+        return map;
+    }
+
+    // 포인트 결제
+
 }

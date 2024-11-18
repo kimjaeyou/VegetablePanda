@@ -1,14 +1,18 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user_buy")
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +38,7 @@ public class UserBuy {
 
     @Column(name = "stock_discount")
     private Integer stockDiscount;
+
+    @OneToMany(mappedBy = "userBuy", fetch = FetchType.LAZY)
+    private List<UserBuyDetail> userBuyDetails;
 }
