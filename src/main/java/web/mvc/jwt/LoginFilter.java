@@ -95,6 +95,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter { //폼값
         // 응답할 헤더를 설정
         // 베어러 뒤에 공백을 준다. 관례적인  prefix
         // 결론은 그냥이라는 뜻이네
+        //응답할 헤더를 설정
+        //베어러 뒤에 공백을 준다. 관례적인  prefix
         response.addHeader("Authorization", "Bearer " + token);
 
         Map<String, Object> map = new HashMap<>();

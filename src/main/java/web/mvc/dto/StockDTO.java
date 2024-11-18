@@ -1,16 +1,30 @@
 package web.mvc.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StockDTO {
 
+    int stockSeq;
 
+    String content;
+
+    int count;
+
+    int productSeq;
+    String stockGradeSeq;
+    String stockOrganicSeq;
+    long farmerUserSeq;
+//    ProductDTO productDTO;
+//
+//    StockGradeDTO stockGradeDTO;
+//
+//    StockOrganicDTO stockOrganicDTO;
+//
+//    FarmerUserDTO farmerUserDTO;
 
 }

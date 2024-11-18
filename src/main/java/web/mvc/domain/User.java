@@ -2,10 +2,8 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-
+import lombok.Builder;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -13,6 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 @Builder
 public class User {
     @Id

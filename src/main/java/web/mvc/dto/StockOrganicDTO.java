@@ -9,9 +9,9 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class StockOrganicDTO {
 
-    String stock_organic_seq;
+    String stockOrganicSeq;
 
-    String organic_status;
+    String organicStatus;
 
 
 }

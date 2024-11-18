@@ -13,10 +13,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class FarmerUser {
     @Id
     @Column(name = "user_seq")
-    private Long user_seq;
+    private long userSeq;
+
+    @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Stock> stockList;
 
     @Column(name = "farmer_id", nullable = false, length = 60, unique = true)
     private String farmerId;
@@ -52,7 +56,7 @@ public class FarmerUser {
     private String role;
 
     @Column(name = "fammer_grade", nullable = false)
-    private int fammerGrade;
+    private int farmerGrade;
 
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
     private List<Likes> likes;
@@ -61,7 +65,7 @@ public class FarmerUser {
     public FarmerUser(Long user_seq,String farmerId,String name, String pw,
                       String address,String code,String account,String phone,
                       String email,int state,String role) {
-        this.user_seq = user_seq;
+        this.userSeq = user_seq;
         this.farmerId = farmerId;
         this.name = name;
         this.pw = pw;
@@ -72,7 +76,11 @@ public class FarmerUser {
         this.email = email;
         this.state = state;
         this.role = role;
-        this.fammerGrade= 0;
+        this.farmerGrade= 0;
         this.regDate = LocalDateTime.now();
     }
+    public FarmerUser (long farmerSeq){
+        this.userSeq = farmerSeq;
+    }
 }
+
