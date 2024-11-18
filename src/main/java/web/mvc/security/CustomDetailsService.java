@@ -6,25 +6,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import web.mvc.domain.Member;
-import web.mvc.repository.MemberRepository;
-
+import web.mvc.domain.User;
+import web.mvc.dto.GetAllUserDTO;
+import web.mvc.repository.UserRepository;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class CustomDetailsService implements UserDetailsService {
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername -----------> : ", username);
         System.out.println(username);
-        Member m= memberRepository.findById(username);
-        if(m!=null){
-            log.info("FindMem -----------> : ", m);
-            System.out.println(m);
-            return new CustomUserDetails(m);
+        GetAllUserDTO getAllUserDTO = userRepository.findById(username);
+        if(getAllUserDTO != null){
+            log.info("FindMem -----------> : ", getAllUserDTO);
+            System.out.println(getAllUserDTO);
+            return new CustomUserDetails(getAllUserDTO);
         }
         return null;
     }

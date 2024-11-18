@@ -11,7 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import web.mvc.domain.User;
 import web.mvc.dto.GetAllUserDTO;
+import web.mvc.security.CustomUserDetails;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -20,7 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 @Slf4j
-public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 받는 컨트롤러 역할의 필터
+public class LoginFilter extends UsernamePasswordAuthenticationFilter { //폼값 받는 컨트롤러 역할의 필터
     private final AuthenticationManager authenticationManager;
 
     private final JWTUtil jwtUtil;
@@ -31,9 +33,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
     }
 
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException{
+            throws AuthenticationException {
         //1. 클라이언트 로그인 요청시 id, password 받아서 출력
-        String username=super.obtainUsername(request);//id
+        String username = super.obtainUsername(request);//id
         String password = super.obtainPassword(request);//password
 
         log.info("username = {}", username); // 아이디
@@ -42,23 +44,23 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         //2. 스프링 시큐러티에서는 username, password를 검증하기 위해서 ~~token에 담는다.
         //지금은 authorization은 없어서  null 로 담았다.
         UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(username, password,null);
+                new UsernamePasswordAuthenticationToken(username, password, null);
 
         //3. token을 ~Manager에 전달...Provoder...DetailsServicve...db연결...CustomMemberDetails생성..Back/Back/...
-        Authentication authentication=authenticationManager.authenticate(authToken);//CustomMemberDetails정보를 반환...
-        log.info("authentication{}",authentication);
+        Authentication authentication = authenticationManager.authenticate(authToken);//CustomMemberDetails정보를 반환...
+        log.info("authentication{}", authentication);
         return authentication;
     }//
 
     //로그인 성공시 실행하는 메소드 (여기서 JWT를 발급하면 됨)
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain chain,Authentication authentication) throws  IOException{
+                                            FilterChain chain, Authentication authentication) throws IOException {
         response.setContentType("text/html;charset=UTF-8");
         log.info("로그인 성공 ......");
 
-        //UserDetailsS
-        CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
+        //UserDetails
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
         /*
         하나의 유저가 여러개의 권한을 가질수 있기 때문에 collection으로 반환됨
@@ -74,22 +76,23 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
 
         //토큰생성과정...이때 password는 JWTUtil에서 안담았다.
         String token = jwtUtil.createJwt(
-                customMemberDetails.getUser(), role, 1000L*60*10L);//1초*60*10 10분
+                customUserDetails.getGetAllUserDTO(), role, 1000L * 60 * 10L);//1초*60*10 10분
         //응답할 헤더를 설정
         //베어러 뒤에 공백을 준다. 관례적인  prefix
         response.addHeader("Authorization", "Bearer " + token);
 
         Map<String, Object> map = new HashMap<>();
-        GetAllUserDTO user= customMemberDetails.getUser();
-        map.put("user_seq",Long.toString(user.getUser_seq()));
-        map.put("id", user.getId());
-        map.put("name", user.getName());
-        map.put("role", user.getRole());
+        GetAllUserDTO getAllUserDTO = customUserDetails.getGetAllUserDTO();
+        map.put("user_seq", Long.toString(getAllUserDTO.getUser_seq()));
+        map.put("id", getAllUserDTO.getId());
+        map.put("name", getAllUserDTO.getName());
+        map.put("role", getAllUserDTO.getRole());
 
-        Gson gson= new Gson();
+        Gson gson = new Gson();
         String arr = gson.toJson(map);
         response.getWriter().print(arr);
     }
+
     //로그인 실패시 실행하는 메소드
     //CustomMemberDetailsService에서 null이 떨어지면 이곳으로 리턴..
     //응답 메세지를 Json형태로 프론트 단으로 넘기기 위해서 Gson 라이브러리 사용함.
@@ -104,10 +107,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         response.setStatus(401);
 
         Map<String, Object> map = new HashMap<>();
-        map.put("errMsg","정보를 다시 확인해주세요.");
-        Gson gson= new Gson();
+        map.put("errMsg", "정보를 다시 확인해주세요.");
+        Gson gson = new Gson();
         String arr = gson.toJson(map);
         response.getWriter().print(arr);
     }
-
 }
