@@ -25,6 +25,9 @@ public class Streaming {
     @Column(name = "chat_room_id")
     private String chatRoomId;
 
+    @Column(name = "PLAYBACK_URL")
+    private String playbackUrl;
+
     @Column(name = "state")
     private Integer state;
 }
