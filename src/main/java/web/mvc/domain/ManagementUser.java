@@ -24,11 +24,6 @@ public class ManagementUser {
     @Column(name = "user_id", nullable = false, length = 50, unique = true)
     private String id;
 
-    @OneToOne(mappedBy = "managementUser")
-    private CompanyUser companyUser;
-
-    @OneToOne(mappedBy = "managementUser")
-    private User user;
 
     @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
     private List<Review> reviews;

@@ -3,9 +3,9 @@ package web.mvc.dto;
 import lombok.Data;
 
 @Data
-public class GetFammerUserDTO {
+public class GetAllUserDTO {
     private String id;
-    private String password;
+    private String pw;
     private String content;
     private String name;
     private String address;
@@ -13,4 +13,7 @@ public class GetFammerUserDTO {
     private String phone;
     private String code;
     private String acount;
+    private String gender;
+    private String ownerName;
+    private String comName;
 }

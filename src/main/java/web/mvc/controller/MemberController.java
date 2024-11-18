@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.ManagementUser;
 import web.mvc.domain.Member;
-import web.mvc.dto.GetFammerUserDTO;
+import web.mvc.dto.GetAllUserDTO;
 import web.mvc.service.MemberService;
 
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class MemberController {
     }
 
     @PostMapping("/members")
-    public String signUp(@RequestBody GetFammerUserDTO user) {
+    public String signUp(@RequestBody GetAllUserDTO user) {
         memberService.signUp(user);
         return "ok";
     }
