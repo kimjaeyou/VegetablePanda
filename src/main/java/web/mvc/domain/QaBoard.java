@@ -1,9 +1,7 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +10,9 @@ import java.util.List;
 @Table(name = "qa_board")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class QaBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
