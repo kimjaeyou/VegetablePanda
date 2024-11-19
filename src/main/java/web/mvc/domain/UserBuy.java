@@ -20,10 +20,6 @@ public class UserBuy {
     private Integer buySeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_seq", nullable = false)
-    private Stock stock;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)
     private User user;
 
