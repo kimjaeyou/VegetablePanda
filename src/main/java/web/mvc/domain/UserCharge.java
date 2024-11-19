@@ -3,6 +3,8 @@ package web.mvc.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -29,4 +31,7 @@ public class UserCharge {
 
     @Column(name = "order_uid", unique = true)
     private String orderUid;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Payment payment;
 }

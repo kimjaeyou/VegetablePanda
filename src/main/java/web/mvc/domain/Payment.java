@@ -20,6 +20,14 @@ public class Payment {
     private PaymentStatus status;
     private String paymentUid;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_charge_seq")
+    private UserCharge usercharge;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "buy_seq")
+    private UserBuy userBuy;
+
     @Builder
     public Payment(long price, PaymentStatus status){
         this.price = price;

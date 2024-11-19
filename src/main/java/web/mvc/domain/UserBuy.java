@@ -34,4 +34,7 @@ public class UserBuy {
 
     @Column(name = "stock_discount")
     private Integer stockDiscount;
+
+    @OneToMany(mappedBy = "userBuy")
+    private List<Payment> payments;
 }
