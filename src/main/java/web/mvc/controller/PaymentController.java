@@ -1,13 +1,17 @@
 package web.mvc.controller;
 
+import com.siot.IamportRestClient.response.IamportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import web.mvc.domain.Payment;
 import web.mvc.domain.UserBuy;
 import web.mvc.domain.UserCharge;
+import web.mvc.dto.PaymentReq;
+import web.mvc.dto.RequestPayDTO;
 import web.mvc.dto.UserBuyReq;
 import web.mvc.dto.UserChargeDTO;
 import web.mvc.service.PaymentService;
@@ -43,8 +47,8 @@ public class PaymentController {
         return null;
     }
 
-    // 포인트 충전 // 프론트에서 결제 진행한 후 DB에 포인트 충전 진행
-    @PostMapping("/payment/charge")
+    // 포인트 충전 // 충전 정보 임시로 DB에 넣은 후 프론트에서 결제 진행, 검증 후 DB에 포인트 충전 진행
+    //@PostMapping("/payment/charge")
     public Map<Object, Object> chargePoint(@RequestBody UserChargeDTO userChargeDTO) {
         // 충전 날짜
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -71,6 +75,19 @@ public class PaymentController {
         return map;
     }
 
-    // 포인트 결제
+    // 주문내역에서 결제정보 찾아와 넘겨주기
+    @GetMapping("/payment/{id}")
+    public ResponseEntity<?> paymentPage(@PathVariable(name="id", required = false) String id) {
+        RequestPayDTO requestDTO = paymentService.findRequestDto(id);
+        ResponseEntity<?> entity = new ResponseEntity(requestDTO, HttpStatus.OK);
+        return entity;
+    }
+
+    // 포인트 결제 검증
+    @PostMapping("/payment/charge")
+    public ResponseEntity<IamportResponse<Payment>> validatePayment(@RequestBody PaymentReq paymentReq) {
+
+        return null;
+    }
 
 }

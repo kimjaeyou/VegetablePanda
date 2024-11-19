@@ -1,11 +1,15 @@
 package web.mvc.service;
 
 import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.response.IamportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import web.mvc.domain.Payment;
 import web.mvc.domain.UserBuy;
 import web.mvc.domain.UserCharge;
+import web.mvc.dto.PaymentReq;
+import web.mvc.dto.RequestPayDTO;
 import web.mvc.repository.UserChargeRepository;
 
 @Service
@@ -32,5 +36,17 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public UserCharge getLastCharge() {
         return userChargeRepository.getLastCharge();
+    }
+
+    @Override
+    public RequestPayDTO findRequestDto(String orderUid) {
+
+
+        return null;
+    }
+
+    @Override
+    public IamportResponse<Payment> paymentByCallback(PaymentReq request) {
+        return null;
     }
 }

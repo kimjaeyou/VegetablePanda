@@ -1,12 +1,15 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserCharge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,12 +18,15 @@ public class UserCharge {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)
-    private ManagementUser user;
+    private ManagementUser managementUser;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "charge_date", length = 60)
     private String chargeDate;
 
     @Column(name = "price")
-    private Integer price;
+    private long price;
+
+    @Column(name = "order_uid", unique = true)
+    private String orderUid;
 }

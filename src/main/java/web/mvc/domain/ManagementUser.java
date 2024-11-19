@@ -44,8 +44,12 @@ public class ManagementUser {
     private List<CalcPoint> calcPoints;
 
 
-    public ManagementUser(String id,String content) {
+    public ManagementUser(String id, String content) {
         this.id = id;
         this.content = content;
     }
+
+    public ManagementUser(long userSeq) {
+        this.userSeq = userSeq;
+    };
 }

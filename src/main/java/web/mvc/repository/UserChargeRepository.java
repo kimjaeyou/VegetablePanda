@@ -9,4 +9,6 @@ public interface UserChargeRepository extends JpaRepository<UserCharge, Integer>
 
     @Query(value = "select u from UserCharge u order by u.userChargeSeq desc limit 1")
     UserCharge getLastCharge();
+
+    boolean existsByOrderUid(String orderUid);
 }

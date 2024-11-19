@@ -23,8 +23,8 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
     UPDATE_FAILED( HttpStatus.BAD_REQUEST, "Update fail","수정할수 없습니다."),
     DELETE_FAILED( HttpStatus.BAD_REQUEST, "Delete fail","삭제할 수 없습니다."),
 
-    STOCK_UPDATE_FAILED (HttpStatus.NOT_FOUND, "Stock update fail", "상품 수정에 실패했습니다."),
-    STOCK_NOTFOUND (HttpStatus.NOT_FOUND, "Stock update fail", "상품을 찾을 수 없습니다."),
+    STOCK_UPDATE_FAILED (HttpStatus.NOT_FOUND, "Stock update fail", "재고 수정에 실패했습니다."),
+    STOCK_NOTFOUND (HttpStatus.NOT_FOUND, "Stock update fail", "재고를 찾을 수 없습니다."),
 
     PRODUCT_UPDATE_FAILED (HttpStatus.NOT_FOUND, "Stock update fail", "상품 수정에 실패했습니다."),
     PRODUCT_NOTFOUND (HttpStatus.NOT_FOUND, "Stock update fail", "상품을 찾을 수 없습니다."),
