@@ -2,11 +2,14 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "auction")
-@Data
+@Getter @Setter
 public class Auction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

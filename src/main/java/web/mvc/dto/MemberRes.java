@@ -13,5 +13,4 @@ public class MemberRes {
     private Long  memberNo;
     private String  id;
     private String  name;
-
 }

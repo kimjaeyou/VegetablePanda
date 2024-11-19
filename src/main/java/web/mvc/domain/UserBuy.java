@@ -10,9 +10,9 @@ import java.util.List;
 @Table(name = "user_buy")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UserBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,4 @@ public class UserBuy {
 
     @Column(name = "stock_discount")
     private Integer stockDiscount;
-
-    @OneToMany(mappedBy = "userBuy", fetch = FetchType.LAZY)
-    private List<UserBuyDetail> userBuyDetails;
 }

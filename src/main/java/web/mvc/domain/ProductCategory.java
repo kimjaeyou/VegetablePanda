@@ -1,14 +1,15 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Entity
 @Table(name = "product_category")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class ProductCategory {
     @Id

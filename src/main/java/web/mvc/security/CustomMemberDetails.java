@@ -1,30 +1,29 @@
 package web.mvc.security;
 
-import lombok.Data;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import web.mvc.domain.Member;
+import web.mvc.dto.GetAllUserDTO;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Slf4j
-@Data
+@Setter
+@Getter
 public class CustomMemberDetails implements UserDetails{
-    private final Member member;
+    private final GetAllUserDTO user;
 
-    public CustomMemberDetails(Member member) {
-        this.member = member;
-        log.info("CustomMemberDetails created ::::::",this.member);
+    public CustomMemberDetails(GetAllUserDTO getUser) {
+        this.user = getUser;
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         log.info("getAuthorities!!!!!");
         Collection<GrantedAuthority> collection = new ArrayList<GrantedAuthority>();
-        collection.add(()->member.getRole());
+        collection.add(()->user.getRole());
         return collection;
     }
 
@@ -32,13 +31,13 @@ public class CustomMemberDetails implements UserDetails{
     public String getPassword() {
         log.info("getPassword!!!!!");
 
-        return member.getPassword();
+        return user.getPw();
     }
 
     @Override
     public String getUsername() {
         log.info("getUsername!!!!!");
-        return member.getId();
+        return user.getId();
     }
 
     @Override

@@ -2,10 +2,13 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "shop")
-@Data
+@Getter
+@Setter
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
