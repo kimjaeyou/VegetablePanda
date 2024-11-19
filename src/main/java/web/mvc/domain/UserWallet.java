@@ -13,7 +13,7 @@ public class UserWallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_wallet_seq")
-    private Integer userWalletSeq;
+    private Long userWalletSeq;
 
     @Column(name = "point", nullable = false)
     private Integer point;

@@ -7,12 +7,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import web.mvc.domain.User;
 import web.mvc.dto.GetAllUserDTO;
-import web.mvc.security.CustomUserDetails;
+import web.mvc.security.CustomMemberDetails;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
 @RestController
 @Slf4j
@@ -25,9 +24,9 @@ public class AdminController {
         log.info("Authentication getName =  {} " , name);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
-        GetAllUserDTO getAllUserDTO = customUserDetails.getGetAllUserDTO();
-        log.info("customMemberDetails =  {} ,{} ,{} " , getAllUserDTO.getId(), getAllUserDTO.getName(), getAllUserDTO.getRole());
+        CustomMemberDetails customMemberDetails = (CustomMemberDetails)authentication.getPrincipal();
+        GetAllUserDTO m = customMemberDetails.getUser();
+        log.info("customMemberDetails =  {} ,{} ,{} " , m.getId(), m.getName(), m.getRole());
 
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -54,6 +53,5 @@ public class AdminController {
 //        System.out.println("소요시간(s) : "+secDiffTime);
 //        return "testAPI";
 //    }
-
 
 }

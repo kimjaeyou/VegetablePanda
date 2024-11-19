@@ -34,21 +34,20 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void signUp(GetAllUserDTO getAllUserDTO) {
+    public void signUp(GetAllUserDTO user) {
 
-        if (managementRepository.existsById(getAllUserDTO.getId()) > 0) {
+        if (managementRepository.existsById(user.getId()) > 0) {
             throw new MemberAuthenticationException(ErrorCode.DUPLICATED);
         } else {
-            ManagementUser managementUser = new ManagementUser(getAllUserDTO.getId(), getAllUserDTO.getContent());
+            ManagementUser managementUser = new ManagementUser(user.getId(), user.getContent());
             ManagementUser m = managementRepository.save(managementUser);
             log.info("member = " + m);
-
-            if (getAllUserDTO.getContent().equals("farmer")) {
-                fammerIn(m, getAllUserDTO);
-            } else if (getAllUserDTO.getContent().equals("user")) {
-                userIn(m, getAllUserDTO);
-            } else if (getAllUserDTO.getContent().equals("company")) {
-                companyIn(m, getAllUserDTO);
+            if (user.getContent().equals("farmer")) {
+                fammerIn(m, user);
+            } else if (user.getContent().equals("user")) {
+                userIn(m, user);
+            } else if (user.getContent().equals("company")) {
+                companyIn(m, user);
             } else {
                 throw new MemberAuthenticationException(ErrorCode.WRONG_PASS);
             }
@@ -56,7 +55,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public void fammerIn(ManagementUser m, GetAllUserDTO user) {
-        FarmerUser farmerUser =
+        FarmerUser fuser =
                 new FarmerUser(
                         m.getUserSeq(),
                         user.getId(),
@@ -70,7 +69,7 @@ public class MemberServiceImpl implements MemberService {
                         0,
                         "ROLE_FARMER"
                 );
-        farmerRepository.save(farmerUser);
+        farmerRepository.save(fuser);
     }
 
     public void userIn(ManagementUser m, GetAllUserDTO user) {
