@@ -24,7 +24,7 @@ public class UserChargeController {
 
     // 포인트 충전 주문하기
     @PostMapping("/charge")
-    public ResponseEntity<?> charge(@RequestBody UserChargeDTO userChargeDTO) {
+    public String charge(@RequestBody UserChargeDTO userChargeDTO) {
         log.info("UserChargeController!!");
 
         // 주문번호 생성
@@ -36,7 +36,8 @@ public class UserChargeController {
         System.out.println(usercharge);
 
         UserChargeDTO result = modelMapper.map(userChargeService.order(usercharge), UserChargeDTO.class);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        //return new ResponseEntity<>(result, HttpStatus.OK);
+        return "redirect:/payment/" + orderUid;
     }
 
 }

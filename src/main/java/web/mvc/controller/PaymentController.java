@@ -77,8 +77,8 @@ public class PaymentController {
 
     // 주문내역에서 결제정보 찾아와 넘겨주기
     @GetMapping("/payment/{id}")
-    public ResponseEntity<?> paymentPage(@PathVariable(name="id", required = false) String id) {
-        RequestPayDTO requestDTO = paymentService.findRequestDto(id);
+    public ResponseEntity<?> paymentPage(@PathVariable(name="id", required = false) String orderUid) {
+        RequestPayDTO requestDTO = paymentService.findRequestDto(orderUid);
         ResponseEntity<?> entity = new ResponseEntity(requestDTO, HttpStatus.OK);
         return entity;
     }
