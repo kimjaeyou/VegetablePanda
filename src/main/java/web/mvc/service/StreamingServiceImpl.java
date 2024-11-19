@@ -29,4 +29,14 @@ public class StreamingServiceImpl implements StreamingService {
     public void save(Streaming streaming) {
         streamingRepository.save(streaming);
     }
+
+    @Override
+    public List<Streaming> findByState(Integer state) {
+        return streamingRepository.findByState(state);
+    }
+
+    @Override
+    public Streaming findByChatRoomId(String chatRoomId) {
+        return streamingRepository.findByChatRoomId(chatRoomId);
+    }
 }
