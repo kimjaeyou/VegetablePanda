@@ -32,12 +32,11 @@ public class Stock {
     private Product product;
 
     @OneToMany(mappedBy = "stock")
-    private List<UserBuy> userBuys;
+    private List<UserBuyDetail> userBuyDetails;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_grade_seq", nullable = false)
     private StockGrade stockGrade;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_organic_seq", nullable = false)

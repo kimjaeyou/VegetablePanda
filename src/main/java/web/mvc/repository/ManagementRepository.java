@@ -7,9 +7,12 @@ import web.mvc.domain.User;
 
 public interface ManagementRepository extends JpaRepository<ManagementUser, Long> {
 
-    @Query("select u.id from ManagementUser u where u.id = ?1")
-    Boolean existsById(String id);
+    @Query("select count(m) from ManagementUser m where m.id=?1")
+    int existsById(String id);
 
     ManagementUser findById(String id);
+
+    @Query("select u from ManagementUser m left join UserWallet u on m.userSeq=u.managementUser.userSeq  where u.managementUser.userSeq = ?1")
+    int point(int seq);
 
 }

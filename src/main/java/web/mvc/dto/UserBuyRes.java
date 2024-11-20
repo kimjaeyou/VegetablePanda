@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Builder
 public class UserBuyRes {
     private Integer buySeq;
-    private Stock stock;
     private User user;
     private LocalDateTime buyDate;
     private Integer state;
@@ -24,7 +23,6 @@ public class UserBuyRes {
     // UserBuy Entity를 UserBuyRes로 변환
     public UserBuyRes (UserBuy userBuy) {
         buySeq = userBuy.getBuySeq();
-        stock = userBuy.getStock();
         user = userBuy.getUser();
         buyDate = userBuy.getBuyDate();
         state = userBuy.getState();

@@ -1,9 +1,7 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,11 +9,14 @@ import java.util.List;
 @Table(name = "review")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_seq")
-    private Integer reviewSeq;
+    private Long reviewSeq;
 
     @Column(name = "visit_num", nullable = false)
     private Integer visitNum;
@@ -28,11 +29,11 @@ public class Review {
     private File file;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "management_user_user_seq", nullable = false)
+    @JoinColumn(name = "managementUser_user_seq", nullable = false)
     private ManagementUser managementUser;
 
     @OneToOne
-    @JoinColumn(name = "user_seq", nullable = false)
+    @JoinColumn(name = "farmer_seq", nullable = false)
     private FarmerUser farmerUser;
 
     @OneToMany(mappedBy = "review")

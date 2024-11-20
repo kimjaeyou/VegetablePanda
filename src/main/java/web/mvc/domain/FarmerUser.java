@@ -79,4 +79,3 @@ public class FarmerUser {
         this.user_seq = farmerSeq;
     }
 }
-
