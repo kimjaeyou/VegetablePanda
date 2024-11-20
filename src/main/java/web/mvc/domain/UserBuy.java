@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user_buy")
@@ -17,10 +18,6 @@ public class UserBuy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "buy_seq")
     private Integer buySeq;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock_seq", nullable = false)
-    private Stock stock;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)
@@ -37,4 +34,7 @@ public class UserBuy {
 
     @Column(name = "stock_discount")
     private Integer stockDiscount;
+
+    @OneToMany(mappedBy = "userBuy")
+    private List<Payment> payments;
 }
