@@ -21,6 +21,7 @@ public class CustomDetailsService implements UserDetailsService {
     private final NormalUserRepository nUserRepository;
     private final CompanyUserRepository cUserRepository;
     private final FarmerUserRepository fUserRepository;
+    private final ManagementRepository managementRepository;
     private GetAllUserDTO getAllUserDTO;
 
 
@@ -28,7 +29,7 @@ public class CustomDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername -----------> : ", username);
         System.out.println(username);
-        ManagementUser m= userRepository.findById(username);
+        ManagementUser m = managementRepository.findById(username);
         System.out.println("!!!!!!!!!!!!!"+m);
         if(m!=null){
             log.info("FindUser -----------> : ", m);

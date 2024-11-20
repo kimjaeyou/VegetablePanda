@@ -7,12 +7,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import web.mvc.dto.GetAllUserDTO;
 import web.mvc.security.CustomMemberDetails;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
 @RestController
 @Slf4j
