@@ -1,13 +1,13 @@
 package web.mvc.controller;
 
 import com.siot.IamportRestClient.response.IamportResponse;
+import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import web.mvc.domain.Payment;
 import web.mvc.domain.UserBuy;
 import web.mvc.domain.UserCharge;
 import web.mvc.dto.PaymentReq;
@@ -77,7 +77,9 @@ public class PaymentController {
 
     // 주문내역에서 결제정보 찾아와 넘겨주기
     @GetMapping("/payment/{id}")
-    public ResponseEntity<?> paymentPage(@PathVariable(name="id", required = false) String orderUid) {
+    public ResponseEntity<?> paymentPage(@PathVariable("id") String orderUid) {
+        // 결제정보 불러오기
+        log.info("paymentPage");
         RequestPayDTO requestDTO = paymentService.findRequestDto(orderUid);
         ResponseEntity<?> entity = new ResponseEntity(requestDTO, HttpStatus.OK);
         return entity;
@@ -86,8 +88,10 @@ public class PaymentController {
     // 포인트 결제 검증
     @PostMapping("/payment/charge")
     public ResponseEntity<IamportResponse<Payment>> validatePayment(@RequestBody PaymentReq paymentReq) {
+        IamportResponse<Payment> iamportResponse = paymentService.paymentByCallback(paymentReq);
 
-        return null;
+        log.info("결제 응답 : {}", iamportResponse.getResponse().toString());
+        return new ResponseEntity<>(iamportResponse, HttpStatus.OK);
     }
 
 }

@@ -2,7 +2,7 @@ package web.mvc.service;
 
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.response.IamportResponse;
-import web.mvc.domain.Payment;
+import com.siot.IamportRestClient.response.Payment;
 import web.mvc.domain.UserBuy;
 import web.mvc.domain.UserCharge;
 import web.mvc.dto.PaymentReq;

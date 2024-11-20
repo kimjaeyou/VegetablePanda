@@ -9,16 +9,15 @@ import lombok.*;
 @AllArgsConstructor
 public class StockDTO {
 
-    int stockSeq;
+    private int stockSeq;
+    private String content;
+    private int count;
+    private String color;
 
-    String content;
-
-    int count;
-
-    int productSeq;
-    String stockGradeSeq;
-    String stockOrganicSeq;
-    long farmerUserSeq;
+    private int productSeq;
+    private String stockGradeSeq;
+    private String stockOrganicSeq;
+    private long farmerUserSeq;
 //    ProductDTO productDTO;
 //
 //    StockGradeDTO stockGradeDTO;

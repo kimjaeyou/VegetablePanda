@@ -33,5 +33,6 @@ public class UserCharge {
     private String orderUid;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "payment_seq")
     private Payment payment;
 }

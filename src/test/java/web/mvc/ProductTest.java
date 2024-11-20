@@ -4,11 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
-import web.mvc.domain.Product;
-import web.mvc.domain.ProductCategory;
-import web.mvc.repository.ProductCategoryRepository;
-import web.mvc.repository.ProductRepository;
+import web.mvc.domain.*;
+import web.mvc.repository.*;
 
 @SpringBootTest
 @Rollback(false)
@@ -19,6 +19,25 @@ public class ProductTest {
     private ProductRepository productRepository;
     @Autowired
     private ProductCategoryRepository productCategoryRepository;
+    @Autowired
+    private ManagementRepository managementRepository;
+    @Autowired
+    private FarmerUserRepository farmerUserRepository;
+    @Autowired
+    private NormalUserRepository normalUserRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    /**
+     * 유저 등록(farmer)
+     */
+    public void singupTest(){
+        managementRepository.save(ManagementUser.builder().content("farmer").id("farmer").build());
+        farmerUserRepository.save(FarmerUser.builder().farmerId("farmer").name("farmer").pw(passwordEncoder.encode("1234")).address("Ori").code("code").account("111-1111").phone("000-1111-2222").email("farmer@gmail.com").role("ROLE_FARMER").build());
+
+        managementRepository.save(ManagementUser.builder().content("user").id("user").build());
+        normalUserRepository.save(User.builder().id("user").name("user").pw(passwordEncoder.encode("1234")).address("Ori").phone("000-1111-2222").state(0).email("user@gmail.com").gender("M").role("ROLE_USER").build());
+    }
 
     /**
      * 상품 카테고리 등록
