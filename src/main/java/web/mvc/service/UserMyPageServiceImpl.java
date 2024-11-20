@@ -1,6 +1,9 @@
 package web.mvc.service;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.stereotype.Service;
 import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
@@ -10,13 +13,16 @@ import web.mvc.repository.*;
 
 import java.util.List;
 
+@Transactional
+@RequiredArgsConstructor
+@Service
 public class UserMyPageServiceImpl implements UserMyPageService {
-    private BuyMyPageRepository buyMyPageRepository;
-    private UserMyPageRepository userMyPageRepository;
-    private UserRepository userRepository;
-    private ManagementRepository managementRepository;
-    private ReviewRepository reviewRepository;
-    private BidRepository bidRepository;
+    private final BuyMyPageRepository buyMyPageRepository;
+    private final UserMyPageRepository userMyPageRepository;
+    private final UserRepository userRepository;
+    private final ManagementRepository managementRepository;
+    private final ReviewRepository reviewRepository;
+    private final BidRepository bidRepository;
 
     /**
      * 주문내역
