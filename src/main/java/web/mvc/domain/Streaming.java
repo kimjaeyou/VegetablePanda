@@ -20,13 +20,15 @@ public class Streaming {
 
     @Column(name = "server_address")
     private String serverAddress;
-
+    
     //state까지 추가한 부분
     @Column(name = "chat_api_url")
     private String chatUrl;
 
     @Column(name = "chat_room_id")
     private String chatRoomId;
+    @Column(name = "PLAYBACK_URL")
+    private String playbackUrl;
 
     @Column(name = "state")
     private Integer state;
