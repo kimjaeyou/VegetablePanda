@@ -16,13 +16,16 @@ public class StockDTO {
     int count;
 
     int productSeq;
-
     String stockGradeSeq;
-
     String stockOrganicSeq;
-
     long farmerUserSeq;
-
     int price;
+//    ProductDTO productDTO;
+//
+//    StockGradeDTO stockGradeDTO;
+//
+//    StockOrganicDTO stockOrganicDTO;
+//
+//    FarmerUserDTO farmerUserDTO;
 
 }

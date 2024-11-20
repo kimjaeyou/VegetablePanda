@@ -9,6 +9,7 @@ import web.mvc.dto.StockDTO;
 import web.mvc.service.ShopService;
 
 @RestController
+@RequestMapping("/shop")
 public class ShopBuyController {
 
     @Autowired
@@ -16,7 +17,6 @@ public class ShopBuyController {
 
     @PostMapping("/add")
     public void shopInsert(@RequestBody StockDTO stock) {
-        System.out.println(stock);
         shopService.shopInsert(stock);
     }
 
@@ -26,7 +26,7 @@ public class ShopBuyController {
     }
 
 
-    @PostMapping("/a/{code}")
+    @GetMapping("/{code}")
     public void shopDelete(@PathVariable Long code) {
         shopService.shopDelete(code);
     }
