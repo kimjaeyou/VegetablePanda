@@ -12,4 +12,7 @@ public interface ManagementRepository extends JpaRepository<ManagementUser, Long
 
     ManagementUser findById(String id);
 
+    @Query("select u from ManagementUser m left join UserWallet u on m.userSeq=u.managementUser.userSeq  where u.managementUser.userSeq = ?1")
+    int point(int seq);
+
 }

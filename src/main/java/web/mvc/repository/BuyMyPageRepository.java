@@ -16,5 +16,5 @@ public interface BuyMyPageRepository extends JpaRepository<UserBuy, Long>, JpaSp
      * 시퀀스값이 일치한 데이터들만 List에 담아서 리턴
      */
     @Query("select d.userBuySeq , d.content , d.count, d.price from UserBuyDetail d  left join UserBuy b on b.buySeq = d.userBuySeq where b.user.userSeq = ?1")
-    List<UserBuyDTO> selectAll (int seq);
+    List<UserBuyDTO> selectAll (Long seq);
 }

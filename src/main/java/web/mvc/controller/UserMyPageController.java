@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.dto.UserDTO;
-import web.mvc.repository.BuyMyPageRepository;
 import web.mvc.service.UserMyPageService;
 
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.List;
 public class UserMyPageController {
 
     private UserMyPageService userMyPageService;
+
     /**
      * 일단 페이지가 잘 만들어 졌는지 테스트
      */
@@ -33,12 +34,13 @@ public class UserMyPageController {
      * 화면에 해당되는 아이디의 주문내역을 출력해주기.
      */
     @GetMapping("/user/buyList/{seq}")
-    public String buyList(@PathVariable int seq){
-    log.info("주문내역 조회시작");
-    // 토큰값에서 시퀀스 꺼내서 그 시퀀스를 들고 가야하는데... 어떻게 하지...
+    public String buyList(@PathVariable Long seq, Model model) {
+        log.info("주문내역 조회시작");
+        // 토큰값에서 시퀀스 꺼내서 그 시퀀스를 들고 가야하는데... 어떻게 하지...
 
-    List<UserBuyDTO> list = userMyPageService.buyList(seq);
-    return "/user/buyList/" + seq;
+        List<UserBuyDTO> list = userMyPageService.buyList(seq);
+        model.addAttribute("list", list);
+        return "/user/buyList/" + seq;
     }
 
     /**
@@ -46,9 +48,9 @@ public class UserMyPageController {
      * 일단 값은 들고와야하니까..
      */
     @GetMapping("/user/list/{seq}")
-    public ModelAndView selectUser (@PathVariable int seq , Model model){
+    public ModelAndView selectUser(@PathVariable Long seq, Model model) {
         UserDTO userDTO = userMyPageService.selectUser(seq);
-        return new ModelAndView("user/list"+seq , "user", userDTO);
+        return new ModelAndView("user/list" + seq, "user", userDTO);
     }
 
     /**
@@ -59,6 +61,7 @@ public class UserMyPageController {
         userMyPageService.update(userDTO);
         return "redirect:/user/update";
     }
+
     /**
      * 탈퇴
      * 사실상 말이 탈퇴지
@@ -76,21 +79,23 @@ public class UserMyPageController {
      * 충전은 인영님이 결제 API로 넣어주신다고 하셨으니까 일단 조회만 되게 해보자
      */
     @PostMapping("/user/point")
-    public String point (int seq){
-        userMyPageService.point(seq);
+    public String point(Long seq, Model model) {
+        int point = userMyPageService.point(seq);
+        model.addAttribute("point", point);
         return "redirect:/user/point";
     }
 
     // 여기 두개는 어차피 똑같은 코드일테니까 일단 위에부터 해결해보자...
     // 17:35 : 이거 먼저 해야되네...
+
     /**
      * 나의 활동내역 리스트
      * 리뷰 조회
      */
-
     @GetMapping("/user/review/{seq}")
-    public String review(@PathVariable int seq){
-      //  List<ReviewComment>  list = userMyPageService.review();
+    public String review(@PathVariable Long seq, Model model) {
+        List<ReviewComment> list = userMyPageService.review(seq);
+        model.addAttribute("list", list);
         return "/user/review/" + seq;
     }
 
@@ -98,10 +103,22 @@ public class UserMyPageController {
      * 나의 활동내역 리스트
      * 리뷰 삭제
      */
+    @PostMapping("/user/review/delete/{seq}")
+    public String deleteReview(@PathVariable Long seq) {
+        userMyPageService.deleteReview(seq);
+        return "/user/review/delete/"+seq;
+    }
 
     /**
      * 나의 활동내역 리스트
      * 경매참여내역
+     * // 모르겠다..
      */
+    @GetMapping("/user/auction/{seq}")
+    public String auctionList(@PathVariable Long seq, Model model) {
+        List<Bid> list = userMyPageService.auctionList(seq);
+        model.addAttribute("list", list);
+        return "/user/auction/" + seq;
+    }
 
 }
