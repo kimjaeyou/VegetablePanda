@@ -22,7 +22,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         System.out.println(" registerStompEndpoints(StompEndpointRegistry registry...");
         registry.addEndpoint("/ws") // WebSocket 엔드포인트
                 .setAllowedOrigins("http://localhost:5173"); // React 앱 주소
-                //.setAllowedOrigins("*");
-                //.withSockJS(); // SockJS를 통한 WebSocket fallback 지원
+        //.setAllowedOrigins("*");
+        //.withSockJS(); // SockJS를 통한 WebSocket fallback 지원
     }
 }
