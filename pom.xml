@@ -51,10 +51,10 @@
         <!--            <artifactId>sockjs-client</artifactId>-->
         <!--        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>org.webjars.bower</groupId>-->
-<!--            <artifactId>jquery</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.webjars.bower</groupId>-->
+        <!--            <artifactId>jquery</artifactId>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.webjars</groupId>

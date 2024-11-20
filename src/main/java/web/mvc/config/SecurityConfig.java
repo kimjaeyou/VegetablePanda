@@ -93,18 +93,4 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 새로운 CORS 설정 추가
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // 3000 포트 설정
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용 메서드
-        configuration.setAllowCredentials(true); // 자격 증명 허용
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type")); // 허용 헤더
-        configuration.setExposedHeaders(Arrays.asList("Authorization")); // 노출 헤더
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 }
