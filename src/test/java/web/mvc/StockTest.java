@@ -10,6 +10,8 @@ import web.mvc.domain.Product;
 import web.mvc.domain.Stock;
 import web.mvc.domain.StockGrade;
 import web.mvc.domain.StockOrganic;
+import web.mvc.repository.StockGradeRepository;
+import web.mvc.repository.StockOrganicRepository;
 import web.mvc.repository.StockRepository;
 
 @SpringBootTest
@@ -19,14 +21,43 @@ public class StockTest {
 
     @Autowired
     private StockRepository stockRepository;
+    @Autowired
+    private StockGradeRepository stockGradeRepository;
+    @Autowired
+    private StockOrganicRepository stockOrganicRepository;
     //private Stock stock;
 
     /**
-     * 상품 샘플 등록
+     * 재고 등급 등록
+     */
+    @Test
+    @Rollback(false)
+    public void stockGradeInsert(){
+        stockGradeRepository.save(StockGrade.builder().grade("1등급").build());
+        stockGradeRepository.save(StockGrade.builder().grade("2등급").build());
+        stockGradeRepository.save(StockGrade.builder().grade("3등급").build());
+        stockGradeRepository.save(StockGrade.builder().grade("4등급").build());
+    }
+
+    /**
+     * 재고 유기능 분류 등록
+     */
+    @Test
+    @Rollback(false)
+    public void stockOrganicInsert(){
+        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("유기농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("전환기 유기농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("무농약 농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("저농약 농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("분류없음").build());
+    }
+
+    /**
+     * 재고 샘플 등록
      */
     @Test
     @Rollback(value = false)
-    @Disabled
+    //@Disabled
     public void stockInsert () {
         //stock.setProduct(new Product(1));
 
