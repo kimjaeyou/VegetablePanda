@@ -22,10 +22,9 @@ import java.util.stream.Collectors;
 public class StockController {
 
     private final ModelMapper modelMapper;
-
     private final StockService stockService;
 
-    // 상품 등록
+    // 상품 등록 -> 상품 이미지 어떻게 하는지
     @PostMapping("/stock")
     public ResponseEntity<?> insert(int productSeq, int stockGradeSeq, int stockOrganicSeq, long farmerSeq, @RequestBody StockDTO stockDTO) {
         log.info("Controller Product : {}", stockDTO);

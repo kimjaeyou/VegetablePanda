@@ -12,7 +12,6 @@ import web.mvc.domain.UserBuy;
 @ToString
 public class UserBuyReq {
     private Integer buySeq;
-    private Integer stockSeq;
     private Long userSeq; // user pk
     private Integer state;
     private Integer stockPrice;
@@ -20,8 +19,7 @@ public class UserBuyReq {
 
     public UserBuy toUserBuy (UserBuyReq userBuyReq) {
         // UserBuyReq를 UserBuy 엔티티로 변환
-        return UserBuy.builder().buySeq(userBuyReq.buySeq).stock(Stock.builder().stockSeq(userBuyReq.stockSeq).build())
-                .user(User.builder().userSeq(userBuyReq.userSeq).build()).state(userBuyReq.state)
+        return UserBuy.builder().buySeq(userBuyReq.buySeq).user(User.builder().userSeq(userBuyReq.userSeq).build()).state(userBuyReq.state)
                 .stockPrice(userBuyReq.state).stockDiscount(userBuyReq.stockDiscount).build();
     }
 
