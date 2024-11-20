@@ -14,7 +14,7 @@ public interface UserMyPageRepository extends JpaRepository<User, Long> {
 
     // 수정할 회원정보 조회 값 출력
     @Query("select u from User u where u.userSeq = ?1 ")
-    UserDTO selectUser(Long seq);
+    User selectUser(Long seq);
 
     //회원 탈퇴(그냥 상태값 바꾸는거임.)
     @Modifying

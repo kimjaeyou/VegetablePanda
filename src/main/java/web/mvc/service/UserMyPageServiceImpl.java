@@ -2,7 +2,9 @@ package web.mvc.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
@@ -16,6 +18,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserMyPageServiceImpl implements UserMyPageService {
     private final BuyMyPageRepository buyMyPageRepository;
     private final UserMyPageRepository userMyPageRepository;
@@ -23,6 +26,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final ManagementRepository managementRepository;
     private final ReviewRepository reviewRepository;
     private final BidRepository bidRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 주문내역
@@ -42,9 +46,9 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 회원정보 가져오기
      */
     @Override
-    public UserDTO selectUser(Long seq) {
-        UserDTO userDTO = userMyPageRepository.selectUser(seq);
-        return userDTO;
+    public User selectUser(Long seq) {
+        User user = userMyPageRepository.selectUser(seq);
+        return user;
     }
 
     /**
@@ -52,19 +56,17 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Modifying
     @Override
-    public void update(UserDTO userDTO) {
+    public void update(User user, Long seq) {
+        log.info(user.toString());
 
-        // 일단 아이디에 해당하는 값 찾아서 값만 바꿔주자
-        User user = userRepository.findById(userDTO.getId());
+        // 일단 시퀀스에 해당하는 값 찾아서 값만 바꿔주자
+        User user1 = userRepository.find(seq);
+        log.info(user.getGender()); // 여기까지 나옴
 
-        user.setEmail(userDTO.getEmail());
-        user.setAddress(userDTO.getAddress());
-        user.setGender(userDTO.getGender());
-        user.setName(userDTO.getName());
-        user.setPhone(userDTO.getPhone());
-        user.setPw(userDTO.getPw());
+        int no = userRepository.updateUser(user1.getPw(), user1.getAddress(),user1.getGender(),user1.getPhone(), user1.getEmail(), seq);
+        log.info("no={}",no);
+        log.info("회원 수정 성공~");
 
-        userRepository.save(user);  // 또는 saveAndFlush() 사용 가능
     }
 
     /**
