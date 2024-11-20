@@ -1,13 +1,18 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "qa_board")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class QaBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

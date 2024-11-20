@@ -1,12 +1,17 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notice_board")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class NoticeBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +33,13 @@ public class NoticeBoard {
     @OneToOne
     @JoinColumn(name = "file_file_seq", nullable = false)
     private File file;
+
+
+    NoticeBoard(String subject, String content, String readnum, LocalDateTime regDate) {
+
+        this.subject = subject;
+        this.content = content;
+        this.readnum = readnum;
+        this.regDate = regDate;
+    }
 }

@@ -1,17 +1,25 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import java.util.List;
 
 @Entity
 @Table(name = "stock")
-@Data
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@DynamicUpdate
 public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stock_seq")
-    private Integer stockSeq;
+    private long stockSeq;
 
     @Column(name = "content", nullable = false, length = 45)
     private String content;
@@ -24,7 +32,7 @@ public class Stock {
     private Product product;
 
     @OneToMany(mappedBy = "stock")
-    private List<UserBuy> userBuys;
+    private List<UserBuyDetail> userBuyDetails;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_grade_seq", nullable = false)
@@ -33,5 +41,9 @@ public class Stock {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_organic_seq", nullable = false)
     private StockOrganic stockOrganic;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "farmer_user_seq", nullable = false)
+    private FarmerUser farmerUser;
 
 }

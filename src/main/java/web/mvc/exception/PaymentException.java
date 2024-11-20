@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class BoardSearchNotException extends  RuntimeException{
-   private final ErrorCode errorCode;
+public class PaymentException extends RuntimeException {
+    private final ErrorCode errorCode;
 }

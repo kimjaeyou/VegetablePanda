@@ -2,10 +2,13 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "streaming")
-@Data
+@Getter
+@Setter
 public class Streaming {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +27,6 @@ public class Streaming {
 
     @Column(name = "chat_room_id")
     private String chatRoomId;
-
     @Column(name = "PLAYBACK_URL")
     private String playbackUrl;
 
