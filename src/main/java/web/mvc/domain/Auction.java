@@ -25,9 +25,6 @@ public class Auction {
     @Column(name = "close_time", nullable = false)
     private LocalDateTime closeTime;
 
-    @Column(name = "bid_price")
-    private Integer bidPrice;
-
     @Column(name = "status")
     private Integer status;
 
