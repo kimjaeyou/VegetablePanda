@@ -24,6 +24,13 @@ public class ReviewComment {
     @Column(name = "score",nullable = false)
     private Integer score;
 
+    @OneToOne
+    @JoinColumn(name = "file_seq", nullable = false)
+    private File file;
+
+    @Column(name="user_seq" , nullable = false)
+    private Integer userSeq;
+
     @Column(name="reg_date" , nullable = false)
     private LocalDateTime date;
 

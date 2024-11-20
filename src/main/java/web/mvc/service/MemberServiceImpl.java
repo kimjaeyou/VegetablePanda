@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.mvc.domain.CompanyUser;
-import web.mvc.domain.FarmerUser;
-import web.mvc.domain.ManagementUser;
-import web.mvc.domain.User;
+import web.mvc.domain.*;
 import web.mvc.dto.GetAllUserDTO;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.MemberAuthenticationException;
@@ -18,13 +15,13 @@ import web.mvc.repository.*;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberServiceImpl implements MemberService {
-    private final UserRepository userRepository;
     private final FarmerUserRepository farmerRepository;
     private final NormalUserRepository normalUserRepository;
     private final CompanyUserRepository companyUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final ManagementRepository managementRepository;
-
+    private final WalletRepository walletRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -40,6 +37,15 @@ public class MemberServiceImpl implements MemberService {
         } else {
             ManagementUser managementUser = new ManagementUser(user.getId(), user.getContent());
             ManagementUser m = managementRepository.save(managementUser);
+
+            // 리뷰에 명함 넣기
+            Review review = new Review();
+            reviewRepository.save(review);
+
+            // 지갑테이블에 지갑 생성
+            UserWallet userWallet = new UserWallet();
+            walletRepository.save(userWallet);
+
             log.info("member = " + m);
             if (user.getContent().equals("farmer")) {
                 fammerIn(m, user);
@@ -105,5 +111,4 @@ public class MemberServiceImpl implements MemberService {
                 );
         companyUserRepository.save(cuser);
     }
-
 }

@@ -33,6 +33,9 @@ public class FarmerUser {
     @Column(name = "phone", nullable = false, length = 50)
     private String phone;
 
+    @Column(name = "content", length = 505)
+    private String content;
+
     @Column(name = "code", length = 60)
     private String code;
 

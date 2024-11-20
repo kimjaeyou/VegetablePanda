@@ -20,17 +20,6 @@ public class Review {
     @Column(name = "visit_num", nullable = false)
     private Integer visitNum;
 
-    @Column(name = "content", length = 505)
-    private String content;
-
-    @OneToOne
-    @JoinColumn(name = "file_file_seq", nullable = false)
-    private File file;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "managementUser_user_seq", nullable = false)
-    private ManagementUser managementUser;
-
     @OneToOne
     @JoinColumn(name = "farmer_seq", nullable = false)
     private FarmerUser farmerUser;
