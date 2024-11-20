@@ -29,7 +29,76 @@
     <properties>
         <java.version>17</java.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+
+        <!--websocket-->
+        <!-- 채팅 관련 웹소켓 디펜던시 -->
+        <!--        <dependency>-->
+        <!--            <groupId>org.webjars</groupId>-->
+        <!--            <artifactId>stomp-websocket</artifactId>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.webjars</groupId>-->
+        <!--            <artifactId>sockjs-client</artifactId>-->
+        <!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.webjars.bower</groupId>-->
+<!--            <artifactId>jquery</artifactId>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.3</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.3</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+
 
         <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
@@ -103,12 +172,12 @@
             <scope>test</scope>
         </dependency>
 
-<!--        시큐리티 주석처리-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security</groupId>-->
-<!--            <artifactId>spring-security-test</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--        시큐리티 주석처리-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.hibernate.orm</groupId>
@@ -163,6 +232,14 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.6.0</version>
         </dependency>
+
+        <!-- 결제 api 추가 -->
+        <dependency>
+            <groupId>com.github.iamport</groupId>
+            <artifactId>iamport-rest-client-java</artifactId>
+            <version>0.2.22</version>
+        </dependency>
+
     </dependencies>
 
     <build>

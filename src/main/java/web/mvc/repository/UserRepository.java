@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import web.mvc.domain.User;
 import web.mvc.dto.UserDTO;
 
+import web.mvc.domain.ManagementUser;
+import web.mvc.domain.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u from User u where u.userSeq = ?1")

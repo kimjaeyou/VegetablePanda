@@ -27,4 +27,12 @@ public class UserBuyDetail {
 
     @Column(name = "count")
     private Integer count;
+
+    // 추가
+    @Column(name = "discount")
+    private Integer discount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stock_seq", nullable = false)
+    private Stock stock;
 }

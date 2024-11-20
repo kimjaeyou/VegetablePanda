@@ -1,14 +1,15 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "review_comment")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class ReviewComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

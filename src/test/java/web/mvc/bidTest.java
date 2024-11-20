@@ -29,7 +29,7 @@ public class bidTest {
     @Test
     @DisplayName("재고 넣기")
     public void test() {
-
+    	System.err.println();
     }
 
 }
