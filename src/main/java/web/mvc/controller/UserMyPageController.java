@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
+@RequestMapping("/myPage/user")
 public class UserMyPageController {
 
     private final UserMyPageService userMyPageService;
@@ -23,7 +24,7 @@ public class UserMyPageController {
      * 일단 페이지가 잘 만들어 졌는지 테스트
      * 성공
      */
-    @GetMapping("/user/myPage")
+    @GetMapping("/")
     public String test() {
         log.info("일반 마이페이지 test");
         return "일반 마이페이지";
@@ -34,7 +35,7 @@ public class UserMyPageController {
      * 화면에 해당되는 아이디의 주문내역을 출력해주기.
      * 성공
      */
-    @GetMapping("/user/buyList/{seq}")
+    @GetMapping("/buyList/{seq}")
     public String buyList(@PathVariable Long seq, Model model) {
         log.info("주문내역 조회시작");
         // 토큰값에서 시퀀스 꺼내서 그 시퀀스를 들고 가야하는데... 어떻게 하지...
@@ -42,7 +43,7 @@ public class UserMyPageController {
         List<UserBuyDTO> list = userMyPageService.buyList(seq);
         model.addAttribute("list", list);
         log.info("list = {}", list);
-        return "/user/buyList/" + seq;
+        return "/buyList/" + seq;
     }
 
     /**
@@ -50,22 +51,22 @@ public class UserMyPageController {
      * 일단 값은 들고와야하니까..
      * 얘도 성공
      */
-    @GetMapping("/user/list/{seq}")
+    @GetMapping("/list/{seq}")
     public String selectUser(@PathVariable Long seq, Model model) {
         User user = userMyPageService.selectUser(seq);
         log.info("user = {}", user.getId());
         model.addAttribute("user", user);
-        return "/user/list/" + seq;
+        return "/list/" + seq;
     }
 
     /**
      * 회원정보 수정
      * 성공
      */
-    @PostMapping("/user/update/{seq}")
+    @PostMapping("/update/{seq}")
     public String update(@RequestBody User user, @PathVariable Long seq) {
         userMyPageService.update(user, seq);
-        return "redirect:/user/update";
+        return "redirect:/update";
     }
 
     /**
@@ -76,7 +77,7 @@ public class UserMyPageController {
      * <p>
      * 성공
      */
-    @PostMapping("/user/delete/{seq}")
+    @PostMapping("/delete/{seq}")
     public String delete(@PathVariable Long seq) {
         userMyPageService.delete(seq);
         return "redirect:/main"; // 이건 아직 안넣었음, 왜냐면 이거 탈퇴하면 메인페이지로 갈라고, 메인페이지 url몰라...그래서 일단 main이라고만 적어두자
@@ -87,7 +88,7 @@ public class UserMyPageController {
      * 충전은 인영님이 결제 API로 넣어주신다고 하셨으니까 일단 조회만 되게 해보자
      * 성공
      */
-    @PostMapping("/user/point/{seq}")
+    @PostMapping("/point/{seq}")
     public String point(@PathVariable Long seq, Model model) {
         int point = userMyPageService.point(seq);
         log.info("point = {}", point);
@@ -103,12 +104,12 @@ public class UserMyPageController {
      * 리뷰 조회
      * 성공
      */
-    @GetMapping("/user/review/{seq}")
+    @GetMapping("/review/{seq}")
     public String review(@PathVariable Long seq, Model model) {
         List<ReviewComment> list = userMyPageService.review(seq);
         model.addAttribute("list", list);
         log.info("list = {}", list);
-        return "/user/review/" + seq;
+        return "/review/" + seq;
     }
 
     /**
@@ -116,10 +117,10 @@ public class UserMyPageController {
      * 일단 리뷰 삭제
      * 나중에 뭐 자유게시판 나오면 또 하겠씁니다.
      */
-    @PostMapping("/user/review/delete/{userSeq}/{reviewSeq}")
+    @PostMapping("/review/delete/{userSeq}/{reviewSeq}")
     public String deleteReview(@PathVariable Long reviewSeq, @PathVariable Long userSeq) {
         userMyPageService.deleteReview(reviewSeq, userSeq);
-        return "/user/review/delete/" + userSeq + reviewSeq;
+        return "/review/delete/" + userSeq + reviewSeq;
     }
 
     /**
@@ -133,10 +134,10 @@ public class UserMyPageController {
      * 18:09 : 이거 나중에 할게여... 너무 답이 안나와요
      * 테이블이 너무 엉켜있어요
      */
-    @GetMapping("/user/auction/{seq}")
+    @GetMapping("/auction/{seq}")
     public String auctionList(@PathVariable Long seq, Model model) {
         List<Bid> list = userMyPageService.auctionList(seq);
         model.addAttribute("list", list);
-        return "/user/auction/" + seq;
+        return "/auction/" + seq;
     }
 }

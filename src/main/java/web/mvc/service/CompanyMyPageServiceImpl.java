@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.Bid;
 import web.mvc.domain.CompanyUser;
@@ -25,6 +26,8 @@ public class CompanyMyPageServiceImpl implements CompanyMyPageService {
     private final WalletRepository walletRepository;
     private final CompanyMyPageRepository companyMyPageRepository;
     private final CompanyUserRepository companyUserRepository;
+    private final PasswordEncoder passwordEncoder;
+
     /**
      * 주문내역
      */
@@ -55,13 +58,10 @@ public class CompanyMyPageServiceImpl implements CompanyMyPageService {
     @Override
     public void update(CompanyUser companyUser, Long seq) {
         log.info(companyUser.toString());
+        String pw = passwordEncoder.encode(companyUser.getPw());
+        int no = companyUserRepository.updateUser(pw, companyUser.getAddress(), companyUser.getPhone(), companyUser.getEmail(), seq);
+        log.info("no={}", no);
 
-        // 일단 시퀀스에 해당하는 값 찾아서 값만 바꿔주자
-        CompanyUser companyUser1 = companyUserRepository.find(seq);
-        log.info(companyUser1.getCompanyId()); // 여기까지 나옴
-
-        int no = companyUserRepository.updateUser(companyUser1.getPw(), companyUser1.getAddress(),companyUser1.getPhone(), companyUser1.getEmail(), seq);
-        log.info("no={}",no);
         log.info("회원 수정 성공~");
 
     }
@@ -72,7 +72,7 @@ public class CompanyMyPageServiceImpl implements CompanyMyPageService {
     @Override
     public void delete(Long seq) {
         int i = companyMyPageRepository.delete(seq);
-        log.info("i = {}",i);
+        log.info("i = {}", i);
     }
 
     // 포인트 조회
@@ -99,7 +99,7 @@ public class CompanyMyPageServiceImpl implements CompanyMyPageService {
     @Override
     public void deleteReview(Long reviewSeq, Long userSeq) {
         int no = reviewRepository.deleteReview(reviewSeq, userSeq);
-        log.info("no = {}",no);
+        log.info("no = {}", no);
     }
 
     /**
@@ -108,7 +108,7 @@ public class CompanyMyPageServiceImpl implements CompanyMyPageService {
      */
     @Override
     public List<Bid> auctionList(Long seq) {
-        List <Bid> list = bidRepository.auctionList(seq);
+        List<Bid> list = bidRepository.auctionList(seq);
         return list;
     }
 }

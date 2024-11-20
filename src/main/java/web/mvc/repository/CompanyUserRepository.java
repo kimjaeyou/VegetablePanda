@@ -10,7 +10,7 @@ import web.mvc.domain.User;
 public interface CompanyUserRepository extends JpaRepository<CompanyUser, Long> {
     CompanyUser findByUserSeq(Long userSeq);
 
-    @Query("select u from User u where u.userSeq = ?1")
+    @Query("select u from CompanyUser u where u.userSeq = ?1")
     CompanyUser find(Long seq);
 
     @Modifying

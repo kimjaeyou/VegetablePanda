@@ -35,7 +35,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void signUp(GetAllUserDTO user) {
-
         if (managementRepository.existsById(user.getId()) > 0) {
             throw new MemberAuthenticationException(ErrorCode.DUPLICATED);
         } else {

@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Slf4j
+@RequestMapping("/myPage/company")
 public class CompanyMyPageController {
 
     private final CompanyMyPageService companyMyPageService;
@@ -23,7 +24,7 @@ public class CompanyMyPageController {
      * 일단 페이지가 잘 만들어 졌는지 테스트
      * 근데 이건 왜 안되냐
      */
-    @GetMapping("/company/myPage")
+    @GetMapping("/")
     public String test() {
         log.info("업체 마이페이지 test");
         return "업체 마이페이지";
@@ -33,7 +34,7 @@ public class CompanyMyPageController {
      * 주문내역
      * 화면에 해당되는 아이디의 주문내역을 출력해주기.
      */
-    @GetMapping("/company/buyList/{seq}")
+    @GetMapping("/buyList/{seq}")
     public String buyList(@PathVariable Long seq, Model model) {
         log.info("주문내역 조회시작");
         // 토큰값에서 시퀀스 꺼내서 그 시퀀스를 들고 가야하는데... 어떻게 하지...
@@ -41,25 +42,25 @@ public class CompanyMyPageController {
         List<UserBuyDTO> list = companyMyPageService.buyList(seq);
         model.addAttribute("list", list);
         log.info("list = {}", list);
-        return "/company/buyList/" + seq;
+        return "redirect:/company/buyList/" + seq;
     }
 
     /**
      * 회원의 정보 조회
      * 일단 값은 들고와야하니까..
      */
-    @GetMapping("/company/list/{seq}")
+    @GetMapping("/list/{seq}")
     public String selectUser(@PathVariable Long seq, Model model) {
         CompanyUser companyUser = companyMyPageService.selectUser(seq);
-        log.info("companyUser = {}", companyUser.getCompanyId());
+        log.info("companyUser = {}", companyUser);
         model.addAttribute("companyUser", companyUser);
-        return "/CompanyUser/list/" + seq;
+        return "redirect:/CompanyUser/list/" + seq;
     }
 
     /**
      * 회원정보 수정
      */
-    @PostMapping("/company/update/{seq}")
+    @PostMapping("/update/{seq}")
     public String update(@RequestBody CompanyUser companyUser, @PathVariable Long seq) {
         companyMyPageService.update(companyUser, seq);
         return "redirect:/company/update";
@@ -71,17 +72,17 @@ public class CompanyMyPageController {
      * 그냥 계정 정지임. 그럼 상태값을 바꿔주기만 하면될듯.
      * 근데 이거 Post로 해도 되나...?
      */
-    @PostMapping("/company/delete/{seq}")
+    @PostMapping("/delete/{seq}")
     public String delete(@PathVariable Long seq) {
         companyMyPageService.delete(seq);
-        return "redirect:/main"; // 이건 아직 안넣었음, 왜냐면 이거 탈퇴하면 메인페이지로 갈라고, 메인페이지 url몰라...그래서 일단 main이라고만 적어두자
+        return "redirect:/main"; // 이건 아직 안넣었음, 왜냐면 이거 탈퇴하면 메인페이지로 갈라고, 메인페이지 url몰라... 그래서 일단 main이라고만 적어두자
     }
 
     /**
      * 지갑 잔액조회
      * 충전은 인영님이 결제 API로 넣어주신다고 하셨으니까 일단 조회만 되게 해보자
      */
-    @PostMapping("/company/point/{seq}")
+    @PostMapping("/point/{seq}")
     public String point(@PathVariable Long seq, Model model) {
         int point = companyMyPageService.point(seq);
         log.info("point = {}", point);
@@ -94,12 +95,12 @@ public class CompanyMyPageController {
      * 나의 활동내역 리스트
      * 리뷰 조회
      */
-    @GetMapping("/company/review/{seq}")
+    @GetMapping("/review/{seq}")
     public String review(@PathVariable Long seq, Model model) {
         List<ReviewComment> list = companyMyPageService.review(seq);
         model.addAttribute("list", list);
         log.info("list = {}", list);
-        return "/company/review/" + seq;
+        return "redirect:/company/review/" + seq;
     }
 
     /**
@@ -107,10 +108,10 @@ public class CompanyMyPageController {
      * 일단 리뷰 삭제
      * 나중에 뭐 자유게시판 나오면 또 하겠씁니다.
      */
-    @PostMapping("/company/review/delete/{userSeq}/{reviewSeq}")
+    @PostMapping("/review/delete/{userSeq}/{reviewSeq}")
     public String deleteReview(@PathVariable Long reviewSeq, @PathVariable Long userSeq) {
         companyMyPageService.deleteReview(reviewSeq, userSeq);
-        return "/company/review/delete/" + userSeq + reviewSeq;
+        return "redirect:/company/review/delete/" + userSeq + "/" + reviewSeq;
     }
 
     /**
@@ -124,10 +125,10 @@ public class CompanyMyPageController {
      * 18:09 : 이거 나중에 할게여... 너무 답이 안나와요
      * 테이블이 너무 엉켜있어요
      */
-    @GetMapping("/company/auction/{seq}")
+    @GetMapping("/auction/{seq}")
     public String auctionList(@PathVariable Long seq, Model model) {
         List<Bid> list = companyMyPageService.auctionList(seq);
         model.addAttribute("list", list);
-        return "/company/auction/" + seq;
+        return "redirect:/company/auction/" + seq;
     }
 }
