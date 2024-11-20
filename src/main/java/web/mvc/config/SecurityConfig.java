@@ -1,5 +1,6 @@
 package web.mvc.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -11,19 +12,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import web.mvc.jwt.JWTFilter;
 import web.mvc.jwt.JWTUtil;
 import web.mvc.jwt.LoginFilter;
+
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Slf4j
-public class SecurityConfig{
+public class SecurityConfig {
 
     //AuthenticationManager 가  인자로 받을 AuthenticationConfiguraion 객체 생성자  주입
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+
     //AuthenticationManager Bean 등록
     @Bean
     public AuthenticationManager authenticationManager(
@@ -40,6 +46,26 @@ public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        //CORS 설정
+        http.cors((corsCustomizer ->
+                corsCustomizer.configurationSource(new CorsConfigurationSource()
+                {
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                        CorsConfiguration configuration = new CorsConfiguration();
+
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                        configuration.setAllowCredentials(true);
+
+                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+                        configuration.setMaxAge(3600L);
+
+                        configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                        return configuration;
+                    }
+                })));
+
         log.info("Security FilterChain=======================>");
         http.csrf((auth)->auth.disable())
                 .formLogin((auth)->auth.disable())
@@ -57,8 +83,9 @@ public class SecurityConfig{
                 .requestMatchers("/index","/members","/members/**","boards", "/stock", "/stock/**", "/stock/**").permitAll()
                 .requestMatchers("/swagger-ui", "/swagger-ui/**",
                         "/api/logistics","/api/swagger-config","/v3/api-docs/**").permitAll()
-                .requestMatchers("/test/**","http://openapi.seoul.go.kr:8088/**").permitAll()
-                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/test/**","http://openapi.seoul.go.kr:8088/**","/topic/notifications").permitAll()
+                .requestMatchers("/ws/**","/send").permitAll()
+                .requestMatchers("/admin").permitAll()
                 .anyRequest().authenticated()
         );
 
