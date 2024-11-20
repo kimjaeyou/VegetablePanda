@@ -32,9 +32,11 @@ public class PaymentServiceImpl implements PaymentService {
     private final FarmerUserRepository farmerUserRepository;
     private final CompanyUserRepository companyUserRepository;
     private final UserRepository userRepository;
+    private final UserBuyRepository buyRepository;
 
     private final IamportClient iamportClient;
     private final PaymentRepository paymentRepository;
+    private final UserBuyRepository userBuyRepository;
 
     @Override
     public UserBuy paymentInsert(UserBuy userBuy) {
@@ -55,12 +57,29 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public RequestPayDTO findRequestDto(String orderUid) {
+    public RequestPayDTO findRequestDto(int status, String orderUid) {
         //UserCharge userCharge = userChargeRepository.findUserChargeAndPaymentAndManagementUser(orderUid).orElseThrow(()-> new PaymentException(ErrorCode.ORDER_NOTFOUND));
+        ManagementUser userM = null;
         List<UserCharge> userCharge = userChargeRepository.findByOrderUid(orderUid);
-        System.out.println(userCharge);
         log.info("userChage : {}", userCharge);
-        ManagementUser userM = userCharge.get(0).getManagementUser();
+        userM = userCharge.get(0).getManagementUser();
+
+        switch(status){
+            case 1: // 포인트 충전
+                userCharge = userChargeRepository.findByOrderUid(orderUid);
+                log.info("userChage : {}", userCharge);
+                userM = userCharge.get(0).getManagementUser();
+
+                break;
+            case 2: // 일반 결제 요청
+                UserBuy userBuy = userBuyRepository.findById(Integer.parseInt(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
+                System.out.println(userBuy);
+                log.info("userBuy : {}", userBuy);
+                userM = userBuy.getManagementUser();
+
+                break;
+        }
+
         RequestPayDTO requestPayDTO;
         log.info("findRequestDto userM : {}", userM);
         //User user;

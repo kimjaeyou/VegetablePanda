@@ -22,9 +22,9 @@ public interface PaymentService {
     public UserCharge getLastCharge();
 
     /**
-     * 결제 요청 데이터 조회
+     * 충전 및 일반 결제 요청 데이터 조회 : 충전 1, 일반결제 2
      */
-    RequestPayDTO findRequestDto (String orderUid);
+    RequestPayDTO findRequestDto (int status, String orderUid);
 
     /**
      * 결제 후 검증
