@@ -5,67 +5,64 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Bid;
+import web.mvc.domain.CompanyUser;
 import web.mvc.domain.ReviewComment;
-import web.mvc.domain.User;
 import web.mvc.dto.UserBuyDTO;
-import web.mvc.service.UserMyPageService;
+import web.mvc.service.CompanyMyPageService;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 @Slf4j
-public class UserMyPageController {
+public class CompanyMyPageController {
 
-    private final UserMyPageService userMyPageService;
+    private final CompanyMyPageService companyMyPageService;
 
     /**
      * 일단 페이지가 잘 만들어 졌는지 테스트
-     * 성공
+     * 근데 이건 왜 안되냐
      */
-    @GetMapping("/user/myPage")
+    @GetMapping("/company/myPage")
     public String test() {
-        log.info("일반 마이페이지 test");
-        return "일반 마이페이지";
+        log.info("업체 마이페이지 test");
+        return "업체 마이페이지";
     }
 
     /**
      * 주문내역
      * 화면에 해당되는 아이디의 주문내역을 출력해주기.
-     * 성공
      */
-    @GetMapping("/user/buyList/{seq}")
+    @GetMapping("/company/buyList/{seq}")
     public String buyList(@PathVariable Long seq, Model model) {
         log.info("주문내역 조회시작");
         // 토큰값에서 시퀀스 꺼내서 그 시퀀스를 들고 가야하는데... 어떻게 하지...
 
-        List<UserBuyDTO> list = userMyPageService.buyList(seq);
+        List<UserBuyDTO> list = companyMyPageService.buyList(seq);
         model.addAttribute("list", list);
         log.info("list = {}", list);
-        return "/user/buyList/" + seq;
+        return "/company/buyList/" + seq;
     }
 
     /**
      * 회원의 정보 조회
      * 일단 값은 들고와야하니까..
-     * 얘도 성공
      */
-    @GetMapping("/user/list/{seq}")
+    @GetMapping("/company/list/{seq}")
     public String selectUser(@PathVariable Long seq, Model model) {
-        User user = userMyPageService.selectUser(seq);
-        log.info("user = {}", user.getId());
-        model.addAttribute("user", user);
-        return "/user/list/" + seq;
+        CompanyUser companyUser = companyMyPageService.selectUser(seq);
+        log.info("companyUser = {}", companyUser.getCompanyId());
+        model.addAttribute("companyUser", companyUser);
+        return "/CompanyUser/list/" + seq;
     }
 
     /**
      * 회원정보 수정
-     * 성공
      */
-    @PostMapping("/user/update/{seq}")
-    public String update(@RequestBody User user, @PathVariable Long seq) {
-        userMyPageService.update(user, seq);
-        return "redirect:/user/update";
+    @PostMapping("/company/update/{seq}")
+    public String update(@RequestBody CompanyUser companyUser, @PathVariable Long seq) {
+        companyMyPageService.update(companyUser, seq);
+        return "redirect:/company/update";
     }
 
     /**
@@ -73,42 +70,36 @@ public class UserMyPageController {
      * 사실상 말이 탈퇴지
      * 그냥 계정 정지임. 그럼 상태값을 바꿔주기만 하면될듯.
      * 근데 이거 Post로 해도 되나...?
-     * <p>
-     * 성공
      */
-    @PostMapping("/user/delete/{seq}")
+    @PostMapping("/company/delete/{seq}")
     public String delete(@PathVariable Long seq) {
-        userMyPageService.delete(seq);
+        companyMyPageService.delete(seq);
         return "redirect:/main"; // 이건 아직 안넣었음, 왜냐면 이거 탈퇴하면 메인페이지로 갈라고, 메인페이지 url몰라...그래서 일단 main이라고만 적어두자
     }
 
     /**
      * 지갑 잔액조회
      * 충전은 인영님이 결제 API로 넣어주신다고 하셨으니까 일단 조회만 되게 해보자
-     * 성공
      */
-    @PostMapping("/user/point/{seq}")
+    @PostMapping("/company/point/{seq}")
     public String point(@PathVariable Long seq, Model model) {
-        int point = userMyPageService.point(seq);
+        int point = companyMyPageService.point(seq);
         log.info("point = {}", point);
         model.addAttribute("point", point);
         return "redirect:/user/point";
     }
 
-    // 여기 두개는 어차피 똑같은 코드일테니까 일단 위에부터 해결해보자...
-    // 17:35 : 이거 먼저 해야되네...
 
     /**
      * 나의 활동내역 리스트
      * 리뷰 조회
-     * 성공
      */
-    @GetMapping("/user/review/{seq}")
+    @GetMapping("/company/review/{seq}")
     public String review(@PathVariable Long seq, Model model) {
-        List<ReviewComment> list = userMyPageService.review(seq);
+        List<ReviewComment> list = companyMyPageService.review(seq);
         model.addAttribute("list", list);
         log.info("list = {}", list);
-        return "/user/review/" + seq;
+        return "/company/review/" + seq;
     }
 
     /**
@@ -116,10 +107,10 @@ public class UserMyPageController {
      * 일단 리뷰 삭제
      * 나중에 뭐 자유게시판 나오면 또 하겠씁니다.
      */
-    @PostMapping("/user/review/delete/{userSeq}/{reviewSeq}")
+    @PostMapping("/company/review/delete/{userSeq}/{reviewSeq}")
     public String deleteReview(@PathVariable Long reviewSeq, @PathVariable Long userSeq) {
-        userMyPageService.deleteReview(reviewSeq, userSeq);
-        return "/user/review/delete/" + userSeq + reviewSeq;
+        companyMyPageService.deleteReview(reviewSeq, userSeq);
+        return "/company/review/delete/" + userSeq + reviewSeq;
     }
 
     /**
@@ -133,10 +124,10 @@ public class UserMyPageController {
      * 18:09 : 이거 나중에 할게여... 너무 답이 안나와요
      * 테이블이 너무 엉켜있어요
      */
-    @GetMapping("/user/auction/{seq}")
+    @GetMapping("/company/auction/{seq}")
     public String auctionList(@PathVariable Long seq, Model model) {
-        List<Bid> list = userMyPageService.auctionList(seq);
+        List<Bid> list = companyMyPageService.auctionList(seq);
         model.addAttribute("list", list);
-        return "/user/auction/" + seq;
+        return "/company/auction/" + seq;
     }
 }

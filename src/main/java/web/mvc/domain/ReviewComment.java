@@ -3,6 +3,8 @@ package web.mvc.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "review_comment")
 @Getter
@@ -16,11 +18,14 @@ public class ReviewComment {
     @Column(name = "review_comment_seq")
     private Long reviewCommentSeq;
 
-    @Column(name = "content", length = 80)
+    @Column(name = "content", length = 80,nullable = false)
     private String content;
 
-    @Column(name = "score")
+    @Column(name = "score",nullable = false)
     private Integer score;
+
+    @Column(name="reg_date" , nullable = false)
+    private LocalDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_seq", nullable = false)

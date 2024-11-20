@@ -4,13 +4,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.Bid;
+import web.mvc.domain.CompanyUser;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
 import web.mvc.dto.UserBuyDTO;
-import web.mvc.dto.UserDTO;
 import web.mvc.repository.*;
 
 import java.util.List;
@@ -19,13 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class UserMyPageServiceImpl implements UserMyPageService {
+public class CompanyMyPageServiceImpl implements CompanyMyPageService {
     private final BuyMyPageRepository buyMyPageRepository;
-    private final UserMyPageRepository userMyPageRepository;
-    private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
     private final BidRepository bidRepository;
     private final WalletRepository walletRepository;
+    private final CompanyMyPageRepository companyMyPageRepository;
+    private final CompanyUserRepository companyUserRepository;
     /**
      * 주문내역
      */
@@ -44,9 +43,9 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 회원정보 가져오기
      */
     @Override
-    public User selectUser(Long seq) {
-        User user = userMyPageRepository.selectUser(seq);
-        return user;
+    public CompanyUser selectUser(Long seq) {
+        CompanyUser companyUser = companyMyPageRepository.selectUser(seq);
+        return companyUser;
     }
 
     /**
@@ -54,14 +53,14 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Modifying
     @Override
-    public void update(User user, Long seq) {
-        log.info(user.toString());
+    public void update(CompanyUser companyUser, Long seq) {
+        log.info(companyUser.toString());
 
         // 일단 시퀀스에 해당하는 값 찾아서 값만 바꿔주자
-        User user1 = userRepository.find(seq);
-        log.info(user.getGender()); // 여기까지 나옴
+        CompanyUser companyUser1 = companyUserRepository.find(seq);
+        log.info(companyUser1.getCompanyId()); // 여기까지 나옴
 
-        int no = userRepository.updateUser(user1.getPw(), user1.getAddress(),user1.getGender(),user1.getPhone(), user1.getEmail(), seq);
+        int no = companyUserRepository.updateUser(companyUser1.getPw(), companyUser1.getAddress(),companyUser1.getPhone(), companyUser1.getEmail(), seq);
         log.info("no={}",no);
         log.info("회원 수정 성공~");
 
@@ -72,7 +71,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public void delete(Long seq) {
-        int i = userMyPageRepository.delete(seq);
+        int i = companyMyPageRepository.delete(seq);
         log.info("i = {}",i);
     }
 
