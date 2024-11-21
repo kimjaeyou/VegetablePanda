@@ -80,7 +80,7 @@ public class PaymentController {
     public ResponseEntity<?> paymentPage(@PathVariable("id") String orderUid, int status) {
         // 결제정보 불러오기
         log.info("paymentPage");
-        RequestPayDTO requestDTO = paymentService.findRequestDto(status, orderUid);
+        RequestPayDTO requestDTO = paymentService.findRequestDto(orderUid, status);
         ResponseEntity<?> entity = new ResponseEntity(requestDTO, HttpStatus.OK);
         return entity;
     }
@@ -92,6 +92,7 @@ public class PaymentController {
 
         log.info("결제 응답 : {}", iamportResponse.getResponse().toString());
         return new ResponseEntity<>(iamportResponse, HttpStatus.OK);
+        // 유저 wallet 정보 or 결제정보 반환
     }
 
 }
