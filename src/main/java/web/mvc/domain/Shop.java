@@ -13,7 +13,7 @@ public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "shop_seq")
-    private Integer shopSeq;
+    private Long shopSeq;
 
     @OneToOne
     @JoinColumn(name = "stock_seq", nullable = false)

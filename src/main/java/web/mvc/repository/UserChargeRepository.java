@@ -8,7 +8,7 @@ import web.mvc.domain.UserCharge;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserChargeRepository extends JpaRepository<UserCharge, Integer> {
+public interface UserChargeRepository extends JpaRepository<UserCharge, Long> {
 
     @Query(value = "select u from UserCharge u order by u.userChargeSeq desc limit 1")
     UserCharge getLastCharge();

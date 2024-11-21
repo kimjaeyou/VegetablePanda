@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ProductCategoryDTO {
-    private int productCategorySeq;
+    private long productCategorySeq;
     private String content;
     private List<ProductDTO> products;
 }

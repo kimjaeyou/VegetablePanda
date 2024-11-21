@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class StockDTO {
 
-    private int stockSeq;
+    private long stockSeq;
     private String content;
     private int count;
     private String color;

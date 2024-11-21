@@ -13,7 +13,7 @@ public class File {
     @Id
     @Column(name = "file_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer fileSeq;
+    private Long fileSeq;
 
     @Column(name = "path", length = 300)
     private String path;

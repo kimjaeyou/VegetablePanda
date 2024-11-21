@@ -13,7 +13,7 @@ public class Streaming {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "streaming_seq")
-    private Integer streamingSeq;
+    private Long streamingSeq;
 
     @Column(name = "token")
     private String token;
