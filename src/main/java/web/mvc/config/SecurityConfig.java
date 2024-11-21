@@ -78,7 +78,7 @@ public class SecurityConfig {
 
         // 권한 허용 설정
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/index", "/user", "/user/**", "boards").permitAll()
+                .requestMatchers("/index", "/user", "/user/**", "boards", "/myPage/**").permitAll()
                 .requestMatchers("/members", "/members/**").permitAll()
                 .requestMatchers("/swagger-ui", "/swagger-ui/**", "/api/logistics", "/api/swagger-config", "/v3/api-docs/**").permitAll()
                 .requestMatchers("http://openapi.seoul.go.kr:8088/**", "/topic/notifications").permitAll()

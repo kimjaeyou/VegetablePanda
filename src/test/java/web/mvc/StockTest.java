@@ -65,6 +65,5 @@ public class StockTest {
 
         log.info("Stock 정보 : ");
         stockRepository.save(Stock.builder().content("알감자").count(500).product(Product.builder().productSeq(1L).build()).stockGrade(StockGrade.builder().stockGradeSeq(1L).build()).stockOrganic(StockOrganic.builder().stockOrganicSeq(1L).build()).build());
-
     }
 }
