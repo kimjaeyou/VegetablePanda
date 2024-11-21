@@ -24,9 +24,8 @@ public class ManagementUser {
     @Column(name = "user_id", nullable = false, length = 50, unique = true)
     private String id;
 
-
-    @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
-    private List<Review> reviews;
+    @OneToOne(mappedBy = "managementUser")
+    private Review review;
 
     @OneToOne(mappedBy = "managementUser")
     private UserWallet userWallet;

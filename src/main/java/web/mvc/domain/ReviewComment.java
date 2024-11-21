@@ -21,7 +21,7 @@ public class ReviewComment {
     @Column(name = "content", length = 80,nullable = false)
     private String content;
 
-    @Column(name = "score",nullable = false)
+    @Column(name = "score", nullable = false)
     private Integer score;
 
     @OneToOne
@@ -29,7 +29,7 @@ public class ReviewComment {
     private File file;
 
     @Column(name="user_seq" , nullable = false)
-    private Integer userSeq;
+    private Long userSeq;
 
     @Column(name="reg_date" , nullable = false)
     private LocalDateTime date;

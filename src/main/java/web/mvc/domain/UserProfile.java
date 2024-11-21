@@ -13,7 +13,7 @@ public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_profile_seq")
-    private Integer userProfileSeq;
+    private Long userProfileSeq;
 
     @Column(name = "file_path", length = 60)
     private String filePath;

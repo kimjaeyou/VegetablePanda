@@ -17,7 +17,7 @@ public class FammerGrade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fammer_grade_seq")
-    private Integer fammerGradeSeq;
+    private Long fammerGradeSeq;
 
     @Column(name = "grade_content", nullable = false, length = 60)
     private String gradeContent;

@@ -21,8 +21,8 @@ public class Review {
     private Integer visitNum;
 
     @OneToOne
-    @JoinColumn(name = "farmer_seq", nullable = false)
-    private FarmerUser farmerUser;
+    @JoinColumn(name = "user_seq", nullable = false)
+    private ManagementUser managementUser;
 
     @OneToMany(mappedBy = "review")
     private List<ReviewComment> reviewComments;

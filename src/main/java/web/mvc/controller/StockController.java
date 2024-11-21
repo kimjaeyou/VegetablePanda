@@ -26,7 +26,7 @@ public class StockController {
 
     // 상품 등록 -> 상품 이미지 어떻게 하는지
     @PostMapping("/stock")
-    public ResponseEntity<?> insert(int productSeq, int stockGradeSeq, int stockOrganicSeq, long farmerSeq, @RequestBody StockDTO stockDTO) {
+    public ResponseEntity<?> insert(Long productSeq, Long stockGradeSeq, Long stockOrganicSeq, Long farmerSeq, @RequestBody StockDTO stockDTO) {
         log.info("Controller Product : {}", stockDTO);
 
         Stock stock = modelMapper.map(stockDTO, Stock.class);

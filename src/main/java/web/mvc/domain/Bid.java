@@ -15,7 +15,7 @@ public class Bid {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bid_seq")
-    private Integer bidSeq;
+    private Long bidSeq;
 
     @Column(name = "price", nullable = false)
     private Integer price;

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class UserBuyRes {
-    private Integer buySeq;
+    private Long buySeq;
     private User user;
     private LocalDateTime buyDate;
     private Integer state;
