@@ -11,7 +11,7 @@ import org.springframework.test.annotation.Rollback;
 import web.mvc.domain.*;
 import web.mvc.repository.*;
 
-//@SpringBootTest
+@SpringBootTest
 @Rollback(false)
 @Slf4j
 public class ProductTest {
@@ -36,11 +36,11 @@ public class ProductTest {
     @Rollback(false)
     @Disabled
     public void singupTest(){
-        managementRepository.save(ManagementUser.builder().content("farmer").id("farmer").build());
         farmerUserRepository.save(FarmerUser.builder().farmerId("farmer").name("farmer").pw(passwordEncoder.encode("1234")).address("Ori").code("code").account("111-1111").phone("000-1111-2222").email("farmer@gmail.com").role("ROLE_FARMER").build());
+        managementRepository.save(ManagementUser.builder().content("farmer").id("farmer").build());
 
-        managementRepository.save(ManagementUser.builder().content("user").id("user").build());
         normalUserRepository.save(User.builder().id("user").name("user").pw(passwordEncoder.encode("1234")).address("Ori").phone("000-1111-2222").state(0).email("user@gmail.com").gender("M").role("ROLE_USER").build());
+        managementRepository.save(ManagementUser.builder().content("user").id("user").build());
     }
 
     /**

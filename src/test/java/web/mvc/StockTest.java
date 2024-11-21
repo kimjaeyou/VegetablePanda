@@ -14,7 +14,7 @@ import web.mvc.repository.StockGradeRepository;
 import web.mvc.repository.StockOrganicRepository;
 import web.mvc.repository.StockRepository;
 
-//@SpringBootTest
+@SpringBootTest
 @Rollback(false)
 @Slf4j
 public class StockTest {
