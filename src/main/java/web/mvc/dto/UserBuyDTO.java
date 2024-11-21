@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class UserBuyDTO {
-    private Integer userBuySeq; // 주문번호
+    private Long userBuySeq; // 주문번호
     private String content; // 상품명
     private Integer price; // 가격
     private Integer count; // 수량

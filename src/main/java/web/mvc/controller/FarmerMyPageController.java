@@ -39,15 +39,6 @@ public class FarmerMyPageController {
         return "redirect:/buyList/" + seq;
     }
 
-
-    /**
-     * 물류 관리
-     * 일단 처음엔 내가 등록한 물류들 리스트 출력
-     * 부수 기능 : 등록 , 수정, 삭제
-     * 인영님께서 만들어주신 귀한 자료 꿀꺽좀 하겠습니다 ㅎㅎ
-     */
-
-
     /**
      * 회원의 정보 조회
      * 일단 값은 들고와야하니까..
