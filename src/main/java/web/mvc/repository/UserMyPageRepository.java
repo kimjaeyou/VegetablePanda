@@ -14,15 +14,11 @@ public interface UserMyPageRepository extends JpaRepository<User, Long> {
 
     // 수정할 회원정보 조회 값 출력
     @Query("select u from User u where u.userSeq = ?1 ")
-    UserDTO selectUser(Long seq);
+    User selectUser(Long seq);
 
     //회원 탈퇴(그냥 상태값 바꾸는거임.)
     @Modifying
-    @Query("update User u set u.state = 0")
-    void delete(int state);
-
-    // 포인트값 조회해서 리턴시켜주자
-    @Query("select p from UserWallet p where p.point=?1")
-    int point (Long seq);
+    @Query("update User u set u.state = 0 where u.userSeq = ?1")
+    int delete(Long seq);
 
 }

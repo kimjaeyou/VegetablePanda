@@ -17,11 +17,11 @@ public class UserBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "buy_seq")
-    private Integer buySeq;
+    private Long buySeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)
-    private User user;
+    private ManagementUser managementUser;
 
     @Column(name = "buy_date")
     private LocalDateTime buyDate;

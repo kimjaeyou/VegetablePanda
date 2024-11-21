@@ -17,12 +17,12 @@ public interface NoticeBoardService {
     /**
      * 공지사항 수정
      * */
-    public NoticeBoard noticeUpdate(@PathVariable Integer boardNoSeq, @RequestBody NoticeBoard noticeBoard);
+    public NoticeBoard noticeUpdate(@PathVariable Long boardNoSeq, @RequestBody NoticeBoard noticeBoard);
 
     /**
      * 공지사항 조회
      * */
-    public NoticeBoard noticeFindBySeq(@PathVariable Integer boardNoSeq,NoticeBoard noticeBoard);
+    public NoticeBoard noticeFindBySeq(@PathVariable Long boardNoSeq,NoticeBoard noticeBoard);
 
     /**
      * 전체 조회
@@ -32,6 +32,6 @@ public interface NoticeBoardService {
     /**
      * 공지사항 삭제
      * */
-    public String noticeDelete(@PathVariable Integer boardNoSeq);
+    public String noticeDelete(@PathVariable Long boardNoSeq);
     
 }

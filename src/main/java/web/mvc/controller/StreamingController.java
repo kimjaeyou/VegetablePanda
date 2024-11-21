@@ -49,7 +49,7 @@
          * 상태를 0으로 변경
          */
         @PostMapping("/release/{id}")
-        public ResponseEntity<String> releaseStreaming(@PathVariable Integer id) {
+        public ResponseEntity<String> releaseStreaming(@PathVariable Long id) {
             Streaming streaming = streamingService.findById(id);
             if (streaming != null) {
                 streaming.setState(0);
@@ -66,7 +66,7 @@
          * 상태를 2로 변경 (승인 대기)
          */
         @PostMapping("/request/{id}")
-        public ResponseEntity<String> requestStreaming(@PathVariable Integer id) {
+        public ResponseEntity<String> requestStreaming(@PathVariable Long id) {
             Streaming streaming = streamingService.findById(id);
             if (streaming != null) {
                 streaming.setState(2);
@@ -83,7 +83,7 @@
          * 상태를 1로 변경 (사용 중)
          */
         @PostMapping("/approve/{id}")
-        public ResponseEntity<String> approveStreaming(@PathVariable Integer id) {
+        public ResponseEntity<String> approveStreaming(@PathVariable Long id) {
             Streaming streaming = streamingService.findById(id);
             if (streaming != null) {
                 streaming.setState(1);
@@ -107,17 +107,4 @@
             }
             return ResponseEntity.ok(pendingStreamings);
         }
-
-        /**
-         * 상태가 1(사용 중)인 스트리밍 방 목록을 가져오는 엔드포인트
-         */
-        @GetMapping("/active-rooms")
-        public ResponseEntity<List<Streaming>> getActiveStreamingRooms() {
-            List<Streaming> activeStreamings = streamingService.findByState(1);
-            if (activeStreamings.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-            return ResponseEntity.ok(activeStreamings);
-        }
-
     }

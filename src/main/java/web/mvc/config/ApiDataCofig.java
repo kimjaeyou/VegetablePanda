@@ -232,8 +232,8 @@
 //                }
 //            }//inner -for-end
 //        }//outer -for-end
+//        System.out.println(garakDTOList);
 //        return garakDTOList;
 //    }//calcGarakAvg-end
 //}
-//
 //

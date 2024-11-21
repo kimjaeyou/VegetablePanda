@@ -16,7 +16,7 @@ public class NoticeBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_no_seq")
-    private Integer boardNoSeq;
+    private Long boardNoSeq;
 
     @Column(name = "subject", nullable = false, length = 45)
     private String subject;

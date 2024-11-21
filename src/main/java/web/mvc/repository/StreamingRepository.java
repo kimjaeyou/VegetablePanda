@@ -7,7 +7,7 @@ import web.mvc.domain.Streaming;
 import java.util.List;
 
 @Repository
-public interface StreamingRepository extends JpaRepository<Streaming, Integer> {
+public interface StreamingRepository extends JpaRepository<Streaming, Long> {
 
     // 상태값이 0인 첫 번째 스트리밍을 찾는 쿼리 메서드
     Streaming findFirstByState(Integer state);

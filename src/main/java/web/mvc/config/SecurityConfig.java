@@ -81,8 +81,8 @@ public class SecurityConfig {
                 .requestMatchers("/index", "/user", "/user/**", "boards").permitAll()
                 .requestMatchers("/members", "/members/**", "/stock", "/stock/**", "/paymnet/**","/api/streaming/**").permitAll()
                 .requestMatchers("/swagger-ui", "/swagger-ui/**", "/api/logistics", "/api/swagger-config", "/v3/api-docs/**").permitAll()
-                .requestMatchers("/test/**", "http://openapi.seoul.go.kr:8088/**", "/topic/notifications").permitAll()
-                .requestMatchers("/ws/**", "/send").permitAll()
+                .requestMatchers("http://openapi.seoul.go.kr:8088/**", "/topic/notifications").permitAll()
+                .requestMatchers("/ws/**", "/send","/api/streaming/**").permitAll()
                 .requestMatchers("/admin").permitAll()
                 .anyRequest().authenticated()
         );

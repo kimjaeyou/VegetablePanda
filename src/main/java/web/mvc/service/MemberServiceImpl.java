@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.mvc.domain.CompanyUser;
-import web.mvc.domain.FarmerUser;
-import web.mvc.domain.ManagementUser;
-import web.mvc.domain.User;
+import web.mvc.domain.*;
 import web.mvc.dto.GetAllUserDTO;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.MemberAuthenticationException;
@@ -18,13 +15,13 @@ import web.mvc.repository.*;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberServiceImpl implements MemberService {
-    private final UserRepository userRepository;
     private final FarmerUserRepository farmerRepository;
     private final NormalUserRepository normalUserRepository;
     private final CompanyUserRepository companyUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final ManagementRepository managementRepository;
-
+    private final WalletRepository walletRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -35,15 +32,20 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void signUp(GetAllUserDTO user) {
-
         if (managementRepository.existsById(user.getId()) > 0) {
             throw new MemberAuthenticationException(ErrorCode.DUPLICATED);
         } else {
             ManagementUser managementUser = new ManagementUser(user.getId(), user.getContent());
             ManagementUser m = managementRepository.save(managementUser);
+
+            UserWallet userWallet = new UserWallet(0,m.getUserSeq());
+            walletRepository.save(userWallet);
+
             log.info("member = " + m);
             if (user.getContent().equals("farmer")) {
                 fammerIn(m, user);
+                Review review = new Review(m.getUserSeq(),0);
+                reviewRepository.save(review);
             } else if (user.getContent().equals("user")) {
                 userIn(m, user);
             } else if (user.getContent().equals("company")) {
@@ -106,5 +108,4 @@ public class MemberServiceImpl implements MemberService {
                 );
         companyUserRepository.save(cuser);
     }
-
 }

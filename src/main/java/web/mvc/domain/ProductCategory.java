@@ -16,7 +16,7 @@ public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_category_seq")
-    private Integer productCategorySeq;
+    private Long productCategorySeq;
 
     @Column(name = "content", nullable = false, length = 45)
     private String content;
@@ -24,7 +24,7 @@ public class ProductCategory {
     @OneToMany(mappedBy = "productCategory",fetch = FetchType.LAZY)
     private List<Product> products;
 
-    public ProductCategory(int productCategorySeq) {
+    public ProductCategory(Long productCategorySeq) {
         this.productCategorySeq = productCategorySeq;
     }
 }

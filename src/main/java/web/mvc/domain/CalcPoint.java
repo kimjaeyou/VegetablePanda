@@ -14,7 +14,7 @@ public class CalcPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "calc_point_seq")
-    private Integer calcPointSeq;
+    private Long calcPointSeq;
 
     @Column(name = "point")
     private Integer point;

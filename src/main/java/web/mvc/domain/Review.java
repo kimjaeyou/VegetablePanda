@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,21 +20,15 @@ public class Review {
     @Column(name = "visit_num", nullable = false)
     private Integer visitNum;
 
-    @Column(name = "content", length = 505)
-    private String content;
-
     @OneToOne
-    @JoinColumn(name = "file_file_seq", nullable = false)
-    private File file;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "managementUser_user_seq", nullable = false)
+    @JoinColumn(name = "user_seq", nullable = false)
     private ManagementUser managementUser;
-
-    @OneToOne
-    @JoinColumn(name = "farmer_seq", nullable = false)
-    private FarmerUser farmerUser;
 
     @OneToMany(mappedBy = "review")
     private List<ReviewComment> reviewComments;
+
+    public Review(long management_user,Integer visitNum) {
+        this.managementUser = new ManagementUser(management_user);
+        this.visitNum = visitNum;
+    }
 }

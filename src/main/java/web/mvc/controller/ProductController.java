@@ -39,7 +39,7 @@ public class ProductController {
 
     // 상품 수정
     @PutMapping("/product/{productSeq}")
-    public ResponseEntity<?> updateProduct (@PathVariable int productSeq, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<?> updateProduct (@PathVariable long productSeq, @RequestBody ProductDTO productDTO) {
         log.info("{} 번 재고 정보 수정", productSeq);
         log.info("Update Product : {}", productDTO);
 
@@ -51,7 +51,7 @@ public class ProductController {
 
     // 상품 삭제
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<?> deleteProduct (@PathVariable int id) {
+    public ResponseEntity<?> deleteProduct (@PathVariable long id) {
         log.info("Delete Product id : {}", id);
         productService.deleteProduct(id);
         return new ResponseEntity<>(id+"번 상품 삭제 완료", HttpStatus.OK);

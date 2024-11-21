@@ -27,6 +27,10 @@ public class Stock {
     @Column(name = "count")
     private Integer count;
 
+
+    @Column(name = "status")
+    private Integer status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_product_seq", nullable = false)
     private Product product;
@@ -45,5 +49,7 @@ public class Stock {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "farmer_user_seq", nullable = false)
     private FarmerUser farmerUser;
+
+    private int color;
 
 }

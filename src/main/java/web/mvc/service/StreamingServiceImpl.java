@@ -20,7 +20,7 @@ public class StreamingServiceImpl implements StreamingService {
     }
 
     @Override
-    public Streaming findById(Integer id) {
+    public Streaming findById(Long id) {
         Optional<Streaming> streaming = streamingRepository.findById(id);
         return streaming.orElse(null);
     }
