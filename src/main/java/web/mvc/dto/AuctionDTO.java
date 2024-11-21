@@ -21,5 +21,5 @@ public class AuctionDTO {
 
     private int status;
 
-    private int stockSeq;
+    private Long stockSeq;
 }

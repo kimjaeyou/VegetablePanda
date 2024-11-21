@@ -2,6 +2,7 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,7 @@ public class Auction {
     @Column(name = "count", nullable = false)
     private Integer count;
 
+    @CreationTimestamp
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
