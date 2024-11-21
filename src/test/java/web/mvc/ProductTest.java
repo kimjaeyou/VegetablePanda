@@ -1,6 +1,7 @@
 package web.mvc;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,9 @@ public class ProductTest {
     /**
      * 유저 등록(farmer)
      */
+    @Test
+    @Rollback(false)
+    @Disabled
     public void singupTest(){
         managementRepository.save(ManagementUser.builder().content("farmer").id("farmer").build());
         farmerUserRepository.save(FarmerUser.builder().farmerId("farmer").name("farmer").pw(passwordEncoder.encode("1234")).address("Ori").code("code").account("111-1111").phone("000-1111-2222").email("farmer@gmail.com").role("ROLE_FARMER").build());
@@ -44,6 +48,7 @@ public class ProductTest {
      */
     @Test
     @Rollback(false)
+    @Disabled
     public void productCategoryInsert(){
         productCategoryRepository.save(ProductCategory.builder().content("식량작물").build());
         productCategoryRepository.save(ProductCategory.builder().content("엽채류").build());
@@ -59,6 +64,7 @@ public class ProductTest {
      */
     @Test
     @Rollback(false)
+    @Disabled
     public void productInsert(){
         productRepository.save(Product.builder().productCategory(new ProductCategory(4)).productName("감자").build());
         productRepository.save(Product.builder().productCategory(new ProductCategory(5)).productName("고구마").build());

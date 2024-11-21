@@ -72,7 +72,7 @@ public class PaymentServiceImpl implements PaymentService {
 
                 break;
             case 2: // 일반 결제 요청
-                UserBuy userBuy = userBuyRepository.findById(Integer.parseInt(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
+                UserBuy userBuy = userBuyRepository.findById(Long.parseLong(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
                 System.out.println(userBuy);
                 log.info("userBuy : {}", userBuy);
                 userM = userBuy.getManagementUser();

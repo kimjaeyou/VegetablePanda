@@ -10,7 +10,7 @@ public interface     StreamingService {
     Streaming findAvailableStreaming();
 
     // ID로 스트리밍을 찾는 메서드
-    Streaming findById(Integer id);
+    Streaming findById(Long id);
 
     // 상태값을 변경하여 스트리밍을 저장하는 메서드
     void save(Streaming streaming);

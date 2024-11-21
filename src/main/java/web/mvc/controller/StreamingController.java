@@ -49,7 +49,7 @@
          * 상태를 0으로 변경
          */
         @PostMapping("/release/{id}")
-        public ResponseEntity<String> releaseStreaming(@PathVariable Integer id) {
+        public ResponseEntity<String> releaseStreaming(@PathVariable Long id) {
             Streaming streaming = streamingService.findById(id);
             if (streaming != null) {
                 streaming.setState(0);
@@ -66,7 +66,7 @@
          * 상태를 2로 변경 (승인 대기)
          */
         @PostMapping("/request/{id}")
-        public ResponseEntity<String> requestStreaming(@PathVariable Integer id) {
+        public ResponseEntity<String> requestStreaming(@PathVariable Long id) {
             Streaming streaming = streamingService.findById(id);
             if (streaming != null) {
                 streaming.setState(2);
@@ -83,7 +83,7 @@
          * 상태를 1로 변경 (사용 중)
          */
         @PostMapping("/approve/{id}")
-        public ResponseEntity<String> approveStreaming(@PathVariable Integer id) {
+        public ResponseEntity<String> approveStreaming(@PathVariable Long id) {
             Streaming streaming = streamingService.findById(id);
             if (streaming != null) {
                 streaming.setState(1);
