@@ -24,8 +24,8 @@ public class NotificationController {
     public String sendMessage(@RequestBody MessageRequest messageRequest) {
         // 메시지를 특정 topic으로 전송
         System.out.println(messageRequest.getMessage());
+        messagingTemplate.convertAndSend("/bid/notifications", messageRequest.getMessage());
         messagingTemplate.convertAndSend("/topic/notifications", messageRequest.getMessage());
-        System.out.println("////");
         return "ok";
     }
 }
