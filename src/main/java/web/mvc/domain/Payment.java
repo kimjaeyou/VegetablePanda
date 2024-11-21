@@ -12,7 +12,7 @@ import web.mvc.payment.PaymentStatus;
 @AllArgsConstructor
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator = "payment_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     @Column(name="payment_seq")
     private long id;
 
@@ -20,7 +20,7 @@ public class Payment {
     private PaymentStatus status;
     private String paymentUid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_charge_seq")
     private UserCharge usercharge;
 

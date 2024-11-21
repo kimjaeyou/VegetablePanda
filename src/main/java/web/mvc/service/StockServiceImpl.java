@@ -39,7 +39,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     //public Stock updateStock(long farmerUserSeq, int id, Stock stock) {
-    public Stock updateStock(int id, Stock stock) {
+    public Stock updateStock(long id, Stock stock) {
         log.info("updateStock call... / stock.getStockSeq()={}", stock.getStockSeq());
 
         // 예외처리 필요
@@ -58,7 +58,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public int deleteStock(int id) {
+    public int deleteStock(long id) {
         Stock stock = stockRepository.findById(id).orElseThrow(()-> new StockException(ErrorCode.STOCK_NOTFOUND));
         log.info("delect stock : {}", stock);
         stockRepository.deleteById(id);

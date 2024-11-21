@@ -20,7 +20,7 @@ public interface UserMyPageService {
     void update (User user, Long seq);
 
     // 회원정보 탈퇴
-    void delete (int state);
+    void delete (Long seq);
 
     // 포인트 조회
     int point(Long seq);
@@ -29,7 +29,7 @@ public interface UserMyPageService {
     List<ReviewComment> review(Long seq);
 
     // 리뷰 삭제
-    void deleteReview(Long seq);
+    void deleteReview(Long ReviewSeq,Long userSeq);
 
     // 경매 내역 조회
     List<Bid> auctionList(Long seq);

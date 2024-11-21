@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class UserBuyDTO {
-    private Integer userBuySeq;
+    private long userBuySeq;
     private String content;
     private Integer price;
     private Integer count;

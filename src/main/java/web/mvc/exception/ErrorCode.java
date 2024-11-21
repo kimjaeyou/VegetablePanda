@@ -32,7 +32,9 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
 
     AUCTION_NOTFOUND (HttpStatus.NOT_FOUND, "Stock update fail", "경매 정보를 찾을 수 없습니다."),
 
-    ORDER_NOTFOUND (HttpStatus.NOT_FOUND, "Not Found Order", "주문 정보가 없습니다.");
+    ORDER_NOTFOUND (HttpStatus.NOT_FOUND, "Not Found Order", "주문 정보가 없습니다."),
+    ORDER_NOTPAID (HttpStatus.NOT_FOUND, "Not Paid Order", "결제되지 않았습니다."),
+    ORDER_CANCELED (HttpStatus.NOT_FOUND, "결제 금액 위변조 의심", "결제가 취소되었습니다.");
 
     private final HttpStatus httpStatus;
     private  final String title;

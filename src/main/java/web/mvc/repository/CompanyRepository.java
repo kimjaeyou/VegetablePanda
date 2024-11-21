@@ -10,4 +10,6 @@ import java.util.List;
 public interface CompanyRepository extends JpaRepository<CompanyUser, Long> {
     @Query("select u from CompanyUser u where u.companyId = ?1")
     List<CompanyUser> findUser(String id);
+
+
 }

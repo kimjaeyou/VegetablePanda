@@ -21,7 +21,7 @@ public class UserBuy {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)
-    private User user;
+    private ManagementUser managementUser;
 
     @Column(name = "buy_date")
     private LocalDateTime buyDate;

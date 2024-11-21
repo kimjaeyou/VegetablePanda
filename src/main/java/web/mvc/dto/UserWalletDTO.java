@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UserWalletDTO {
-    private int userSeq;
+    private long userSeq;
     private int point;
     private int userWalletSeq;
 }

@@ -18,11 +18,7 @@ public interface UserMyPageRepository extends JpaRepository<User, Long> {
 
     //회원 탈퇴(그냥 상태값 바꾸는거임.)
     @Modifying
-    @Query("update User u set u.state = 0")
-    void delete(int state);
-
-    // 포인트값 조회해서 리턴시켜주자
-    @Query("select p from UserWallet p where p.point=?1")
-    int point (Long seq);
+    @Query("update User u set u.state = 0 where u.userSeq = ?1")
+    int delete(Long seq);
 
 }

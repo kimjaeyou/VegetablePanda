@@ -26,6 +26,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final ManagementRepository managementRepository;
     private final ReviewRepository reviewRepository;
     private final BidRepository bidRepository;
+    private final WalletRepository walletRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -57,13 +58,8 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     @Modifying
     @Override
     public void update(User user, Long seq) {
-        log.info(user.toString());
-
-        // 일단 시퀀스에 해당하는 값 찾아서 값만 바꿔주자
-        User user1 = userRepository.find(seq);
-        log.info(user.getGender()); // 여기까지 나옴
-
-        int no = userRepository.updateUser(user1.getPw(), user1.getAddress(),user1.getGender(),user1.getPhone(), user1.getEmail(), seq);
+        String pw = passwordEncoder.encode(user.getPw());
+        int no = userRepository.updateUser(pw, user.getAddress(),user.getGender(),user.getPhone(), user.getEmail(), seq);
         log.info("no={}",no);
         log.info("회원 수정 성공~");
 
@@ -73,14 +69,15 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 회원정보 탈퇴..? 정지라고 하자
      */
     @Override
-    public void delete(int state) {
-        userMyPageRepository.delete(state);
+    public void delete(Long seq) {
+        int i = userMyPageRepository.delete(seq);
+        log.info("i = {}",i);
     }
 
     // 포인트 조회
     @Override
     public int point(Long seq) {
-        return userMyPageRepository.point(seq);
+        return walletRepository.point(seq);
     }
 
     /**
@@ -91,6 +88,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
         // 처음에 유저 시퀀스에 해당하는 review 시퀀스를 가져오자
         Long reviewSeq = reviewRepository.selectSeq(seq);
 
+        // 그럼 그 리뷰 시퀀스에 해당하는 리뷰들을 가져오자
         return reviewRepository.review(reviewSeq);
     }
 
@@ -98,8 +96,9 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 리뷰 삭제
      */
     @Override
-    public void deleteReview(Long seq) {
-        reviewRepository.deleteReview(seq);
+    public void deleteReview(Long reviewSeq, Long userSeq) {
+        int no = reviewRepository.deleteReview(reviewSeq, userSeq);
+        log.info("no = {}",no);
     }
 
     /**
