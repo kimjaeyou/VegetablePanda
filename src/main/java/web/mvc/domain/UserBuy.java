@@ -29,11 +29,8 @@ public class UserBuy {
     @Column(name = "state")
     private Integer state;
 
-    @Column(name = "stock_price")
-    private Integer stockPrice;
-
-    @Column(name = "stock_discount")
-    private Integer stockDiscount;
+    @Column(name = "total_price")
+    private Integer totalPrice;
 
     @OneToMany(mappedBy = "userBuy")
     private List<Payment> payments;

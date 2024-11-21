@@ -54,8 +54,8 @@ public class FarmerUser {
 
     private String role;
 
-    @Column(name = "fammer_grade", nullable = false)
-    private int fammerGrade;
+    @Column(name = "farmer_grade", nullable = false)
+    private int farmerGrade;
 
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
     private List<Likes> likes;
@@ -75,7 +75,7 @@ public class FarmerUser {
         this.email = email;
         this.state = state;
         this.role = role;
-        this.fammerGrade= 0;
+        this.farmerGrade= 0;
         this.regDate = LocalDateTime.now();
     }
     public FarmerUser (long farmerSeq){

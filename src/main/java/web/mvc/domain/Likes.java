@@ -16,7 +16,7 @@ public class Likes {
     private Long likeSeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "management_user_user_seq", nullable = false)
+    @JoinColumn(name = "user_seq", nullable = false)
     private ManagementUser managementUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
