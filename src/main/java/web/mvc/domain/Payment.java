@@ -12,8 +12,7 @@ import web.mvc.payment.PaymentStatus;
 @AllArgsConstructor
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE ,generator = "payment_seq")
-    @SequenceGenerator(allocationSize = 1,sequenceName = "payment_seq", name = "payment_seq", initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     @Column(name="payment_seq")
     private long id;
 
@@ -21,9 +20,9 @@ public class Payment {
     private PaymentStatus status;
     private String paymentUid;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_charge_seq")
-//    private UserCharge usercharge;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_charge_seq")
+    private UserCharge usercharge;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buy_seq")
