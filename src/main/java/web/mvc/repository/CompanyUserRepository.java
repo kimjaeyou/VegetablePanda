@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import web.mvc.domain.CompanyUser;
 import web.mvc.domain.User;
 
+import java.util.List;
+
 public interface CompanyUserRepository extends JpaRepository<CompanyUser, Long> {
     CompanyUser findByUserSeq(Long userSeq);
 

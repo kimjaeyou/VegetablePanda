@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Product product) {
-        Product dbProduct = productRepository.findById(Math.toIntExact(product.getProductSeq())).orElseThrow(()-> new ProductException(ErrorCode.PRODUCT_UPDATE_FAILED));
+        Product dbProduct = productRepository.findById(product.getProductSeq()).orElseThrow(()-> new ProductException(ErrorCode.PRODUCT_UPDATE_FAILED));
 
         dbProduct.setProductCategory(product.getProductCategory());
         dbProduct.setProductName(product.getProductName());
@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int deleteProduct(int id) {
+    public int deleteProduct(long id) {
          Product product = productRepository.findById(id).orElseThrow(()-> new ProductException(ErrorCode.PRODUCT_NOTFOUND));
          productRepository.delete(product);
         return 1;

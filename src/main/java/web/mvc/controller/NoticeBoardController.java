@@ -45,7 +45,7 @@ public class NoticeBoardController {
      *공지사항 수정
      * */
     @PutMapping("/{notifyBoard_seq}")
-    public ResponseEntity<?> noticeUpdate(@PathVariable Integer boardNoSeq, @RequestBody NoticeBoard noticeBoard) {
+    public ResponseEntity<?> noticeUpdate(@PathVariable Long boardNoSeq, @RequestBody NoticeBoard noticeBoard) {
         return ResponseEntity.ok(noticeBoardService.noticeUpdate(boardNoSeq, noticeBoard));
     }
 
@@ -53,7 +53,7 @@ public class NoticeBoardController {
      *공지사항 조회
      * */
     @GetMapping("/{notifyBoard_seq}")
-    public ResponseEntity<?> noticeFindBySeq(@PathVariable Integer boardNoSeq, NoticeBoard noticeBoard) {
+    public ResponseEntity<?> noticeFindBySeq(@PathVariable Long boardNoSeq, NoticeBoard noticeBoard) {
 
 
 
@@ -74,7 +74,7 @@ public class NoticeBoardController {
      *공지사항 삭제
      * */
     @DeleteMapping("/{notifyBoard_seq}")
-    public ResponseEntity<?> noticeDelete(@PathVariable Integer boardNoSeq) {
+    public ResponseEntity<?> noticeDelete(@PathVariable Long boardNoSeq) {
 
         return ResponseEntity.ok(noticeBoardService.noticeDelete(boardNoSeq));
     }
