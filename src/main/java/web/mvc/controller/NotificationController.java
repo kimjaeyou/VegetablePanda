@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import web.mvc.dto.MessageReq;
+//뺏길떄
+//선호알림
+//시간 알림
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
 public class NotificationController {
@@ -21,23 +24,11 @@ public class NotificationController {
     }
 
     @PostMapping("/send")
-    public String sendMessage(@RequestBody MessageRequest messageRequest) {
+    public String sendMessage(@RequestBody MessageReq messageRequest) {
         // 메시지를 특정 topic으로 전송
         System.out.println(messageRequest.getMessage());
         messagingTemplate.convertAndSend("/topic/notifications", messageRequest.getMessage());
         System.out.println("////");
         return "ok";
-    }
-}
-
-class MessageRequest {
-    private String message;
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }
