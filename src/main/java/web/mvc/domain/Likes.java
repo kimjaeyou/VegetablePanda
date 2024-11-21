@@ -13,7 +13,7 @@ public class Likes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "like_seq")
-    private Integer likeSeq;
+    private Long likeSeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "management_user_user_seq", nullable = false)

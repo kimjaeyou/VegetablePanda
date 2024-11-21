@@ -12,7 +12,7 @@ public class UserBuyDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_buy_detail_seq")
-    private Integer userBuySeq;
+    private Long userBuySeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_buy_seq", nullable = false)

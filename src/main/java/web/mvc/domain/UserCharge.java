@@ -16,7 +16,7 @@ public class UserCharge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_charge_seq")
-    private Integer userChargeSeq;
+    private Long userChargeSeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)

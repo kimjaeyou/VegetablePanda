@@ -18,7 +18,7 @@ public class StockGrade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stock_grade_seq")
-    private Integer stockGradeSeq;
+    private Long stockGradeSeq;
 
     @Column(name = "grade", nullable = false, length = 45)
     private String grade;
@@ -26,7 +26,7 @@ public class StockGrade {
     @OneToMany(mappedBy = "stockGrade",fetch = FetchType.LAZY)
     private List<Stock> stocks;
 
-    public StockGrade(int stockGradeSeq) {
+    public StockGrade(Long stockGradeSeq) {
         this.stockGradeSeq = stockGradeSeq;
     }
 
