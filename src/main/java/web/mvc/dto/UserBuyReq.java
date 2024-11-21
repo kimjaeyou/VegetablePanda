@@ -21,7 +21,7 @@ public class UserBuyReq {
     public UserBuy toUserBuy (UserBuyReq userBuyReq) {
         // UserBuyReq를 UserBuy 엔티티로 변환
         return UserBuy.builder().buySeq(userBuyReq.buySeq).managementUser(ManagementUser.builder().userSeq(userBuyReq.userSeq).build()).state(userBuyReq.state)
-                .stockPrice(userBuyReq.state).stockDiscount(userBuyReq.stockDiscount).build();
+                .totalPrice(userBuyReq.state).build();
     }
 
 }
