@@ -32,6 +32,6 @@ public class QaBoard {
     private LocalDateTime regDate;
 
     @OneToOne
-    @JoinColumn(name = "file_file_seq", nullable = false)
+    @JoinColumn(name = "file_seq", nullable = false)
     private File file;
 }
