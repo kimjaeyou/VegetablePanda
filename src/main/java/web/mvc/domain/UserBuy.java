@@ -17,11 +17,11 @@ public class UserBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "buy_seq")
-    private Integer buySeq;
+    private Long buySeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)
-    private User user;
+    private ManagementUser managementUser;
 
     @Column(name = "buy_date")
     private LocalDateTime buyDate;
@@ -29,11 +29,8 @@ public class UserBuy {
     @Column(name = "state")
     private Integer state;
 
-    @Column(name = "stock_price")
-    private Integer stockPrice;
-
-    @Column(name = "stock_discount")
-    private Integer stockDiscount;
+    @Column(name = "total_price")
+    private Integer totalPrice;
 
     @OneToMany(mappedBy = "userBuy")
     private List<Payment> payments;

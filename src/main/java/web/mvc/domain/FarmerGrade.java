@@ -1,7 +1,6 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,15 +12,15 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class FammerGrade {
+public class FarmerGrade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "fammer_grade_seq")
-    private Integer fammerGradeSeq;
+    private Long fammerGradeSeq;
 
     @Column(name = "grade_content", nullable = false, length = 60)
     private String gradeContent;
 
-    @OneToMany(mappedBy = "fammerGrade", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "farmerGrade", fetch = FetchType.LAZY)
     private List<FarmerUser> farmerUsers;
 }

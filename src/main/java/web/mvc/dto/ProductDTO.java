@@ -10,7 +10,7 @@ import web.mvc.domain.ProductCategory;
 @Getter
 @Setter
 public class ProductDTO {
-    private int productSeq;
+    private long productSeq;
     private String productName;
     private int productCategorySeq;
 

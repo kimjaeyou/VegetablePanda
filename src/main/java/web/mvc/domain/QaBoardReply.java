@@ -14,12 +14,12 @@ public class QaBoardReply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reply_seq")
-    private Integer replySeq;
+    private Long replySeq;
 
     @Column(name = "comment", nullable = false, length = 255)
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "qa_board_board_no_seq", nullable = false)
+    @JoinColumn(name = "board_no_seq", nullable = false)
     private QaBoard qaBoard;
 }

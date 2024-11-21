@@ -20,7 +20,7 @@ public class ShopServiceImpl implements ShopService {
     public int shopInsert(StockDTO stock) {
         Shop shop = new Shop();
         shop.setInsertDate(LocalDateTime.now());
-        shop.setPrice(stock.getPrice());
+        shop.setPrice(10000);
         shop.setStock(stock.getStockSeq());
         shop=shopRepository.save(shop);
         return 0;

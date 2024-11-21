@@ -24,5 +24,5 @@ public interface ProductService {
     /**
      * 상품 삭제
      */
-    public int deleteProduct(int id);
+    public int deleteProduct(long id);
 }

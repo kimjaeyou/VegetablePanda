@@ -18,7 +18,7 @@ public class StockOrganic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stock_organic")
-    private Integer stockOrganicSeq;
+    private Long stockOrganicSeq;
 
     @Column(name = "oranic_status", nullable = false, length = 45)
     private String oranicStatus;
@@ -26,7 +26,7 @@ public class StockOrganic {
     @OneToMany(mappedBy = "stockOrganic",fetch = FetchType.LAZY)
     private List<Stock> stocks;
 
-    public StockOrganic(int stockOrganicSeq) {
+    public StockOrganic(Long stockOrganicSeq) {
         this.stockOrganicSeq = stockOrganicSeq;
     }
 }

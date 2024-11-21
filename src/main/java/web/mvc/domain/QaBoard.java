@@ -17,7 +17,7 @@ public class QaBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_no_seq")
-    private Integer boardNoSeq;
+    private Long boardNoSeq;
 
     @Column(name = "subject", nullable = false, length = 45)
     private String subject;
@@ -32,6 +32,6 @@ public class QaBoard {
     private LocalDateTime regDate;
 
     @OneToOne
-    @JoinColumn(name = "file_file_seq", nullable = false)
+    @JoinColumn(name = "file_seq", nullable = false)
     private File file;
 }

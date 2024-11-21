@@ -15,7 +15,7 @@ public class Bid {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bid_seq")
-    private Integer bidSeq;
+    private Long bidSeq;
 
     @Column(name = "price", nullable = false)
     private Integer price;
@@ -25,10 +25,10 @@ public class Bid {
     private LocalDateTime insertDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "auction_auction_seq", nullable = false)
+    @JoinColumn(name = "auction_seq", nullable = false)
     private Auction auction;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "management_user_user_seq", nullable = false)
+    @JoinColumn(name = "user_seq", nullable = false)
     private ManagementUser managementUser;
 }

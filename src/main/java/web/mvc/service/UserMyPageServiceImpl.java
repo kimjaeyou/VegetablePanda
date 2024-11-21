@@ -2,11 +2,14 @@ package web.mvc.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
+import web.mvc.dto.AuctionDTO2;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.dto.UserDTO;
 import web.mvc.repository.*;
@@ -16,6 +19,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserMyPageServiceImpl implements UserMyPageService {
     private final BuyMyPageRepository buyMyPageRepository;
     private final UserMyPageRepository userMyPageRepository;
@@ -23,6 +27,8 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final ManagementRepository managementRepository;
     private final ReviewRepository reviewRepository;
     private final BidRepository bidRepository;
+    private final WalletRepository walletRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 주문내역
@@ -42,9 +48,9 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 회원정보 가져오기
      */
     @Override
-    public UserDTO selectUser(Long seq) {
-        UserDTO userDTO = userMyPageRepository.selectUser(seq);
-        return userDTO;
+    public User selectUser(Long seq) {
+        User user = userMyPageRepository.selectUser(seq);
+        return user;
     }
 
     /**
@@ -52,33 +58,27 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Modifying
     @Override
-    public void update(UserDTO userDTO) {
+    public void update(User user, Long seq) {
+        String pw = passwordEncoder.encode(user.getPw());
+        int no = userRepository.updateUser(pw, user.getAddress(),user.getGender(),user.getPhone(), user.getEmail(), seq);
+        log.info("no={}",no);
+        log.info("회원 수정 성공~");
 
-        // 일단 아이디에 해당하는 값 찾아서 값만 바꿔주자
-        User user = userRepository.findById(userDTO.getId());
-
-        user.setEmail(userDTO.getEmail());
-        user.setAddress(userDTO.getAddress());
-        user.setGender(userDTO.getGender());
-        user.setName(userDTO.getName());
-        user.setPhone(userDTO.getPhone());
-        user.setPw(userDTO.getPw());
-
-        userRepository.save(user);  // 또는 saveAndFlush() 사용 가능
     }
 
     /**
      * 회원정보 탈퇴..? 정지라고 하자
      */
     @Override
-    public void delete(int state) {
-        userMyPageRepository.delete(state);
+    public void delete(Long seq) {
+        int i = userMyPageRepository.delete(seq);
+        log.info("i = {}",i);
     }
 
     // 포인트 조회
     @Override
     public int point(Long seq) {
-        return userMyPageRepository.point(seq);
+        return walletRepository.point(seq);
     }
 
     /**
@@ -86,18 +86,16 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public List<ReviewComment> review(Long seq) {
-        // 처음에 유저 시퀀스에 해당하는 review 시퀀스를 가져오자
-        Long reviewSeq = reviewRepository.selectSeq(seq);
-
-        return reviewRepository.review(reviewSeq);
+        return reviewRepository.review(seq);
     }
 
     /**
      * 리뷰 삭제
      */
     @Override
-    public void deleteReview(Long seq) {
-        reviewRepository.deleteReview(seq);
+    public void deleteReview(Long reviewSeq, Long userSeq) {
+        int no = reviewRepository.deleteReview(reviewSeq, userSeq);
+        log.info("no = {}",no);
     }
 
     /**
@@ -105,8 +103,8 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 그러면 일단 먼저 시퀀스로 값을 찾아서 목록 가져오기?
      */
     @Override
-    public List<Bid> auctionList(Long seq) {
-        List <Bid> list = bidRepository.auctionList(seq);
+    public List<AuctionDTO2> auctionList(Long seq) {
+        List <AuctionDTO2> list = bidRepository.auctionList(seq);
         return list;
     }
 }

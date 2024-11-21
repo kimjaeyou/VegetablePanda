@@ -238,6 +238,17 @@
             <artifactId>iamport-rest-client-java</artifactId>
             <version>0.2.22</version>
         </dependency>
+        <!-- Jedis (Redis 클라이언트 라이브러리, 기본적으로 사용) -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>4.3.1</version> <!-- 원하는 버전으로 변경 가능 -->
+        </dependency>
+        <!-- Spring Boot Starter for Redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
     </dependencies>
 

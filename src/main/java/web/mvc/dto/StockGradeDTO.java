@@ -9,8 +9,8 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class StockGradeDTO {
 
-    String stockGradeSeq;
+    private String stockGradeSeq;
 
-    String grade;
+    private String grade;
 
 }

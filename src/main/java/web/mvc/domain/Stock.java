@@ -27,8 +27,12 @@ public class Stock {
     @Column(name = "count")
     private Integer count;
 
+
+    @Column(name = "status")
+    private Integer status;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_product_seq", nullable = false)
+    @JoinColumn(name = "product_seq", nullable = false)
     private Product product;
 
     @OneToMany(mappedBy = "stock")
@@ -43,11 +47,14 @@ public class Stock {
     private StockOrganic stockOrganic;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "farmer_user_seq", nullable = false)
+    @JoinColumn(name = "user_seq", nullable = false)
     private FarmerUser farmerUser;
 
     public Stock(Long stockSeq){
         this.stockSeq = stockSeq;
     }
+
+    private int color;
+
 
 }
