@@ -18,9 +18,6 @@ public class UserBuyDetail {
     @JoinColumn(name = "user_buy_seq", nullable = false)
     private UserBuy userBuy;
 
-    @Column(name = "content", length = 60)
-    private String content;
-
     @Column(name = "price")
     private Integer price;
 

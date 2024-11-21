@@ -18,8 +18,7 @@ public class UserBuyRes {
     private ManagementUser managementUser;
     private LocalDateTime buyDate;
     private Integer state;
-    private Integer stockPrice;
-    private Integer stockDiscount;
+    private Integer totalPrice;
 
     // UserBuy Entity를 UserBuyRes로 변환
     public UserBuyRes (UserBuy userBuy) {
@@ -27,7 +26,7 @@ public class UserBuyRes {
         managementUser = userBuy.getManagementUser();
         buyDate = userBuy.getBuyDate();
         state = userBuy.getState();
-        stockPrice = userBuy.getStockPrice();
-        stockDiscount = userBuy.getStockDiscount();
+        totalPrice = userBuy.getTotalPrice();
+
     }
 }
