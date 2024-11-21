@@ -1,9 +1,7 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +12,7 @@ public class Auction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "auction_seq")
-    private Integer auctionSeq;
+    private Long auctionSeq;
 
     @Column(name = "count", nullable = false)
     private Integer count;
