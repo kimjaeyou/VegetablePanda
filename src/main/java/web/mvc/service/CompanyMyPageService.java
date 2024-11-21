@@ -4,6 +4,7 @@ import web.mvc.domain.Bid;
 import web.mvc.domain.CompanyUser;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
+import web.mvc.dto.AuctionDTO2;
 import web.mvc.dto.UserBuyDTO;
 
 import java.util.List;
@@ -32,6 +33,6 @@ public interface CompanyMyPageService {
     void deleteReview(Long ReviewSeq,Long userSeq);
 
     // 경매 내역 조회
-    List<Bid> auctionList(Long seq);
+    List<AuctionDTO2> auctionList(Long seq);
 
 }

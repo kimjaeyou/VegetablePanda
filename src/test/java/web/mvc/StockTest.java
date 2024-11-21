@@ -31,7 +31,7 @@ public class StockTest {
         //stock.setProduct(new Product(1));
 
         log.info("Stock 정보 : ");
-        stockRepository.save(Stock.builder().content("알감자").count(500).product(Product.builder().productSeq(1).build()).stockGrade(StockGrade.builder().stockGradeSeq(1).build()).stockOrganic(StockOrganic.builder().stockOrganicSeq(1).build()).build());
+//        stockRepository.save(Stock.builder().content("알감자").count(500).product(Product.builder().productSeq().build()).stockGrade(StockGrade.builder().stockGradeSeq(1).build()).stockOrganic(StockOrganic.builder().stockOrganicSeq(1).build()).build());
 
     }
 }
