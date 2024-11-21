@@ -26,4 +26,9 @@ public class Review {
 
     @OneToMany(mappedBy = "review")
     private List<ReviewComment> reviewComments;
+
+    public Review(long management_user,Integer visitNum) {
+        this.managementUser = new ManagementUser(management_user);
+        this.visitNum = visitNum;
+    }
 }

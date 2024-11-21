@@ -16,10 +16,10 @@ public interface BuyMyPageRepository extends JpaRepository<UserBuy, Long>, JpaSp
     * 시퀀스값이 일치한 데이터들만 List에 담아서 리턴
     * 가져오는 값 : 주문번호 , 상품명, 수량, 가격, 구매날짜
     */
-    @Query("select d.userBuySeq , z.content , d.count, d.price, d.userBuy.buyDate , z.farmerUser.name from UserBuyDetail d  join UserBuy b on b.buySeq = d.userBuySeq join Stock z on z.stockSeq = d.stock.stockSeq where b.user.userSeq = ?1 and b.state = 1")
+    @Query("select d.userBuySeq , z.content , d.count, d.price, d.userBuy.buyDate , z.farmerUser.name from UserBuyDetail d  join UserBuy b on b.buySeq = d.userBuySeq join Stock z on z.stockSeq = d.stock.stockSeq where b.managementUser.userSeq = ?1 and b.state = 1")
     List<UserBuyDTO> selectAll (Long seq);
 
-    @Query("select d.userBuySeq , z.content , d.count, d.price, d.userBuy.buyDate, b.user.name from UserBuyDetail d  join UserBuy b on b.buySeq = d.userBuySeq join Stock z on z.stockSeq = d.stock.stockSeq where b.user.userSeq = ?1 and b.state = 3")
+    @Query("select d.userBuySeq , z.content , d.count, d.price, d.userBuy.buyDate, b.managementUser.id from UserBuyDetail d  join UserBuy b on b.buySeq = d.userBuySeq join Stock z on z.stockSeq = d.stock.stockSeq where b.managementUser.userSeq = ?1 and b.state = 3")
     List<UserBuyDTO> saleSelectAll (Long seq);
 
 }

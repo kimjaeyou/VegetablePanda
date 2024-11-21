@@ -38,17 +38,14 @@ public class MemberServiceImpl implements MemberService {
             ManagementUser managementUser = new ManagementUser(user.getId(), user.getContent());
             ManagementUser m = managementRepository.save(managementUser);
 
-            // 리뷰에 명함 넣기
-            Review review = new Review();
-            reviewRepository.save(review);
-
-            // 지갑테이블에 지갑 생성
-            UserWallet userWallet = new UserWallet();
+            UserWallet userWallet = new UserWallet(0,m.getUserSeq());
             walletRepository.save(userWallet);
 
             log.info("member = " + m);
             if (user.getContent().equals("farmer")) {
                 fammerIn(m, user);
+                Review review = new Review(m.getUserSeq(),0);
+                reviewRepository.save(review);
             } else if (user.getContent().equals("user")) {
                 userIn(m, user);
             } else if (user.getContent().equals("company")) {

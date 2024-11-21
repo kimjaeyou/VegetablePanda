@@ -25,7 +25,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
     //경매종료
     @Override
-    public int updateAuction(int auctionSeq) {
+    public int updateAuction(long auctionSeq) {
 
         Auction dbAuction = auctionRepository.findById(auctionSeq).orElseThrow(()->new AuctionException(ErrorCode.AUCTION_NOTFOUND));
         dbAuction.setStatus(1); // 등록 취소? : 추가적인 논의 필요

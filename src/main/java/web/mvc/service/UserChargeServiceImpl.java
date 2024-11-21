@@ -24,7 +24,8 @@ public class UserChargeServiceImpl implements UserChargeService {
     @Override
     public UserCharge order(UserCharge userCharge) {
         // 임시 결제내역 생성
-        Payment payment = Payment.builder().price(1000L).status(PaymentStatus.READY).build();
+        Payment payment = Payment.builder().price(userCharge.getPrice()).status(PaymentStatus.READY)//.usercharge(UserCharge.builder().userChargeSeq())
+                .build();
         paymentRepository.save(payment);
 
         // 주문 생성
@@ -32,6 +33,7 @@ public class UserChargeServiceImpl implements UserChargeService {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd- HH:mm:ss");
         String date = format.format(new Date());
         userCharge.setChargeDate(date);
+        userCharge.setPayment(payment);
         return userChargeRepository.save(userCharge);
     }
 
@@ -61,5 +63,11 @@ public class UserChargeServiceImpl implements UserChargeService {
             sb.append(ramdonNo);
         }
         return sb.toString();
+    }
+
+    @Override
+    public String chargeWallet() {
+        
+        return "";
     }
 }

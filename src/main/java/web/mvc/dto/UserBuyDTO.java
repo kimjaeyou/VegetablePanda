@@ -16,4 +16,5 @@ public class UserBuyDTO {
     private Integer count; // 수량
     private String date; // 구매날짜
     private String name; // 이건 구매입장은 판매자가 들어갈꺼고 판매자 입장에선 누가 구매했는지 나올거에요
+
 }

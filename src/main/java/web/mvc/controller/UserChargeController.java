@@ -40,4 +40,11 @@ public class UserChargeController {
         return "redirect:/payment/" + orderUid;
     }
 
+    // 결제 검증까지 완료된 후 결제 금액만큼 포인트 충전
+    public String chargePointComplete (long point) {
+        log.info("지갑에 금액 충전");
+
+        return "";
+    }
+
 }

@@ -1,6 +1,7 @@
 package web.mvc.dto;
 
 import lombok.*;
+import web.mvc.domain.ManagementUser;
 import web.mvc.domain.Stock;
 import web.mvc.domain.User;
 import web.mvc.domain.UserBuy;
@@ -13,20 +14,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class UserBuyRes {
-    private Long buySeq;
-    private User user;
+    private long buySeq;
+    private ManagementUser managementUser;
     private LocalDateTime buyDate;
     private Integer state;
-    private Integer stockPrice;
-    private Integer stockDiscount;
+    private Integer totalPrice;
 
     // UserBuy Entity를 UserBuyRes로 변환
     public UserBuyRes (UserBuy userBuy) {
         buySeq = userBuy.getBuySeq();
-        user = userBuy.getUser();
+        managementUser = userBuy.getManagementUser();
         buyDate = userBuy.getBuyDate();
         state = userBuy.getState();
-        stockPrice = userBuy.getStockPrice();
-        stockDiscount = userBuy.getStockDiscount();
+        totalPrice = userBuy.getTotalPrice();
+
     }
 }

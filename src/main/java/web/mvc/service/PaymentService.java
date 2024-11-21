@@ -2,7 +2,7 @@ package web.mvc.service;
 
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.response.IamportResponse;
-import web.mvc.domain.Payment;
+import com.siot.IamportRestClient.response.Payment;
 import web.mvc.domain.UserBuy;
 import web.mvc.domain.UserCharge;
 import web.mvc.dto.PaymentReq;
@@ -22,9 +22,9 @@ public interface PaymentService {
     public UserCharge getLastCharge();
 
     /**
-     * 결제 요청 데이터 조회
+     * 충전 및 일반 결제 요청 데이터 조회 : 충전 1, 일반결제 2
      */
-    RequestPayDTO findRequestDto (String orderUid);
+    RequestPayDTO findRequestDto (int status, String orderUid);
 
     /**
      * 결제 후 검증

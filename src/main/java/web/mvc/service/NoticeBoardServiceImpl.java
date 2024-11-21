@@ -44,7 +44,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * */
     @Override
     @Transactional
-    public NoticeBoard noticeFindBySeq(@PathVariable Integer boardNoSeq, @RequestBody NoticeBoard noticeBoard) {
+    public NoticeBoard noticeFindBySeq(@PathVariable Long boardNoSeq, @RequestBody NoticeBoard noticeBoard) {
 
 
         return noticeBoardRepository.findById(boardNoSeq).orElse(null);
@@ -56,7 +56,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * */
     @Override
     @Transactional
-    public NoticeBoard noticeUpdate(@PathVariable Integer boardNoSeq, @RequestBody NoticeBoard noticeBoard) throws DMLException {
+    public NoticeBoard noticeUpdate(@PathVariable Long boardNoSeq, @RequestBody NoticeBoard noticeBoard) throws DMLException {
         NoticeBoard boardEntity = noticeBoardRepository.findById(boardNoSeq)
                 .orElseThrow(() -> new DMLException(ErrorCode.PRODUCT_UPDATE_FAILED));
 
@@ -87,7 +87,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * */
     @Override
     @Transactional
-    public String noticeDelete(@PathVariable Integer boardNoSeq) {
+    public String noticeDelete(@PathVariable Long boardNoSeq) {
 
         noticeBoardRepository.deleteById(boardNoSeq);
 

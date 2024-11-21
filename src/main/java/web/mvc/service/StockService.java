@@ -20,10 +20,10 @@ public interface StockService {
      * 상품 수정
      */
     //public Stock updateStock(long farmerUserSeq, int id, Stock stock);
-    public Stock updateStock(int id, Stock stock);
+    public Stock updateStock(long id, Stock stock);
 
     /**
      * 상품 삭제
      */
-    public int deleteStock(int id);
+    public int deleteStock(long id);
 }

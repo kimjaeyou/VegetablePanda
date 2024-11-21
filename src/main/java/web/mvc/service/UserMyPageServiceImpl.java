@@ -11,6 +11,7 @@ import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
 import web.mvc.dto.AuctionDTO2;
 import web.mvc.dto.UserBuyDTO;
+import web.mvc.dto.UserDTO;
 import web.mvc.repository.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final BuyMyPageRepository buyMyPageRepository;
     private final UserMyPageRepository userMyPageRepository;
     private final UserRepository userRepository;
+    private final ManagementRepository managementRepository;
     private final ReviewRepository reviewRepository;
     private final BidRepository bidRepository;
     private final WalletRepository walletRepository;
@@ -61,6 +63,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
         int no = userRepository.updateUser(pw, user.getAddress(),user.getGender(),user.getPhone(), user.getEmail(), seq);
         log.info("no={}",no);
         log.info("회원 수정 성공~");
+
     }
 
     /**
