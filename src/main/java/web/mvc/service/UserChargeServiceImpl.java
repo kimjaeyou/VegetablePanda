@@ -64,4 +64,10 @@ public class UserChargeServiceImpl implements UserChargeService {
         }
         return sb.toString();
     }
+
+    @Override
+    public String chargeWallet() {
+        
+        return "";
+    }
 }
