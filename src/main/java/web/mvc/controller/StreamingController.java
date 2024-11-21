@@ -107,4 +107,17 @@
             }
             return ResponseEntity.ok(pendingStreamings);
         }
+
+        /**
+         * 상태가 1(사용 중)인 스트리밍 방 목록을 가져오는 엔드포인트
+         */
+        @GetMapping("/active-rooms")
+        public ResponseEntity<List<Streaming>> getActiveStreamingRooms() {
+            List<Streaming> activeStreamings = streamingService.findByState(1);
+            if (activeStreamings.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            return ResponseEntity.ok(activeStreamings);
+        }
+
     }

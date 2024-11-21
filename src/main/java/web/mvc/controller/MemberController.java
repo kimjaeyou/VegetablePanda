@@ -1,6 +1,10 @@
 package web.mvc.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -49,4 +53,28 @@ public class MemberController {
         response.put("role", userDetails.getUser().getRole());
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/api/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        // 현재 SecurityContext에서 인증 정보 제거
+        SecurityContextHolder.clearContext();
+
+        // 세션 무효화
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        // 클라이언트 쿠키 삭제
+        Cookie cookie = new Cookie("JSESSIONID", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true); // HTTPS에서만 전달
+        cookie.setMaxAge(0); // 쿠키 즉시 삭제
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        log.info("사용자 로그아웃 성공");
+        return ResponseEntity.ok("로그아웃 되었습니다.");
+    }
+
 }
