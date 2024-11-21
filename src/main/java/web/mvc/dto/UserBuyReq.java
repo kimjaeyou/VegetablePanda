@@ -11,7 +11,7 @@ import web.mvc.domain.UserBuy;
 @Getter
 @ToString
 public class UserBuyReq {
-    private Integer buySeq;
+    private Long buySeq;
     private Long userSeq; // user pk
     private Integer state;
     private Integer stockPrice;

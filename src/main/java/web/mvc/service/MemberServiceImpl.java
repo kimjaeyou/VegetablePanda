@@ -66,7 +66,7 @@ public class MemberServiceImpl implements MemberService {
                         user.getAcount(),
                         user.getPhone(),
                         user.getEmail(),
-                        0,
+                        1,
                         "ROLE_FARMER"
                 );
         farmerRepository.save(fuser);
@@ -83,7 +83,7 @@ public class MemberServiceImpl implements MemberService {
                         user.getGender(),
                         user.getPhone(),
                         user.getEmail(),
-                        0,
+                        1,
                         "ROLE_USER"
                 );
         normalUserRepository.save(uuser);
@@ -101,7 +101,7 @@ public class MemberServiceImpl implements MemberService {
                         user.getPhone(),
                         user.getCode(),
                         user.getEmail(),
-                        0,
+                        1,
                         "ROLE_COMPANY"
                 );
         companyUserRepository.save(cuser);

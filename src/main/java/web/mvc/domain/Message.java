@@ -13,7 +13,7 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_seq")
-    private Integer messageSeq;
+    private Long messageSeq;
 
     @Column(name = "content", length = 200)
     private String content;

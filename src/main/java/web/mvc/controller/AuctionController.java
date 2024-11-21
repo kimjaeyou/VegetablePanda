@@ -24,19 +24,24 @@ public class AuctionController {
         log.info("경매 상품 등록 : {}", auctionDTO);
 
         auctionDTO.setStatus(0); // 경매 승인 대기상태로 등록
-        
         Auction auction = modelMapper.map(auctionDTO, Auction.class);
         AuctionDTO result = modelMapper.map(auctionService.insertAuction(auction), AuctionDTO.class);
+        /*
+            redis 등록
+         */
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     // 경매 취소 : 삭제가 아닌 취소 상태로 바꾼다?
+    // 경매 종료 : highestBidDTO를 레디스에서 꺼내서
     @PatchMapping("/auction/{auctionSeq}")
     public ResponseEntity<?> update(@PathVariable int auctionSeq) {
-        log.info("경매 취소~~");
+        log.info("경매 종료~~");
         auctionService.updateAuction(auctionSeq);
         return new ResponseEntity<>("1", HttpStatus.OK);
+
     }
+
 
 }

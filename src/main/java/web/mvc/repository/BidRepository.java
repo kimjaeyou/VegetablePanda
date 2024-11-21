@@ -10,4 +10,6 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
 
     @Query("select b from Bid b where b.managementUser.userSeq = ?1")
     List<Bid> auctionList(Long seq);
+
+
 }

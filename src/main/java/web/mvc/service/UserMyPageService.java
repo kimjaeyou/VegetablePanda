@@ -2,6 +2,7 @@ package web.mvc.service;
 
 import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
+import web.mvc.domain.User;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.dto.UserDTO;
 
@@ -13,10 +14,10 @@ public interface UserMyPageService {
     List<UserBuyDTO> buyList(Long seq);
 
     // 회원정보 출력
-    UserDTO selectUser(Long seq);
+    User selectUser(Long seq);
 
     // 회원정보 수정
-    void update (UserDTO userDTO);
+    void update (User user, Long seq);
 
     // 회원정보 탈퇴
     void delete (int state);

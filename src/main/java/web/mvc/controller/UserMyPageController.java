@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
+import web.mvc.domain.User;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.dto.UserDTO;
 import web.mvc.service.UserMyPageService;
@@ -18,10 +19,11 @@ import java.util.List;
 @Slf4j
 public class UserMyPageController {
 
-    private UserMyPageService userMyPageService;
+    private final UserMyPageService userMyPageService;
 
     /**
      * 일단 페이지가 잘 만들어 졌는지 테스트
+     * 성공
      */
     @GetMapping("/user/myPage")
     public String test() {
@@ -32,6 +34,7 @@ public class UserMyPageController {
     /**
      * 주문내역
      * 화면에 해당되는 아이디의 주문내역을 출력해주기.
+     * 성공
      */
     @GetMapping("/user/buyList/{seq}")
     public String buyList(@PathVariable Long seq, Model model) {
@@ -40,25 +43,30 @@ public class UserMyPageController {
 
         List<UserBuyDTO> list = userMyPageService.buyList(seq);
         model.addAttribute("list", list);
+        log.info("list = {}", list);
         return "/user/buyList/" + seq;
     }
 
     /**
      * 회원의 정보 조회
      * 일단 값은 들고와야하니까..
+     * 얘도 성공
      */
     @GetMapping("/user/list/{seq}")
-    public ModelAndView selectUser(@PathVariable Long seq, Model model) {
-        UserDTO userDTO = userMyPageService.selectUser(seq);
-        return new ModelAndView("user/list" + seq, "user", userDTO);
+    public String selectUser(@PathVariable Long seq, Model model) {
+        User user = userMyPageService.selectUser(seq);
+        log.info("user = {}", user.getId());
+        model.addAttribute("user", user);
+        return "/user/list/" + seq;
     }
 
     /**
      * 회원정보 수정
+     * 성공
      */
-    @PostMapping("/user/update")
-    public String update(UserDTO userDTO) {
-        userMyPageService.update(userDTO);
+    @PostMapping("/user/update/{seq}")
+    public String update(@RequestBody User user,@PathVariable Long seq) {
+        userMyPageService.update(user, seq);
         return "redirect:/user/update";
     }
 
