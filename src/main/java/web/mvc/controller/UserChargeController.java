@@ -5,11 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import web.mvc.domain.UserCharge;
+import web.mvc.domain.UserWallet;
 import web.mvc.dto.UserChargeDTO;
+import web.mvc.dto.UserWalletDTO;
 import web.mvc.service.UserChargeService;
 
 import java.util.Date;
@@ -41,10 +42,14 @@ public class UserChargeController {
     }
 
     // 결제 검증까지 완료된 후 결제 금액만큼 포인트 충전
-    public String chargePointComplete (long point) {
+    @GetMapping("/charge/point")
+    public ResponseEntity<?> chargePointComplete (int point, long userSeq) {
         log.info("지갑에 금액 충전");
-
-        return "";
+        UserWallet wallet = userChargeService.chargeWallet(point, userSeq);
+        UserWalletDTO walletDTO = modelMapper.map(wallet, UserWalletDTO.class);
+//        return wallet.getPoint()+"포인트 충전 성공";
+        return new ResponseEntity<>(walletDTO, HttpStatus.OK);
     }
+
 
 }

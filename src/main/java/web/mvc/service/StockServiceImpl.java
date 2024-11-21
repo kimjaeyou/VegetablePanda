@@ -27,6 +27,7 @@ public class StockServiceImpl implements StockService {
     public Stock addStock(Stock stock) {
         log.info("addProduct service 동작");
         log.info("Product : {}", stock);
+        stock.setStatus(0);
         return stockRepository.save(stock);
     }
 
@@ -52,6 +53,7 @@ public class StockServiceImpl implements StockService {
 
         dbStock.setCount(stock.getCount());
         dbStock.setContent(stock.getContent());
+        dbStock.setColor(stock.getColor());
 
        // stockRepository.save(dbStock);
         return dbStock;

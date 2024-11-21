@@ -2,17 +2,21 @@ package web.mvc.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import web.mvc.domain.Payment;
 import web.mvc.domain.UserCharge;
+import web.mvc.domain.UserWallet;
 import web.mvc.payment.PaymentStatus;
 import web.mvc.repository.PaymentRepository;
 import web.mvc.repository.UserChargeRepository;
+import web.mvc.repository.WalletRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+@Transactional
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -20,6 +24,7 @@ public class UserChargeServiceImpl implements UserChargeService {
 
     private final UserChargeRepository userChargeRepository;
     private final PaymentRepository paymentRepository;
+    private final WalletRepository walletRepository;
 
     @Override
     public UserCharge order(UserCharge userCharge) {
@@ -66,8 +71,12 @@ public class UserChargeServiceImpl implements UserChargeService {
     }
 
     @Override
-    public String chargeWallet() {
-        
-        return "";
+    public UserWallet chargeWallet(int point, long userSeq) {
+        // 유저 지갑에 포인트 충전
+        UserWallet wallet = walletRepository.findByUserSeq(userSeq);
+        int dbPoint = wallet.getPoint();
+        int finalPoint = dbPoint + point;
+        wallet.setPoint(finalPoint);
+        return wallet;
     }
 }

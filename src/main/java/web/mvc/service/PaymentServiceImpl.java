@@ -31,6 +31,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final ManagementRepository managementRepository;
     private final FarmerUserRepository farmerUserRepository;
     private final CompanyUserRepository companyUserRepository;
+    private final WalletRepository walletRepository;
     private final UserRepository userRepository;
     private final UserBuyRepository buyRepository;
 
@@ -64,21 +65,21 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("userChage : {}", userCharge);
         userM = userCharge.get(0).getManagementUser();
 
-        switch(status){
-            case 1: // 포인트 충전
-                userCharge = userChargeRepository.findByOrderUid(orderUid);
-                log.info("userChage : {}", userCharge);
-                userM = userCharge.get(0).getManagementUser();
-
-                break;
-            case 2: // 일반 결제 요청
-                UserBuy userBuy = userBuyRepository.findById(Long.parseLong(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
-                System.out.println(userBuy);
-                log.info("userBuy : {}", userBuy);
-                userM = userBuy.getManagementUser();
-
-                break;
-        }
+//        switch(status){
+//            case 1: // 포인트 충전
+//                userCharge = userChargeRepository.findByOrderUid(orderUid);
+//                log.info("userChage : {}", userCharge);
+//                userM = userCharge.get(0).getManagementUser();
+//
+//                break;
+//            case 2: // 일반 결제 요청
+//                UserBuy userBuy = userBuyRepository.findById(Long.parseLong(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
+//                System.out.println(userBuy);
+//                log.info("userBuy : {}", userBuy);
+//                userM = userBuy.getManagementUser();
+//
+//                break;
+//        }
 
         RequestPayDTO requestPayDTO;
         log.info("findRequestDto userM : {}", userM);
@@ -138,6 +139,9 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new UserChargeException(ErrorCode.ORDER_CANCELED);
             }
 
+            // 검증 후 포인트 충전
+            //chargeWallet(price, userCharge.getManagementUser().getUserSeq());
+
             // 결제 상태 OK로 변경
             userCharge.getPayment().changePaymentBySuccess(PaymentStatus.OK, iamportResponse.getResponse().getImpUid());
             return iamportResponse;
@@ -149,4 +153,15 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
     }
+
+//    public UserWallet chargeWallet(long point, long userSeq) {
+//        // 유저 지갑에 포인트 충전
+//        UserWallet wallet = walletRepository.findByUserSeq(userSeq);
+//        long dbPoint = wallet.getPoint();
+//        long finalPoint = dbPoint + point;
+//        int changePoint = Long.parseLong(finalPoint);
+//        wallet.setPoint(changePoint);
+//        return wallet;
+//    }
+
 }

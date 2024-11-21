@@ -60,7 +60,6 @@ public class StockController {
     public ResponseEntity<?> update(@RequestBody StockDTO stockDTO) {
         // 값 확인용
         System.out.println(stockDTO.getProductSeq());
-        //System.out.println(stockDTO.getProductDTO().getProductCategorySeq());
         System.out.println(stockDTO.getStockGradeSeq());
         System.out.println(stockDTO.getStockOrganicSeq());
 

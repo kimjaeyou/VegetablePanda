@@ -1,6 +1,7 @@
 package web.mvc.service;
 
 import web.mvc.domain.UserCharge;
+import web.mvc.domain.UserWallet;
 
 public interface UserChargeService {
     /**
@@ -16,5 +17,5 @@ public interface UserChargeService {
     /**
      * 지갑 실제 충전
      */
-    public String chargeWallet();
+    public UserWallet chargeWallet(int point, long userSeq);
 }
