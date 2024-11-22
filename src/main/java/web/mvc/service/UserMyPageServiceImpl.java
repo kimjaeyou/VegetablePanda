@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
+import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.dto.UserDTO;
+import web.mvc.dto.UserUpdateDTO;
 import web.mvc.repository.*;
 
 import java.util.List;
@@ -47,22 +49,40 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 회원정보 가져오기
      */
     @Override
-    public User selectUser(Long seq) {
+    public UserDTO selectUser(Long seq) {
         User user = userMyPageRepository.selectUser(seq);
-        return user;
+
+        // 기존 UserDTO 사용
+        UserDTO userDTO = UserDTO.builder()
+                .userSeq(user.getUserSeq())
+                .id(user.getId())
+                .name(user.getName())
+                .address(user.getAddress())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .build();
+
+        return userDTO;
     }
 
     /**
      * 회원정보 수정
      */
-    @Modifying
     @Override
-    public void update(User user, Long seq) {
-        String pw = passwordEncoder.encode(user.getPw());
-        int no = userRepository.updateUser(pw, user.getAddress(),user.getGender(),user.getPhone(), user.getEmail(), seq);
-        log.info("no={}",no);
-        log.info("회원 수정 성공~");
+    @Transactional
+    public void update(UserUpdateDTO userUpdateDTO, Long seq) {
+        User user = userRepository.findById(seq)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
+        if (userUpdateDTO.getPassword() != null && !userUpdateDTO.getPassword().isEmpty()) {
+            user.setPw(passwordEncoder.encode(userUpdateDTO.getPassword()));
+        }
+        user.setName(userUpdateDTO.getName());
+        user.setAddress(userUpdateDTO.getAddress());
+        user.setPhone(userUpdateDTO.getPhone());
+        user.setEmail(userUpdateDTO.getEmail());
+
+        userRepository.save(user);
     }
 
     /**
@@ -84,7 +104,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 리뷰 작성 목록 조회
      */
     @Override
-    public List<ReviewComment> review(Long seq) {
+    public List<ReviewCommentDTO> review(Long seq) {
         // 처음에 유저 시퀀스에 해당하는 review 시퀀스를 가져오자
         Long reviewSeq = reviewRepository.selectSeq(seq);
 

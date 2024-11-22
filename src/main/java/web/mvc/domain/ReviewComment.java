@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class ReviewComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

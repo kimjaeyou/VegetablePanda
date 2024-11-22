@@ -1,16 +1,16 @@
 package web.mvc.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDTO {
-    private Long userSeq;
-    private String id;
+public class UserUpdateDTO {
+    private String password;
     private String name;
     private String address;
     private String phone;

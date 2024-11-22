@@ -4,6 +4,8 @@ import web.mvc.domain.Bid;
 import web.mvc.domain.CompanyUser;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
+import web.mvc.dto.CompanyDTO;
+import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.UserBuyDTO;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public interface CompanyMyPageService {
     int point(Long seq);
 
     // 리뷰 조회
-    List<ReviewComment> review(Long seq);
+    List<ReviewCommentDTO> review(Long seq);
 
     // 리뷰 삭제
     void deleteReview(Long ReviewSeq,Long userSeq);
@@ -34,4 +36,5 @@ public interface CompanyMyPageService {
     // 경매 내역 조회
     List<Bid> auctionList(Long seq);
 
+    CompanyDTO selectCompany(Long seq);
 }

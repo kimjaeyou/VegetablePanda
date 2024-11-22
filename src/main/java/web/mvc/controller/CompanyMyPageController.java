@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Bid;
 import web.mvc.domain.CompanyUser;
 import web.mvc.domain.ReviewComment;
+import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.service.CompanyMyPageService;
 
@@ -97,7 +98,7 @@ public class CompanyMyPageController {
      */
     @GetMapping("/review/{seq}")
     public String review(@PathVariable Long seq, Model model) {
-        List<ReviewComment> list = companyMyPageService.review(seq);
+        List<ReviewCommentDTO> list = companyMyPageService.review(seq);
         model.addAttribute("list", list);
         log.info("list = {}", list);
         return "redirect:/company/review/" + seq;

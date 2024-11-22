@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
+import web.mvc.dto.ReviewCommentDTO;
 
 import java.util.List;
 
@@ -19,8 +20,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     /**
      * 2. 그리고 그 리뷰 시퀀스에 해당하는 정보들을 들고오면 끝
      */
-    @Query("select c from  ReviewComment c where c.review.reviewSeq = ?1")
-    List<ReviewComment> review(Long seq);
+    @Query("select new web.mvc.dto.ReviewCommentDTO(c.reviewCommentSeq, c.content, c.score, c.review.reviewSeq) " +
+            "from ReviewComment c where c.review.reviewSeq = ?1")
+    List<ReviewCommentDTO> review(Long seq);
 
     /**
      * 리뷰 삭제
