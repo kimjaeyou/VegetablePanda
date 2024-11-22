@@ -13,11 +13,11 @@ public class StockDTO {
     private String content;
     private int count;
     private String color;
-
     private int productSeq;
     private String stockGradeSeq;
     private String stockOrganicSeq;
     private long farmerUserSeq;
+
 //    ProductDTO productDTO;
 //
 //    StockGradeDTO stockGradeDTO;
