@@ -51,11 +51,11 @@ public class UserChargeServiceImpl implements UserChargeService {
             date = format.format(new Date());
             randomNo = this.generateRandomNo(4);
 
-            boolean result = userChargeRepository.existsByOrderUid(date + randomNo);
+            boolean result = userChargeRepository.existsByOrderUid("O" + date + randomNo);
             if(!result) break;
         }
 
-        return date+randomNo;
+        return "O"+date+randomNo;
     }
 
     // 랜덤한 숫자 생성

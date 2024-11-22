@@ -44,12 +44,12 @@ public class ProductTest {
     }
 
     /**
-     * 상품 카테고리 등록
+     * 상품 카테고리, 샘플 등록
      */
     @Test
     @Rollback(false)
     @Disabled
-    public void productCategoryInsert(){
+    public void productDataInsert(){
         productCategoryRepository.save(ProductCategory.builder().content("식량작물").build());
         productCategoryRepository.save(ProductCategory.builder().content("엽채류").build());
         productCategoryRepository.save(ProductCategory.builder().content("과채류").build());
@@ -57,6 +57,11 @@ public class ProductTest {
         productCategoryRepository.save(ProductCategory.builder().content("과수").build());
         productCategoryRepository.save(ProductCategory.builder().content("양채류").build());
         productCategoryRepository.save(ProductCategory.builder().content("기타작물").build());
+
+        productRepository.save(Product.builder().productCategory(new ProductCategory(4L)).productName("감자").build());
+        productRepository.save(Product.builder().productCategory(new ProductCategory(5L)).productName("고구마").build());
+        productRepository.save(Product.builder().productCategory(new ProductCategory(1L)).productName("쌀").build());
+        productRepository.save(Product.builder().productCategory(new ProductCategory(2L)).productName("상추").build());
     }
 
     /**
@@ -65,7 +70,7 @@ public class ProductTest {
     @Test
     @Rollback(false)
     @Disabled
-    public void productInsert(){
+    public void productSampleInsert(){
         productRepository.save(Product.builder().productCategory(new ProductCategory(4L)).productName("감자").build());
         productRepository.save(Product.builder().productCategory(new ProductCategory(5L)).productName("고구마").build());
         productRepository.save(Product.builder().productCategory(new ProductCategory(1L)).productName("쌀").build());

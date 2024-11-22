@@ -59,14 +59,13 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public RequestPayDTO findRequestDto(String orderUid, int status) {
-        //UserCharge userCharge = userChargeRepository.findUserChargeAndPaymentAndManagementUser(orderUid).orElseThrow(()-> new PaymentException(ErrorCode.ORDER_NOTFOUND));
         ManagementUser userM = null;
         RequestPayDTO requestPayDTO = null;
 
         switch(status){
             case 1: // 포인트 충전
                 List<UserCharge> userCharge = userChargeRepository.findByOrderUid(orderUid);
-                log.info("userChage : {}", userCharge);
+                log.info("findRequestDto에서 검색한 userChrage : {}", userCharge);
                 userM = userCharge.get(0).getManagementUser();
 
                 if("user".equals(userM.getContent())){
@@ -185,7 +184,7 @@ public class PaymentServiceImpl implements PaymentService {
     // 포인트 충전을 위한 결제 요청 객체 검색 메소드
     public List<UserCharge> findUserChargeByOrderUid(String orderUid) {
         List<UserCharge> userCharge = userChargeRepository.findByOrderUid(orderUid);
-        log.info("userChage : {}", userCharge);
+        log.info("userCharge : {}", userCharge);
         return userCharge;
     }
 
