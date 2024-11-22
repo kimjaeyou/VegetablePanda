@@ -43,8 +43,8 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * 공지사항 조회
      * */
     @Override
-    @Transactional
-    public NoticeBoard noticeFindBySeq(@PathVariable Long boardNoSeq, @RequestBody NoticeBoard noticeBoard) {
+    @Transactional(readOnly = true)
+    public NoticeBoard noticeFindBySeq( Long boardNoSeq,  NoticeBoard noticeBoard) {
 
 
         return noticeBoardRepository.findById(boardNoSeq).orElse(null);
@@ -56,16 +56,14 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * */
     @Override
     @Transactional
-    public NoticeBoard noticeUpdate(@PathVariable Long boardNoSeq, @RequestBody NoticeBoard noticeBoard) throws DMLException {
+    public NoticeBoard noticeUpdate(Long boardNoSeq,  NoticeBoard noticeBoard) throws DMLException {
         NoticeBoard boardEntity = noticeBoardRepository.findById(boardNoSeq)
                 .orElseThrow(() -> new DMLException(ErrorCode.PRODUCT_UPDATE_FAILED));
 
-        // 필드 업데이트
         boardEntity.setSubject(noticeBoard.getSubject());
         boardEntity.setContent(noticeBoard.getContent());
         boardEntity.setFile(noticeBoard.getFile());
 
-        // 저장 후 반환
         return noticeBoardRepository.save(boardEntity);
     }
 
@@ -74,7 +72,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * 전체 조회
      */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<NoticeBoard> noticeFindAll(){
 
 
@@ -87,9 +85,10 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      * */
     @Override
     @Transactional
-    public String noticeDelete(@PathVariable Long boardNoSeq) {
+    public String noticeDelete(Long boardNoSeq) {
 
-        noticeBoardRepository.deleteById(boardNoSeq);
+        noticeBoardRepository.findById(boardNoSeq).orElseThrow(()->
+                new DMLException(ErrorCode.DELETE_FAILED));
 
         return "ok";
     }
