@@ -13,17 +13,23 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.test.annotation.Rollback;
 import web.mvc.domain.*;
 import web.mvc.dto.AuctionDTO;
 import web.mvc.dto.HighestBidDTO;
 import web.mvc.dto.StockDTO;
 import web.mvc.dto.UserTempWalletDTO;
+import web.mvc.exception.BidException;
+import web.mvc.exception.ErrorCode;
 import web.mvc.redis.RedisUtils;
 import web.mvc.repository.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -163,7 +169,7 @@ public class BidTest {
         System.out.println("유저 가상지갑 : "+userTempWallet.getPoint());
 
 
-        Optional<HighestBidDTO> saveHighestBid =redisUtils.getData("highestBid:"+"7", HighestBidDTO.class);
+        Optional<HighestBidDTO> saveHighestBid =redisUtils.getData("highestBid:"+"15", HighestBidDTO.class);
         HighestBidDTO highestBid = saveHighestBid.orElse(null);
 
         System.out.println("경매 번호" + highestBid.getAuctionSeq());
@@ -184,40 +190,70 @@ public class BidTest {
                 .build(); // 복사
         System.out.println(originalHighestBid.getPrice());
 
-            if(userTempWallet.getPoint()<250){//입찰 시도 금액이 지갑보다 더 작을 때 이 트랜잭션 전에 할듯
-                //오류
-                System.out.println("입찰 선금 포인트가 부족합니다.");
-            }
-            if(highestBid.getPrice()>2500) {// 입찰금이 현재 입찰가 보다 낮으면 안됨
-                //오류 발생
-                System.out.println("입찰가격이 2500보다 더 커야한다.");
-            }
-        try {
-            redisUtils.watch("highestBid:" + highestBid.getAuctionSeq()); // watch는 multi 전에 호출
-            redisUtils.multi();  // 트랜잭션 시작
-
-            // 입찰자 존재시 가상지갑에 포인트 돌려주기
-            /*if (highestBid.getUserSeq() != 0) {
-                UserTempWalletDTO oldBidderWallet = redisUtils.getData("userTempWallet:" + String.valueOf(highestBid.getUserSeq()), UserTempWalletDTO.class).orElse(null);
-                oldBidderWallet.setPoint(oldBidderWallet.getPoint() + (int)(highestBid.getPrice() * 0.1)); // 기존 입찰자에게 포인트 돌려주기
-            }*/
-
-
-            // 변경된 데이터를 Redis 트랜잭션 내에서 저장
-            redisUtils.saveData("userTempWallet:3", userTempWallet);
-            redisUtils.saveData("highestBid:" + String.valueOf(highestBid.getAuctionSeq()), highestBid);
-
-            // EXEC 명령어로 트랜잭션 실행
-            redisUtils.exec();
-            System.out.println("트랜잭션 성공");
-        } catch (Exception e) {
-            e.printStackTrace();
-            // 트랜잭션 실패 시
-            System.out.println("트랜잭션 실패: 데이터가 변경되었습니다.");
-            redisUtils.discard();  // 트랜잭션 취소
-            // 데이터 롤백을 수동으로 수
+        if(highestBid.getUserSeq() == userTempWallet.getUserSeq()){
+            throw new BidException(ErrorCode.HIGH_BIDDER);
         }
 
+        redisTemplate.execute(new SessionCallback<List<Object>>() {
+            @Override
+            public List<Object> execute(RedisOperations operations) throws DataAccessException {
+
+                try {
+                    // 특정 키를 모니터링(watch) 설정, multi 전에 호출
+                    operations.watch("highestBid:" + highestBid.getAuctionSeq());
+                    // 트랜잭션 시작
+                    operations.multi();
+
+
+                    // 입찰자 존재 시 가상 지갑에 포인트 돌려주기
+                    if (highestBid.getUserSeq() != 0) {
+                        UserTempWalletDTO oldBidderWallet = redisUtils.getData("userTempWallet:" + highestBid.getUserSeq(), UserTempWalletDTO.class).orElse(null);
+                        if (oldBidderWallet != null) {
+                            oldBidderWallet.setPoint(oldBidderWallet.getPoint() + (int)(highestBid.getPrice() * 0.1)); // 기존 입찰자에게 포인트 돌려주기
+                            // 업데이트된 정보를 저장해야 한다면 추가적으로 save를 호출할 수 있습니다.
+                            redisUtils.saveData("userTempWallet:" + highestBid.getUserSeq(), oldBidderWallet);
+                        }
+                    }
+                    highestBid.setUserSeq(userTempWallet.getUserSeq());
+                    userTempWallet.setPoint(userTempWallet.getPoint() - 3000);
+                    highestBid.setPrice(3000);
+
+                    if(userTempWallet.getPoint()<2500){//입찰 시도 금액이 지갑보다 더 작을 때 이 트랜잭션 전에 할듯
+                        //오류
+                        System.out.println("입찰 선금 포인트가 부족합니다.");
+                        throw new Exception("e");
+                    }
+                    // 유저 가상지갑에서 금액 차감 및 상위 입찰 정보 수정
+
+
+                    System.out.println("redis에 변경사항 저장");
+                    // 변경된 데이터를 Redis 트랜잭션 내에서 저장
+                    redisUtils.saveData("userTempWallet:3", userTempWallet);
+                    redisUtils.saveData("highestBid:" + highestBid.getAuctionSeq(), highestBid);
+
+                    // 트랜잭션 커밋
+                    return operations.exec();
+                } catch (Exception exception) {
+                    // 트랜잭션 롤백
+                    operations.discard();
+                    System.out.println("롤백 할께");
+                    redisUtils.saveData("userTempWallet:3", originalUserTempWallet);
+                    redisUtils.saveData("highestBid:" + highestBid.getAuctionSeq(), originalHighestBid);
+                    return null; // 예외 발생 시 null 반환 (적절한 에러 처리 필요)
+                }
+            }
+        });
+
+        Optional<HighestBidDTO> rollbackBid =redisUtils.getData("highestBid:"+"15", HighestBidDTO.class);
+        HighestBidDTO rollbackHighestBid = rollbackBid.orElse(null);
+
+        Optional<UserTempWalletDTO> userTempWal = redisUtils.getData("userTempWallet:3",UserTempWalletDTO.class);
+        UserTempWalletDTO rollbackUserTempWallet = userTempWal.orElse(null);
+
+        System.out.println("입찰 성공");
+        System.out.println("user 지갑 남은돈 : " + rollbackUserTempWallet.getPoint());
+        System.out.println("상위 입찰 유저 번호 : " + rollbackHighestBid.getUserSeq());
+        System.out.println("상위 입찰 가격 번호 : " + rollbackHighestBid.getPrice());
 
 
     }
