@@ -54,27 +54,4 @@ public class MemberController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/api/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        // 현재 SecurityContext에서 인증 정보 제거
-        SecurityContextHolder.clearContext();
-
-        // 세션 무효화
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-
-        // 클라이언트 쿠키 삭제
-        Cookie cookie = new Cookie("JSESSIONID", null);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true); // HTTPS에서만 전달
-        cookie.setMaxAge(0); // 쿠키 즉시 삭제
-        cookie.setPath("/");
-        response.addCookie(cookie);
-
-        log.info("사용자 로그아웃 성공");
-        return ResponseEntity.ok("로그아웃 되었습니다.");
-    }
-
 }

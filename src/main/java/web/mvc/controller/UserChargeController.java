@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import web.mvc.domain.UserCharge;
 import web.mvc.dto.UserChargeDTO;
+import web.mvc.repository.ManagementRepository;
 import web.mvc.service.UserChargeService;
 
 import java.util.Date;
@@ -21,6 +22,7 @@ public class UserChargeController {
 
     private final UserChargeService userChargeService;
     private final ModelMapper modelMapper;
+    private final ManagementRepository managementRepository;
 
     // 포인트 충전 주문하기
     @PostMapping("/charge")
