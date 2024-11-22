@@ -2,22 +2,25 @@ package web.mvc.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Builder
+@Data
 @AllArgsConstructor
-public class AuctionDTO {
+public class AuctionDTO implements Serializable {
+
     private Long auctionSeq;
     private int count;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime startTime;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime closeTime;
+    private String startTime;
+
+    private String closeTime;
 
     private int status;
 

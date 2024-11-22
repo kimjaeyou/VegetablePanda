@@ -36,7 +36,8 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
     ORDER_NOTPAID (HttpStatus.NOT_FOUND, "Not Paid Order", "결제되지 않았습니다."),
     ORDER_CANCELED (HttpStatus.NOT_FOUND, "결제 금액 위변조 의심", "결제가 취소되었습니다."),
 
-    HIGH_BIDDER (HttpStatus.NOT_FOUND, "Bidding", "입찰중인 상품입니다 .");
+    HIGH_BIDDER (HttpStatus.NOT_FOUND, "Bidding", "입찰중인 상품입니다 ."),
+    LOW_BID(HttpStatus.NOT_FOUND, "low Bid", "현재 입찰가보다 높게 입력하세요.");
 
 
     private final HttpStatus httpStatus;
