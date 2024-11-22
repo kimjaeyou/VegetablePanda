@@ -12,9 +12,9 @@ import org.springframework.data.redis.core.RedisHash;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HighestBidDTO {
-     int auctionSeq;
+     Long auctionSeq;
 
-     int userSeq;
+     Long userSeq;
 
      int price;
 
