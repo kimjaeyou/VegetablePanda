@@ -1,5 +1,6 @@
 package web.mvc.controller;
 
+import jakarta.servlet.ServletContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -10,11 +11,14 @@ import web.mvc.domain.Auction;
 import web.mvc.dto.AuctionDTO;
 import web.mvc.service.AuctionService;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
 public class AuctionController {
 
+    private final ServletContext servletContext;
     private final AuctionService auctionService;
     private final ModelMapper modelMapper;
 
@@ -41,6 +45,12 @@ public class AuctionController {
         auctionService.updateAuction(auctionSeq);
         return new ResponseEntity<>("1", HttpStatus.OK);
 
+    }
+
+    @PostMapping("/tests")
+    public void test(){
+        List<String> garakData = (List<String>) servletContext.getAttribute("garakData");
+        System.out.println("start:"+garakData);
     }
 
 

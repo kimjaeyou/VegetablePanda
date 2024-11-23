@@ -14,6 +14,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry config) {
         System.out.println("configureMessageBroker(MessageBrokerRegistry config)");
         config.enableSimpleBroker("/topic"); // 클라이언트로 메시지를 전달하는 prefix
+        config.enableSimpleBroker("/bid");
         config.setApplicationDestinationPrefixes("/app"); // 클라이언트에서 서버로 메시지를 보낼 때의 prefix
     }
 
@@ -22,7 +23,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         System.out.println(" registerStompEndpoints(StompEndpointRegistry registry...");
         registry.addEndpoint("/ws") // WebSocket 엔드포인트
                 .setAllowedOrigins("http://localhost:5173"); // React 앱 주소
-                //.setAllowedOrigins("*");
-                //.withSockJS(); // SockJS를 통한 WebSocket fallback 지원
+        //.withSockJS(); // SockJS를 통한 WebSocket fallback 지원
     }
 }

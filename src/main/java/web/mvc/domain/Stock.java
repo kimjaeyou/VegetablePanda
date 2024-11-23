@@ -50,6 +50,11 @@ public class Stock {
     @JoinColumn(name = "user_seq", nullable = false)
     private FarmerUser farmerUser;
 
+    public Stock(Long stockSeq){
+        this.stockSeq = stockSeq;
+    }
+
     private int color;
+
 
 }
