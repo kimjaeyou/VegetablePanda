@@ -34,6 +34,7 @@ public class MemberController {
 
     @PostMapping("/members")
     public String signUp(@RequestBody GetAllUserDTO user) {
+        log.info("user={}",user);
         memberService.signUp(user);
         return "ok";
     }

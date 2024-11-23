@@ -56,7 +56,7 @@ public class UserMyPageController {
     public String selectUser(@PathVariable Long seq, Model model) {
         User user = userMyPageService.selectUser(seq);
         log.info("user = {}", user.getId());
-        model.addAttribute("user", user);
+        model.addAttribute("userInfo", user);
         return "/list/" + seq;
     }
 

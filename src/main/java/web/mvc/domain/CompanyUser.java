@@ -30,6 +30,9 @@ public class CompanyUser {
     @Column(name = "owner_name", nullable = false, length = 60)
     private String ownerName;
 
+    @Column(name = "reg_name", nullable = false, length = 60)
+    private String regName;
+
     @Column(name = "phone", nullable = false, length = 45)
     private String phone;
 
@@ -51,9 +54,10 @@ public class CompanyUser {
 
     private String role;
 
+
     public CompanyUser(Long user_seq,String userId,String comName,String ownerName, String pw,
                        String address,String phone,String code,
-                       String email,int state,String role) {
+                       String email,String regName,int state,String role) {
         this.userSeq = user_seq;
         this.companyId = userId;
         this.comName = comName;
@@ -65,6 +69,7 @@ public class CompanyUser {
         this.email = email;
         this.state = state;
         this.role = role;
+        this.regName = regName;
         this.regDate= LocalDateTime.now();
     }
 

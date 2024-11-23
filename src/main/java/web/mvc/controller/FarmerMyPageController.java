@@ -31,12 +31,12 @@ public class FarmerMyPageController {
      */
     @GetMapping("/saleList/{seq}")
     public String buyList(@PathVariable Long seq, Model model) {
-        log.info("주문내역 조회시작");
+        log.info("판매내역 조회시작");
 
         List<UserBuyDTO> list = farmerMyPageService.buyList(seq);
         model.addAttribute("list", list);
         log.info("list = {}", list);
-        return "redirect:/buyList/" + seq;
+        return "redirect:/,saleList/" + seq;
     }
 
     /**
