@@ -2,12 +2,16 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "auction")
 @Getter @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Auction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,11 +21,12 @@ public class Auction {
     @Column(name = "count", nullable = false)
     private Integer count;
 
+    @CreationTimestamp
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private String startTime;
 
     @Column(name = "close_time", nullable = false)
-    private LocalDateTime closeTime;
+    private String closeTime;
 
     @Column(name = "status")
     private Integer status;

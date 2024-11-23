@@ -33,9 +33,6 @@ public class FarmerUser {
     @Column(name = "phone", nullable = false, length = 50)
     private String phone;
 
-    @Column(name = "content", length = 505)
-    private String content;
-
     @Column(name = "code", length = 60)
     private String code;
 
@@ -55,7 +52,7 @@ public class FarmerUser {
     private String role;
 
     @Column(name = "farmer_grade", nullable = false)
-    private int farmerGrade;
+    private String farmerGrade;
 
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
     private List<Likes> likes;
@@ -63,7 +60,7 @@ public class FarmerUser {
 
     public FarmerUser(Long user_seq,String farmerId, String pw,String name,
                       String address,String code,String account,String phone,
-                      String email,int state,String role) {
+                      String email,int state,String role,String farmerGrade) {
         this.user_seq = user_seq;
         this.farmerId = farmerId;
         this.name = name;
@@ -75,7 +72,7 @@ public class FarmerUser {
         this.email = email;
         this.state = state;
         this.role = role;
-        this.farmerGrade= 0;
+        this.farmerGrade = farmerGrade;
         this.regDate = LocalDateTime.now();
     }
     public FarmerUser (long farmerSeq){

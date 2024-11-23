@@ -3,6 +3,7 @@ package web.mvc.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,6 +21,9 @@ public class Review {
     @Column(name = "visit_num", nullable = false)
     private Integer visitNum;
 
+    @Column(name="intro", length = 505) // 판매자 개인 페이지의 한줄소개
+    private String intro; // 우리가 그토록 토론한 content 이거로 이름 바꿧어여
+
     @OneToOne
     @JoinColumn(name = "user_seq", nullable = false)
     private ManagementUser managementUser;
@@ -27,8 +31,9 @@ public class Review {
     @OneToMany(mappedBy = "review")
     private List<ReviewComment> reviewComments;
 
-    public Review(long management_user,Integer visitNum) {
+    public Review(long management_user,Integer visitNum,String intro) {
         this.managementUser = new ManagementUser(management_user);
         this.visitNum = visitNum;
+        this.intro = intro;
     }
 }
