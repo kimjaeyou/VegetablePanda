@@ -13,6 +13,8 @@ import web.mvc.domain.Auction;
 import web.mvc.domain.Bid;
 import web.mvc.dto.AuctionDTO;
 import web.mvc.dto.BidDTO;
+import web.mvc.dto.HighestBidDTO;
+import web.mvc.dto.UserTempWalletDTO;
 import web.mvc.service.BidService;
 
 @RestController
@@ -28,18 +30,20 @@ public class BidController {
 
     // 입찰
     @PostMapping("/bid")
-    public ResponseEntity<?> register(@RequestBody BidDTO bidDTO) {
-        log.info("입찰 등록 : {}", bidDTO);
+    public ResponseEntity<?> userBid(@RequestBody BidDTO newBidder) {
+        log.info("입찰 등록 : {}", newBidder);
+        HighestBidDTO highestBidDTO = bidService.checkHighestBid(newBidder.getAuctionSeq(),newBidder.getUserSeq());
+        UserTempWalletDTO userTempWalletDTO = bidService.checkUserTempWallet(newBidder.getUserSeq());
+        BidDTO result = modelMapper.map(bidService.bid(newBidder,highestBidDTO,userTempWalletDTO), BidDTO.class);
 
-
-        Bid newBidder = modelMapper.map(bidDTO, Bid.class);
-        BidDTO result = modelMapper.map(bidService.bid(newBidder), BidDTO.class);
         /*
             redis 등록
          */
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
+
+
 
 
 

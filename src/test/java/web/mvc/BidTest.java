@@ -113,7 +113,8 @@ public class BidTest {
         } catch (Exception e) {
             System.out.println("Redis 저장 중 직렬화 오류 발생: " + e.getMessage());
             e.printStackTrace();
-        }        System.out.println("auction:"+auction.getAuctionSeq());
+        }
+        System.out.println("auction:"+auction.getAuctionSeq());
         System.out.println(ac.getCount());
         System.out.println(ac.getStatus());
 

@@ -21,12 +21,12 @@ public class Auction {
     @Column(name = "count", nullable = false)
     private Integer count;
 
-    @CreationTimestamp
+    @CreationTimestamp()
     @Column(name = "start_time", nullable = false)
-    private String startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "close_time", nullable = false)
-    private String closeTime;
+    private LocalDateTime closeTime;
 
     @Column(name = "status")
     private Integer status;
