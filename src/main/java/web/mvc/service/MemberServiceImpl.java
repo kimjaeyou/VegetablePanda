@@ -32,6 +32,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void signUp(GetAllUserDTO user) {
+        log.info("user={}", user);
         if (managementRepository.existsById(user.getId()) > 0) {
             throw new MemberAuthenticationException(ErrorCode.DUPLICATED);
         } else {
@@ -44,7 +45,7 @@ public class MemberServiceImpl implements MemberService {
             log.info("member = " + m);
             if (user.getContent().equals("farmer")) {
                 fammerIn(m, user);
-                Review review = new Review(m.getUserSeq(),0);
+                Review review = new Review(m.getUserSeq(),0,user.getIntro());
                 reviewRepository.save(review);
             } else if (user.getContent().equals("user")) {
                 userIn(m, user);
@@ -69,7 +70,9 @@ public class MemberServiceImpl implements MemberService {
                         user.getPhone(),
                         user.getEmail(),
                         1,
-                        "ROLE_FARMER"
+                        "ROLE_FARMER",
+                        "브론즈" // 등급 일단 넣을게 없어서 이거 넣었습니다, 근데 난 등급 별로,,,
+
                 );
         farmerRepository.save(fuser);
     }
@@ -103,6 +106,7 @@ public class MemberServiceImpl implements MemberService {
                         user.getPhone(),
                         user.getCode(),
                         user.getEmail(),
+                        user.getRegName(),
                         1,
                         "ROLE_COMPANY"
                 );

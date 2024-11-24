@@ -28,7 +28,8 @@ public class SwaggerConfig {
                 .version("1.0.0").contact(new Contact().name("HeeJung Jang")
                         .email( "8253jang@daum.net"));
     }
-    private SecurityScheme createAPIKeyScheme() { return new SecurityScheme().type(SecurityScheme.Type.HTTP)
+    private SecurityScheme createAPIKeyScheme() {
+        return new SecurityScheme().type(SecurityScheme.Type.HTTP)
             .bearerFormat("JWT")
             .scheme("bearer"); }
 }
