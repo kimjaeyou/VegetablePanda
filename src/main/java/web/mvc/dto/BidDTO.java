@@ -24,7 +24,7 @@ public class BidDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime insertDate;
 
-    private Integer auctionSeq;
+    private Long auctionSeq;
 
-    private Integer userSeq;
+    private Long userSeq;
 }
