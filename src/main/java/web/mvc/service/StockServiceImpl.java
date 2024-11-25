@@ -27,7 +27,7 @@ public class StockServiceImpl implements StockService {
     public Stock addStock(Stock stock) {
         log.info("addProduct service 동작");
         log.info("Product : {}", stock);
-        stock.setStatus(0);
+        stock.setStatus(1);
         return stockRepository.save(stock);
     }
 

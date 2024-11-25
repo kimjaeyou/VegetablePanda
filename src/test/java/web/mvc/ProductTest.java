@@ -54,8 +54,8 @@ public class ProductTest {
         productCategoryRepository.save(ProductCategory.builder().content("엽채류").build());
         productCategoryRepository.save(ProductCategory.builder().content("과채류").build());
         productCategoryRepository.save(ProductCategory.builder().content("근채류").build());
-        productCategoryRepository.save(ProductCategory.builder().content("과수").build());
         productCategoryRepository.save(ProductCategory.builder().content("양채류").build());
+        productCategoryRepository.save(ProductCategory.builder().content("과수").build());
         productCategoryRepository.save(ProductCategory.builder().content("기타작물").build());
 
         productRepository.save(Product.builder().productCategory(new ProductCategory(4L)).productName("감자").build());
