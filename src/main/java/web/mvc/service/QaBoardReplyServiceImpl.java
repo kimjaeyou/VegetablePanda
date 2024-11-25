@@ -61,13 +61,13 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
      * */
     @Override
     @Transactional
-    public QaBoardReply qaReplyDelete(Long boardNoSeq) {
+    public String qaReplyDelete(Long boardNoSeq) {
 
         QaBoardReply existingReply = qaBoardReplyRepository.findById(boardNoSeq)
                 .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
 
         qaBoardReplyRepository.delete(existingReply);
 
-        return existingReply;
+        return "삭제 완료";
     }
 }

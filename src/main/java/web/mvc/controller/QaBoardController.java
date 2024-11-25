@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.QaBoard;
@@ -12,22 +13,26 @@ import web.mvc.service.QaBoardService;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/QABoard")
 public class QaBoardController {
     private final QaBoardService qaBoardService;
 
     /**
      * QA 등록
      * */
-    @PostMapping("/QABoard")
+    @PostMapping("/")
     public ResponseEntity<?> qaSave(@RequestBody  QaBoard qaBoard) {
-        SecurityContextHolder.getContext().getAuthentication();
+        Authentication name = SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println("name = " + name );
+
         return new ResponseEntity<>(qaBoardService.qaSave(qaBoard),HttpStatus.CREATED);
     }
 
     /**
      *QA 수정
      * */
-    @PutMapping("/QABoard/{QABoard_seq}")
+    @PutMapping("/{boardNoSeq}")
     public ResponseEntity<?> qaUpdate(@PathVariable Long boardNoSeq, @RequestBody QaBoard qaBoard ) {
         SecurityContextHolder.getContext().getAuthentication();
 
@@ -37,7 +42,7 @@ public class QaBoardController {
     /**
      *QA 조회
      * */
-    @GetMapping("/QABoard/{QABoard_seq}")
+    @GetMapping("/{boardNoSeq}")
     public ResponseEntity<?> qaFindBySeq(@PathVariable Long boardNoSeq){
 
         return new ResponseEntity<>(qaBoardService.qaFindBySeq(boardNoSeq),HttpStatus.OK);
@@ -46,7 +51,7 @@ public class QaBoardController {
     /**
      * 전체 조회
      * */
-    @GetMapping("/QABoard/")
+    @GetMapping("/")
     public ResponseEntity<?> qaFindAll(){
 
         return new ResponseEntity<>(qaBoardService.qaFindAll(),HttpStatus.OK);
@@ -55,7 +60,7 @@ public class QaBoardController {
     /**
      *QA 삭제
      * */
-    @DeleteMapping("/QABoard/")
+    @DeleteMapping("/{boardNoSeq}")
     public ResponseEntity<?> qaDelete(@PathVariable Long boardNoSeq){
         SecurityContextHolder.getContext().getAuthentication();
         return new ResponseEntity<>(qaBoardService.qaDelete(boardNoSeq),HttpStatus.OK);

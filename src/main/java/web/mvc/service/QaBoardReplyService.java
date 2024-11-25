@@ -10,7 +10,7 @@ public interface QaBoardReplyService {
 
     QaBoardReply qaReplyFindBySeq(Long boardNoSeq);
 
-    QaBoardReply qaReplyDelete(Long boardNoSeq);
+    String qaReplyDelete(Long boardNoSeq);
 
 
 }

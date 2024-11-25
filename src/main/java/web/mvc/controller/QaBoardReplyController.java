@@ -15,17 +15,18 @@ import web.mvc.service.QaBoardReplyServiceImpl;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/notifyBoard")
+@RequestMapping("/QaReplyBoard")
 @RequiredArgsConstructor
 @Slf4j
 public class QaBoardReplyController {
+
 
     private final QaBoardReplyService qaBoardReplyService;
 
     /**
      * 질문 댓글 등록
      */
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<?> qaReplySave(@RequestBody QaBoardReply qaBoardReply) {
         validateAdminRole();
         return new ResponseEntity<>(qaBoardReplyService.qaReplySave(qaBoardReply), HttpStatus.CREATED);

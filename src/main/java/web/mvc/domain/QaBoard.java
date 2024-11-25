@@ -2,6 +2,7 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,7 @@ public class QaBoard {
     @Column(name = "readnum", nullable = false, length = 45)
     private String readnum;
 
+    @CreationTimestamp
     @Column(name = "reg_date", nullable = false)
     private LocalDateTime regDate;
 

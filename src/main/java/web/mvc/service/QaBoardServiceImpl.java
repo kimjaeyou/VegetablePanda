@@ -1,9 +1,11 @@
 package web.mvc.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.mvc.domain.NoticeBoard;
 import web.mvc.domain.QaBoard;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
@@ -14,9 +16,10 @@ import java.util.List;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class QaBoardServiceImpl implements QaBoardService {
 
-    private QaBoardRepository qaBoardRepository;
+    private final QaBoardRepository qaBoardRepository;
 
     /**
      * 질문 등록
@@ -35,12 +38,13 @@ public class QaBoardServiceImpl implements QaBoardService {
     @Override
     public QaBoard qaUpdate(Long boardNoSeq, QaBoard qaBoard) {
 
-        QaBoard qa = qaBoardRepository.findById(boardNoSeq).orElseThrow(()->new DMLException(ErrorCode.NOTFOUND_BOARD));
+        QaBoard qa = qaBoardRepository.findById(boardNoSeq)
+                .orElseThrow(()->new DMLException(ErrorCode.NOTFOUND_BOARD));
 
         qa.setSubject(qaBoard.getSubject());
         qa.setContent(qaBoard.getContent());
 
-        return qa;
+        return qaBoardRepository.save(qa);
     }
 
 
@@ -48,6 +52,7 @@ public class QaBoardServiceImpl implements QaBoardService {
      * 질문 조회
      * */
     @Override
+    @Transactional(readOnly = true)
     public QaBoard qaFindBySeq(Long boardNoSeq) {
 
 
@@ -71,10 +76,14 @@ public class QaBoardServiceImpl implements QaBoardService {
      * 질문 삭제
      * */
     @Override
-    public QaBoard qaDelete(Long boardNoSeq) {
+    public String qaDelete(Long boardNoSeq) {
+        QaBoard qaBoard = qaBoardRepository.findById(boardNoSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
 
+        qaBoardRepository.delete(qaBoard);
+        log.info("공지사항 삭제 성공: ID={}", boardNoSeq);
 
-        return null;
+        return "정상적으로 삭제되었습니다.";
     }
 
 

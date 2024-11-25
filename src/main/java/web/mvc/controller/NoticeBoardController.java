@@ -25,7 +25,7 @@ public class NoticeBoardController {
     /**
      * 공지사항 등록
      */
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> noticeSave(@RequestBody NoticeBoard noticeBoard) {
         validateAdminRole();
         return ResponseEntity.ok(noticeBoardService.noticeSave(noticeBoard));
@@ -51,7 +51,7 @@ public class NoticeBoardController {
     /**
      * 공지사항 전체 조회
      */
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<List<NoticeBoard>> noticeFindAll() {
         return ResponseEntity.ok(noticeBoardService.noticeFindAll());
     }

@@ -29,5 +29,5 @@ public interface QaBoardService {
     /**
      * QA 삭제
      * */
-    public QaBoard qaDelete(Long boardNoSeq);
+    public String qaDelete(Long boardNoSeq);
 }
