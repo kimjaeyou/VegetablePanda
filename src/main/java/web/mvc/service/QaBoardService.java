@@ -30,4 +30,6 @@ public interface QaBoardService {
      * QA 삭제
      * */
     public String qaDelete(Long boardNoSeq);
+
+    QaBoard increaseReadnum(Long boardNoSeq);
 }

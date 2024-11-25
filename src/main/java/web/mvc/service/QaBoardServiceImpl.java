@@ -10,6 +10,7 @@ import web.mvc.domain.QaBoard;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.repository.QaBoardRepository;
+import java.time.LocalDateTime;
 
 import java.util.List;
 
@@ -28,6 +29,14 @@ public class QaBoardServiceImpl implements QaBoardService {
     public QaBoard qaSave(QaBoard qaBoard) {
 
 
+        if (qaBoard.getRegDate() == null) {
+            qaBoard.setRegDate(LocalDateTime.now());
+        }
+
+        // 조회수 초기값 설정
+        if (qaBoard.getReadnum() == null) {
+            qaBoard.setReadnum(0);
+        }
         return qaBoardRepository.save(qaBoard);
     }
 
@@ -86,6 +95,16 @@ public class QaBoardServiceImpl implements QaBoardService {
         return "정상적으로 삭제되었습니다.";
     }
 
+    /**
+     *  조회수 증가
+     * */
+    public QaBoard increaseReadnum(Long boardNoSeq) {
+        QaBoard qaBoard = qaBoardRepository.findById(boardNoSeq)
+                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+
+        qaBoard.setReadnum(qaBoard.getReadnum() + 1);
+        return qaBoardRepository.save(qaBoard);
+    }
 
 
 
