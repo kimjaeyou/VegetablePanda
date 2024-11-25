@@ -30,7 +30,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     }
 
     /**
-     * 공지사항 조회 (단건)
+     * 공지사항 조회
      */
     @Override
     @Transactional(readOnly = true)
@@ -48,13 +48,13 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     public NoticeBoard noticeUpdate(Long boardNoSeq, NoticeBoard noticeBoard) {
         log.info("공지사항 글번호: ID={}, 내용={}", boardNoSeq, noticeBoard);
 
-        NoticeBoard existingNotice = noticeBoardRepository.findById(boardNoSeq)
+        NoticeBoard Notice = noticeBoardRepository.findById(boardNoSeq)
                 .orElseThrow(() -> new DMLException(ErrorCode.UPDATE_FAILED));
 
-        existingNotice.setSubject(noticeBoard.getSubject());
-        existingNotice.setContent(noticeBoard.getContent());
+        Notice.setSubject(noticeBoard.getSubject());
+        Notice.setContent(noticeBoard.getContent());
 
-        return noticeBoardRepository.save(existingNotice);
+        return noticeBoardRepository.save(Notice);
     }
 
     /**
@@ -81,6 +81,6 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         noticeBoardRepository.delete(noticeBoard);
         log.info("공지사항 삭제 성공: ID={}", boardNoSeq);
 
-        return "ok";
+        return "정상적으로 삭제되었습니다.";
     }
 }

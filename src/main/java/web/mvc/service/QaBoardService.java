@@ -19,7 +19,7 @@ public interface QaBoardService {
     /**
      * QA 조회
      * */
-    public QaBoard qaFindBySeq(Long boardNoSeq, QaBoard qaBoard);
+    public QaBoard qaFindBySeq(Long boardNoSeq);
 
     /**
      * 전체 조회

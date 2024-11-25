@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class QaBoardReply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +23,10 @@ public class QaBoardReply {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_no_seq", nullable = false)
     private QaBoard qaBoard;
+
+    QaBoardReply(QaBoard qaBoard) {
+
+        this.qaBoard = qaBoard;
+        this.comment = comment;
+    }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class QaBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +35,6 @@ public class QaBoard {
     @OneToOne
     @JoinColumn(name = "file_seq", nullable = true)
     private File file;
+
+
 }
