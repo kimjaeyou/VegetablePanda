@@ -32,7 +32,7 @@ public class Stock {
     private Integer status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_seq", nullable = false)
+    @JoinColumn(name = "product_product_seq", nullable = false)
     private Product product;
 
     @OneToMany(mappedBy = "stock")
