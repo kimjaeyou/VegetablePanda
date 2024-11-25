@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 /**
- * Enum(열거형)은 서로 관련된 상수들을 정의하여 편리하게 사용하기 위한 자료형이다. 
+ * Enum(열거형)은 서로 관련된 상수들을 정의하여 편리하게 사용하기 위한 자료형이다.
  * https://jddng.tistory.com/305
- * 
+ *
  * */
 public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이라는 뜻
 
@@ -38,6 +38,9 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
 
     HIGH_BIDDER (HttpStatus.NOT_FOUND, "Bidding", "입찰중인 상품입니다 ."),
     LOW_BID(HttpStatus.NOT_FOUND, "low Bid", "현재 입찰가보다 높게 입력하세요.");
+
+    LOW_BID (HttpStatus.NOT_FOUND, "low Bid", "현재 입찰가보다 높게 입력하세요."),
+    NOTFOUND_HIGHESTBID (HttpStatus.NOT_FOUND, "Not Found HighestBid", "진행중인 경매가 아닙니다.");
 
     private final HttpStatus httpStatus;
     private  final String title;
