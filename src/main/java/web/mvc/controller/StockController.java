@@ -84,4 +84,5 @@ public class StockController {
         stockService.deleteStock(id);
         return new ResponseEntity<>(id +"번 재고 삭제완료", HttpStatus.OK);
     }
+
 }

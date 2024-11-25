@@ -66,4 +66,5 @@ public class StockServiceImpl implements StockService {
         stockRepository.deleteById(id);
         return 1;
     }
+
 }

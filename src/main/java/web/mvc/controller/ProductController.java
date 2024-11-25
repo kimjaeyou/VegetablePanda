@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Product;
+import web.mvc.domain.ProductCategory;
 import web.mvc.dto.ProductDTO;
 import web.mvc.service.ProductService;
 
@@ -35,6 +36,15 @@ public class ProductController {
         List<Product> productList = productService.findAllProducts();
         List<ProductDTO> productDTOList = productList.stream().map(data -> modelMapper.map(data, ProductDTO.class)).toList();
         return new ResponseEntity<>(productDTOList, HttpStatus.OK);
+    }
+
+    // 카테고리 분류에 따른 상품 목록 조회
+    @GetMapping("/product/{id}")
+    public ResponseEntity<?> getProductsByCategory(@PathVariable long id) {
+        List<Product> productList = productService.findProductsByCategory(id);
+        List<ProductDTO> productDTOList = productList.stream().map(data -> modelMapper.map(data, ProductDTO.class)).toList();
+        return new ResponseEntity<>(productDTOList, HttpStatus.OK);
+
     }
 
     // 상품 수정
