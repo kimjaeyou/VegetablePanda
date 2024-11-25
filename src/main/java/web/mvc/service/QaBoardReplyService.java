@@ -11,11 +11,9 @@ public interface QaBoardReplyService {
 
     QaBoardReply qaReplyUpdate(Long boardNoSeq, QaBoardReply qaBoardReply);
 
-    List<QaBoardReply> qaFindAll();
+    List<QaBoardReply> qaFindAllById(Long boardNoSeq);
 
-    QaBoardReply qaReplyFindBySeq(Long boardNoSeq);
-
-    String qaReplyDelete(Long boardNoSeq);
+    String qaReplyDelete(Long replySeq);
 
 
 }

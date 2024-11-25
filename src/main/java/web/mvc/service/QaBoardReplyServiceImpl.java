@@ -18,9 +18,10 @@ import java.util.List;
 public class QaBoardReplyServiceImpl implements QaBoardReplyService {
 
     private final QaBoardReplyRepository qaBoardReplyRepository;
+
     /**
      * 댓글 등록
-     * */
+     */
     @Override
     @Transactional
     public QaBoardReply qaReplySave(QaBoardReply qaBoardReply) {
@@ -32,7 +33,7 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
 
     /**
      * 댓글 수정
-     * */
+     */
     @Override
     @Transactional
     public QaBoardReply qaReplyUpdate(Long boardNoSeq, QaBoardReply qaBoardReply) {
@@ -47,40 +48,33 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
 
     /**
      * 댓글 조회
-     * */
+     */
     @Override
     @Transactional
-    public QaBoardReply qaReplyFindBySeq(Long boardNoSeq) {
+    public List<QaBoardReply> qaFindAllById(Long boardNoSeq) {
 
+        List<QaBoardReply> replies = qaBoardReplyRepository.findAllByQaBoard_BoardNoSeq(boardNoSeq);
 
-        return qaBoardReplyRepository.findById(boardNoSeq)
-                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+        if (replies.isEmpty()) {
+            throw new DMLException(ErrorCode.NOTFOUND_BOARD);
+        }
+
+        return replies;
     }
 
-    /**
-     * 전체 조회
-     * */
-    @Override
-    public List<QaBoardReply> qaFindAll() {
+        /**
+         * 댓글 삭제
+         * */
+        @Override
+        @Transactional
+        public String qaReplyDelete (Long replySeq){
 
+            QaBoardReply existingReply = qaBoardReplyRepository.findById(replySeq)
+                    .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
 
-        return qaBoardReplyRepository.findAll();
+            qaBoardReplyRepository.delete(existingReply);
+
+            return "삭제 완료";
+        }
     }
 
-
-
-    /**
-     * 댓글 삭제
-     * */
-    @Override
-    @Transactional
-    public String qaReplyDelete(Long boardNoSeq) {
-
-        QaBoardReply existingReply = qaBoardReplyRepository.findById(boardNoSeq)
-                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
-
-        qaBoardReplyRepository.delete(existingReply);
-
-        return "삭제 완료";
-    }
-}
