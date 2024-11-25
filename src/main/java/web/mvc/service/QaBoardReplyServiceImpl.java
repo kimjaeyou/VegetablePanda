@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.mvc.domain.QaBoard;
 import web.mvc.domain.QaBoardReply;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.repository.QaBoardReplyRepository;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -16,7 +19,7 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
 
     private final QaBoardReplyRepository qaBoardReplyRepository;
     /**
-     * 질문 등록
+     * 댓글 등록
      * */
     @Override
     @Transactional
@@ -28,7 +31,7 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
 
 
     /**
-     * 질문 수정
+     * 댓글 수정
      * */
     @Override
     @Transactional
@@ -43,7 +46,7 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
 
 
     /**
-     * 질문 조회
+     * 댓글 조회
      * */
     @Override
     @Transactional
@@ -54,10 +57,20 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
                 .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
     }
 
+    /**
+     * 전체 조회
+     * */
+    @Override
+    public List<QaBoardReply> qaFindAll() {
+
+
+        return qaBoardReplyRepository.findAll();
+    }
+
 
 
     /**
-     * 질문 삭제
+     * 댓글 삭제
      * */
     @Override
     @Transactional

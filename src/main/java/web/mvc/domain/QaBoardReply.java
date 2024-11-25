@@ -1,5 +1,6 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,9 +23,10 @@ public class QaBoardReply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_no_seq", nullable = false)
+    @JsonIgnore
     private QaBoard qaBoard;
 
-    QaBoardReply(QaBoard qaBoard) {
+    QaBoardReply(QaBoard qaBoard, String comment) {
 
         this.qaBoard = qaBoard;
         this.comment = comment;
