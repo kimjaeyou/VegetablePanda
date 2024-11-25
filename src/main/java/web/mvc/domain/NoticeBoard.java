@@ -33,15 +33,17 @@ public class NoticeBoard {
     private LocalDateTime regDate;
 
     @OneToOne
-    @JoinColumn(name = "file_seq", nullable = false)
+    @JoinColumn(name = "file_seq", nullable = true)
     private File file;
 
 
-    NoticeBoard(String subject, String content, String readnum, LocalDateTime regDate) {
+    NoticeBoard(NoticeBoard noticeBoard) {
 
         this.subject = subject;
         this.content = content;
         this.readnum = readnum;
         this.regDate = regDate;
+        this.file = file;
+
     }
 }

@@ -1,8 +1,5 @@
 package web.mvc.service;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import web.mvc.domain.NoticeBoard;
 
 import java.util.List;
@@ -22,7 +19,7 @@ public interface NoticeBoardService {
     /**
      * 공지사항 조회
      * */
-    public NoticeBoard noticeFindBySeq(Long boardNoSeq,NoticeBoard noticeBoard);
+    public NoticeBoard noticeFindBySeq(Long boardNoSeq);
 
     /**
      * 전체 조회

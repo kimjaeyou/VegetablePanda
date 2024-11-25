@@ -1,6 +1,5 @@
 package web.mvc.service;
 
-import org.springframework.http.ResponseEntity;
 import web.mvc.domain.QaBoard;
 
 import java.util.List;
@@ -10,17 +9,17 @@ public interface QaBoardService {
     /**
      * QA 등록
      * */
-    public QaBoard qaSave();
+    public QaBoard qaSave(QaBoard qaBoard);
 
     /**
      * QA 수정
      * */
-    public QaBoard qaUpdate();
+    public QaBoard qaUpdate(Long boardNoSeq, QaBoard qaBoard);
 
     /**
      * QA 조회
      * */
-    public QaBoard qaFindBySeq();
+    public QaBoard qaFindBySeq(Long boardNoSeq, QaBoard qaBoard);
 
     /**
      * 전체 조회
@@ -30,5 +29,5 @@ public interface QaBoardService {
     /**
      * QA 삭제
      * */
-    public QaBoard qaDelete();
+    public QaBoard qaDelete(Long boardNoSeq);
 }

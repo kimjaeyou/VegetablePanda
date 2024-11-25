@@ -1,7 +1,6 @@
 package web.mvc.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.QaBoard;
@@ -18,7 +17,7 @@ public class QaBoardServiceImpl implements QaBoardService {
      * 질문 등록
      * */
     @Override
-    public QaBoard qaSave() {
+    public QaBoard qaSave(QaBoard qaBoard) {
         return null;
     }
 
@@ -27,7 +26,7 @@ public class QaBoardServiceImpl implements QaBoardService {
      * 질문 조회
      * */
     @Override
-    public QaBoard qaUpdate() {
+    public QaBoard qaUpdate(Long boardNoSeq, QaBoard qaBoard) {
         return null;
     }
 
@@ -36,7 +35,7 @@ public class QaBoardServiceImpl implements QaBoardService {
      * 질문 수정
      * */
     @Override
-    public QaBoard qaFindBySeq() {
+    public QaBoard qaFindBySeq(Long boardNoSeq, QaBoard qaBoard) {
         return null;
     }
 
@@ -54,7 +53,7 @@ public class QaBoardServiceImpl implements QaBoardService {
      * 질문 삭제
      * */
     @Override
-    public QaBoard qaDelete() {
+    public QaBoard qaDelete(Long boardNoSeq) {
         return null;
     }
 

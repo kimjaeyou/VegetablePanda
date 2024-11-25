@@ -2,8 +2,10 @@ package web.mvc.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import web.mvc.domain.QaBoard;
 import web.mvc.service.QaBoardService;
 
 @RestController
@@ -16,26 +18,28 @@ public class QaBoardController {
      * QA 등록
      * */
     @PostMapping("/QABoard")
-    public ResponseEntity<?> qaSave(){
+    public ResponseEntity<?> qaSave(@RequestBody  QaBoard qaBoard) {
 
-        return null;
+        return new ResponseEntity<>(qaBoardService.qaSave(qaBoard),HttpStatus.CREATED);
     }
 
     /**
      *QA 수정
      * */
     @PutMapping("/QABoard/{QABoard_seq}")
-    public ResponseEntity<?> qaUpdate(){
-        return null;
+    public ResponseEntity<?> qaUpdate(@PathVariable Long boardNoSeq, @RequestBody QaBoard qaBoard ) {
+
+
+        return new ResponseEntity<>(qaBoardService.qaUpdate(boardNoSeq, qaBoard),HttpStatus.OK);
     }
 
     /**
      *QA 조회
      * */
     @GetMapping("/QABoard/{QABoard_seq}")
-    public ResponseEntity<?> qaFindBySeq(){
+    public ResponseEntity<?> qaFindBySeq(@PathVariable Long boardNoSeq, @RequestBody QaBoard qaBoard){
 
-        return null;
+        return new ResponseEntity<>(qaBoardService.qaFindBySeq(boardNoSeq,qaBoard),HttpStatus.OK);
     }
 
     /**
@@ -44,15 +48,15 @@ public class QaBoardController {
     @GetMapping("/QABoard/")
     public ResponseEntity<?> qaFindAll(){
 
-        return null;
+        return new ResponseEntity<>(qaBoardService.qaFindAll(),HttpStatus.OK);
     }
 
     /**
      *QA 삭제
      * */
     @DeleteMapping("/QABoard/")
-    public ResponseEntity<?> qaDelete(){
+    public ResponseEntity<?> qaDelete(@PathVariable Long boardNoSeq){
 
-        return null;
+        return new ResponseEntity<>(qaBoardService.qaDelete(boardNoSeq),HttpStatus.OK);
     }
 }
