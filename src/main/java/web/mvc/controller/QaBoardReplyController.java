@@ -10,9 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.QaBoardReply;
 import web.mvc.service.QaBoardReplyService;
-import web.mvc.service.QaBoardReplyServiceImpl;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/QaReplyBoard")
@@ -41,31 +41,25 @@ public class QaBoardReplyController {
         return new ResponseEntity<>(qaBoardReplyService.qaReplyUpdate(boardNoSeq, qaBoardReply), HttpStatus.OK);
     }
 
-    /**
-     * 질문 댓글 조회
-     */
-    @GetMapping("/{boardNoSeq}")
-    public ResponseEntity<?> noticeFindBySeq(@PathVariable Long boardNoSeq) {
-        return new ResponseEntity<>(qaBoardReplyService.qaReplyFindBySeq(boardNoSeq), HttpStatus.OK);
-    }
 
     /**
-     * 질문 댓글 전체 조회
+     * 질문 댓글 게시글 별 조회
      * */
-    @GetMapping("/")
-    public ResponseEntity<?> qaFindAll(){
+    @GetMapping("/{boardNoSeq}")
+    public ResponseEntity<?> qaFindAllById(@PathVariable Long boardNoSeq) {
+        List<QaBoardReply> replies = qaBoardReplyService.qaFindAllById(boardNoSeq);
 
-        return new ResponseEntity<>(qaBoardReplyService.qaFindAll(),HttpStatus.OK);
+        return new ResponseEntity<>(replies, HttpStatus.OK);
     }
 
     /**
      * 질문 댓글 삭제
      */
-    @DeleteMapping("/{boardNoSeq}")
-    public ResponseEntity<?> noticeDelete(@PathVariable Long boardNoSeq) {
+    @DeleteMapping("/{replySeq}")
+    public ResponseEntity<?> noticeDelete(@PathVariable Long replySeq) {
         validateAdminRole();
-        qaBoardReplyService.qaReplyDelete(boardNoSeq);
-        return ResponseEntity.ok("공지사항이 삭제되었습니다.");
+        qaBoardReplyService.qaReplyDelete(replySeq);
+        return ResponseEntity.ok("댓글이 삭제되었습니다.");
     }
 
 
