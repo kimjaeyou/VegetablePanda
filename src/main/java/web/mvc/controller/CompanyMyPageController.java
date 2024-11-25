@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Bid;
 import web.mvc.domain.CompanyUser;
 import web.mvc.domain.ReviewComment;
+import web.mvc.dto.AuctionDTO2;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.service.CompanyMyPageService;
 
@@ -22,9 +23,9 @@ public class CompanyMyPageController {
 
     /**
      * 일단 페이지가 잘 만들어 졌는지 테스트
-     * 근데 이건 왜 안되냐
+     * 성공
      */
-    @GetMapping("/")
+    @GetMapping("")
     public String test() {
         log.info("업체 마이페이지 test");
         return "업체 마이페이지";
@@ -32,7 +33,7 @@ public class CompanyMyPageController {
 
     /**
      * 주문내역
-     * 화면에 해당되는 아이디의 주문내역을 출력해주기.
+     * 성공
      */
     @GetMapping("/buyList/{seq}")
     public String buyList(@PathVariable Long seq, Model model) {
@@ -127,8 +128,9 @@ public class CompanyMyPageController {
      */
     @GetMapping("/auction/{seq}")
     public String auctionList(@PathVariable Long seq, Model model) {
-        List<Bid> list = companyMyPageService.auctionList(seq);
+        List<AuctionDTO2> list = companyMyPageService.auctionList(seq);
         model.addAttribute("list", list);
+        log.info("list = {}", list);
         return "redirect:/company/auction/" + seq;
     }
 }

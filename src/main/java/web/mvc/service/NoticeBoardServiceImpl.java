@@ -2,17 +2,13 @@ package web.mvc.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import web.mvc.domain.NoticeBoard;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
-import web.mvc.repository.FileRepository;
 import web.mvc.repository.NoticeBoardRepository;
-import web.mvc.repository.UserRepository;
+import web.mvc.service.NoticeBoardService;
 
 import java.util.List;
 
@@ -20,79 +16,71 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class NoticeBoardServiceImpl implements NoticeBoardService {
-    private final NoticeBoardRepository noticeBoardRepository;
-    private final FileRepository fileRepository;
 
+    private final NoticeBoardRepository noticeBoardRepository;
 
     /**
      * 공지사항 등록
-     * */
-    @Override
-    @Transactional
-    public NoticeBoard noticeSave(@RequestBody NoticeBoard noticeBoard) {
-        NoticeBoard savedNotice = noticeBoardRepository.save(noticeBoard);
-
-
-
-
-        return noticeBoardRepository.save(savedNotice);
-    }
-
-
-    /**
-     * 공지사항 조회
-     * */
-    @Override
-    @Transactional
-    public NoticeBoard noticeFindBySeq(@PathVariable Long boardNoSeq, @RequestBody NoticeBoard noticeBoard) {
-
-
-        return noticeBoardRepository.findById(boardNoSeq).orElse(null);
-    }
-
-
-    /**
-     * 공지사항 수정
-     * */
-    @Override
-    @Transactional
-    public NoticeBoard noticeUpdate(@PathVariable Long boardNoSeq, @RequestBody NoticeBoard noticeBoard) throws DMLException {
-        NoticeBoard boardEntity = noticeBoardRepository.findById(boardNoSeq)
-                .orElseThrow(() -> new DMLException(ErrorCode.PRODUCT_UPDATE_FAILED));
-
-        // 필드 업데이트
-        boardEntity.setSubject(noticeBoard.getSubject());
-        boardEntity.setContent(noticeBoard.getContent());
-        boardEntity.setFile(noticeBoard.getFile());
-
-        // 저장 후 반환
-        return noticeBoardRepository.save(boardEntity);
-    }
-
-
-    /**
-     * 전체 조회
      */
     @Override
     @Transactional
-    public List<NoticeBoard> noticeFindAll(){
+    public NoticeBoard noticeSave(NoticeBoard noticeBoard) {
+        log.info("공지사항 등록 요청: {}", noticeBoard);
+        return noticeBoardRepository.save(noticeBoard);
+    }
 
+    /**
+     * 공지사항 조회
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public NoticeBoard noticeFindBySeq(Long boardNoSeq) {
+        log.info("공지사항 단건 조회 요청: ID={}", boardNoSeq);
+        return noticeBoardRepository.findById(boardNoSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+    }
 
+    /**
+     * 공지사항 수정
+     */
+    @Override
+    @Transactional
+    public NoticeBoard noticeUpdate(Long boardNoSeq, NoticeBoard noticeBoard) {
+        log.info("공지사항 글번호: ID={}, 내용={}", boardNoSeq, noticeBoard);
+
+        NoticeBoard Notice = noticeBoardRepository.findById(boardNoSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.UPDATE_FAILED));
+
+        Notice.setSubject(noticeBoard.getSubject());
+        Notice.setContent(noticeBoard.getContent());
+
+        return noticeBoardRepository.save(Notice);
+    }
+
+    /**
+     * 공지사항 전체 조회
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<NoticeBoard> noticeFindAll() {
+        log.info("공지사항 전체 조회 요청");
         return noticeBoardRepository.findAll();
     }
 
-
     /**
      * 공지사항 삭제
-     * */
+     */
     @Override
     @Transactional
-    public String noticeDelete(@PathVariable Long boardNoSeq) {
+    public String noticeDelete(Long boardNoSeq) {
+        log.info("공지사항 글번호={}", boardNoSeq);
 
-        noticeBoardRepository.deleteById(boardNoSeq);
+        NoticeBoard noticeBoard = noticeBoardRepository.findById(boardNoSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
 
-        return "ok";
+        noticeBoardRepository.delete(noticeBoard);
+        log.info("공지사항 삭제 성공: ID={}", boardNoSeq);
+
+        return "정상적으로 삭제되었습니다.";
     }
-
-
 }

@@ -26,6 +26,10 @@ public class GetAllUserDTO {
     private String ownerName;
     private String comName;
     private String role;
+    private String regName;
+    private String image;
+    private String intro;
+
 
     public GetAllUserDTO(FarmerUser fuser) {
         this.user_seq=fuser.getUser_seq();
@@ -38,6 +42,7 @@ public class GetAllUserDTO {
         this.email=fuser.getEmail();
         this.phone=fuser.getPhone();
         this.role=fuser.getRole();
+
     }
 
     public GetAllUserDTO(User nuser) {
@@ -63,6 +68,7 @@ public class GetAllUserDTO {
         this.phone=cuser.getPhone();
         this.role=cuser.getRole();
         this.code=cuser.getCode();
+        this.regName=cuser.getRegName();
     }
 
 }

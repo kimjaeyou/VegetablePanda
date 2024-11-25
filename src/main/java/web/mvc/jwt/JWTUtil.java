@@ -64,18 +64,34 @@ public class JWTUtil {
         log.info("isExpired(String token)  re  = {}",re);
         return re;
     }
+
+    public String getPhone(String token) {
+        log.info("getPhone(String token) call");
+        String re = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("phone", String.class);
+        log.info("getPhone(String token) re = {}", re);
+        return re;
+    }
+
+    public String getAddress(String token) {
+        log.info("getAddress(String token) call");
+        String re = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("address", String.class);
+        log.info("getAddress(String token) re = {}", re);
+        return re;
+    }
     //Bearer : JWT 혹은 Oauth에 대한 토큰을 사용
     //public String createJwt(String username, String role, Long expiredMs) {
     //claim은 payload에 해당하는 정보
     public String createJwt(GetAllUserDTO getAllUserDTO, String role, Long expiredMs) {
-        log.info("createJwt  call");
+        log.info("createJwt call");
         return Jwts.builder()
-                .claim("user_seq",Long.toString(getAllUserDTO.getUser_seq()))
-                .claim("name", getAllUserDTO.getName()) //이름
-                .claim("id", getAllUserDTO.getId()) //아이디
-                .claim("role", role) //Role
-                .issuedAt(new Date(System.currentTimeMillis())) //현재로그인된 시간
-                .expiration(new Date(System.currentTimeMillis() + expiredMs)) //만료시간
+                .claim("user_seq", Long.toString(getAllUserDTO.getUser_seq()))
+                .claim("name", getAllUserDTO.getName())
+                .claim("id", getAllUserDTO.getId())
+                .claim("role", role)
+                .claim("phone", getAllUserDTO.getPhone())
+                .claim("address", getAllUserDTO.getAddress())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
                 .compact();
     }

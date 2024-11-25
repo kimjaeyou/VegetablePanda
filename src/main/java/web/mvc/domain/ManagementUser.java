@@ -48,7 +48,7 @@ public class ManagementUser {
         this.content = content;
     }
 
-    public ManagementUser(long userSeq) {
+    public ManagementUser(Long userSeq) {
         this.userSeq = userSeq;
     };
 }

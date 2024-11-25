@@ -18,6 +18,7 @@ public class RedisUtils {
         this.redisTemplate = redisTemplate;
     }
 
+
     // 낙관적 잠금 시 사용할 watch 메서드
     public void watch(String key) {
         redisTemplate.watch(key);
@@ -98,6 +99,7 @@ public class RedisUtils {
             return Optional.empty();
         }
     }
+
     public void deleteData(String key){
         redisTemplate.delete(key);
     }

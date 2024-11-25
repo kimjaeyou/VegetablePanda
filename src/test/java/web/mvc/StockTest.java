@@ -69,7 +69,17 @@ public class StockTest {
 
         log.info("Stock 정보 : ");
         //stockRepository.save(Stock.builder().content("알감자").count(500).product(new Product(2L)).stockGrade(new StockGrade(1L)).stockOrganic(new StockOrganic(1L)).farmerUser(new FarmerUser(1)).color(1).build());
-        stockRepository.save(Stock.builder().content("알감자").count(500).product(new Product(2L)).stockGrade(new StockGrade(1L)).stockOrganic(new StockOrganic(1L)).farmerUser(new FarmerUser(1)).color(1).build());
+        //stockRepository.save(Stock.builder().content("알감자").count(500).product(new Product(2L)).stockGrade(new StockGrade(1L)).stockOrganic(new StockOrganic(1L)).farmerUser(new FarmerUser(1L)).color(1).build());
 
+        stockRepository.save(Stock.builder()
+                .content("알감자")
+                .count(500)
+                .status(2)
+                .color(1)
+                .product(Product.builder().productSeq(1L).build())
+                .stockGrade(StockGrade.builder().stockGradeSeq(1L).build())
+                .stockOrganic(StockOrganic.builder().stockOrganicSeq(1L).build())
+                .farmerUser(FarmerUser.builder().user_seq(2L).build())
+                .build());
     }
 }

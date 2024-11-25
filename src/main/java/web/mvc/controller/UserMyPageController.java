@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
+import web.mvc.dto.AuctionDTO2;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.service.UserMyPageService;
 
@@ -24,7 +25,7 @@ public class UserMyPageController {
      * 일단 페이지가 잘 만들어 졌는지 테스트
      * 성공
      */
-    @GetMapping("/")
+    @GetMapping("")
     public String test() {
         log.info("일반 마이페이지 test");
         return "일반 마이페이지";
@@ -55,7 +56,7 @@ public class UserMyPageController {
     public String selectUser(@PathVariable Long seq, Model model) {
         User user = userMyPageService.selectUser(seq);
         log.info("user = {}", user.getId());
-        model.addAttribute("user", user);
+        model.addAttribute("userInfo", user);
         return "/list/" + seq;
     }
 
@@ -66,7 +67,7 @@ public class UserMyPageController {
     @PostMapping("/update/{seq}")
     public String update(@RequestBody User user, @PathVariable Long seq) {
         userMyPageService.update(user, seq);
-        return "redirect:/update";
+        return "redirect:/list";
     }
 
     /**
@@ -74,7 +75,6 @@ public class UserMyPageController {
      * 사실상 말이 탈퇴지
      * 그냥 계정 정지임. 그럼 상태값을 바꿔주기만 하면될듯.
      * 근데 이거 Post로 해도 되나...?
-     * <p>
      * 성공
      */
     @PostMapping("/delete/{seq}")
@@ -85,7 +85,7 @@ public class UserMyPageController {
 
     /**
      * 지갑 잔액조회
-     * 충전은 인영님이 결제 API로 넣어주신다고 하셨으니까 일단 조회만 되게 해보자
+     * 충전은 인영님이 결제 API로 넣어주신다고 하셨으니까 일단 금액만 조회 되게 해보자
      * 성공
      */
     @PostMapping("/point/{seq}")
@@ -134,9 +134,9 @@ public class UserMyPageController {
      * 18:09 : 이거 나중에 할게여... 너무 답이 안나와요
      * 테이블이 너무 엉켜있어요
      */
-    @GetMapping("/auction/{seq}")
+    @GetMapping("/auctionList/{seq}")
     public String auctionList(@PathVariable Long seq, Model model) {
-        List<Bid> list = userMyPageService.auctionList(seq);
+        List<AuctionDTO2> list = userMyPageService.auctionList(seq);
         model.addAttribute("list", list);
         return "/auction/" + seq;
     }

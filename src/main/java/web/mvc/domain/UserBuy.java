@@ -2,6 +2,7 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +24,7 @@ public class UserBuy {
     @JoinColumn(name = "user_seq", nullable = false)
     private ManagementUser managementUser;
 
+    @CreationTimestamp
     @Column(name = "buy_date")
     private LocalDateTime buyDate;
 

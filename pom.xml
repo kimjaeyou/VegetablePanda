@@ -31,30 +31,31 @@
     </properties>
 
     <repositories>
+
+
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-mllib_2.12</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+
 
         <!--websocket-->
-        <!-- 채팅 관련 웹소켓 디펜던시 -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.webjars</groupId>-->
-        <!--            <artifactId>stomp-websocket</artifactId>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>org.webjars</groupId>-->
-        <!--            <artifactId>sockjs-client</artifactId>-->
-        <!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.webjars.bower</groupId>-->
-<!--            <artifactId>jquery</artifactId>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.webjars</groupId>
@@ -201,7 +202,6 @@
         <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-
         </dependency>
 
         <dependency>
@@ -249,6 +249,21 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.15.2</version> <!-- 프로젝트에 맞는 버전 선택 -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-aws</artifactId>
+            <version>2.2.6.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>web</groupId>
+            <artifactId>mvc</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

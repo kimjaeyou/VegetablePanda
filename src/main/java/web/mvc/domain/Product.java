@@ -28,4 +28,9 @@ public class Product {
     public Product (Long productSeq) {
         this.productSeq = productSeq;
     }
+    public Product (String productName,ProductCategory cat) {
+        this.productName = productName;
+        this.productCategory = cat;
+    }
+
 }

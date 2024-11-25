@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
+import web.mvc.dto.AuctionDTO2;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.dto.UserDTO;
 import web.mvc.repository.*;
@@ -85,11 +86,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public List<ReviewComment> review(Long seq) {
-        // 처음에 유저 시퀀스에 해당하는 review 시퀀스를 가져오자
-        Long reviewSeq = reviewRepository.selectSeq(seq);
-
-        // 그럼 그 리뷰 시퀀스에 해당하는 리뷰들을 가져오자
-        return reviewRepository.review(reviewSeq);
+        return reviewRepository.review(seq);
     }
 
     /**
@@ -106,8 +103,8 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 그러면 일단 먼저 시퀀스로 값을 찾아서 목록 가져오기?
      */
     @Override
-    public List<Bid> auctionList(Long seq) {
-        List <Bid> list = bidRepository.auctionList(seq);
+    public List<AuctionDTO2> auctionList(Long seq) {
+        List <AuctionDTO2> list = bidRepository.auctionList(seq);
         return list;
     }
 }

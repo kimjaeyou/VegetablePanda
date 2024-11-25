@@ -2,6 +2,7 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -27,19 +28,22 @@ public class NoticeBoard {
     @Column(name = "readnum", nullable = false, length = 45)
     private String readnum;
 
+    @CreationTimestamp
     @Column(name = "reg_date", nullable = false)
     private LocalDateTime regDate;
 
     @OneToOne
-    @JoinColumn(name = "file_seq", nullable = false)
+    @JoinColumn(name = "file_seq", nullable = true)
     private File file;
 
 
-    NoticeBoard(String subject, String content, String readnum, LocalDateTime regDate) {
+    NoticeBoard(NoticeBoard noticeBoard) {
 
         this.subject = subject;
         this.content = content;
         this.readnum = readnum;
         this.regDate = regDate;
+        this.file = file;
+
     }
 }

@@ -34,6 +34,7 @@ public class MemberController {
 
     @PostMapping("/members")
     public String signUp(@RequestBody GetAllUserDTO user) {
+        log.info("user={}",user);
         memberService.signUp(user);
         return "ok";
     }
@@ -44,9 +45,13 @@ public class MemberController {
                 (CustomMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Map<String, Object> response = new HashMap<>();
+        response.put("user_seq", userDetails.getUser().getUser_seq());
         response.put("id", userDetails.getUser().getId());
         response.put("name", userDetails.getUser().getName());
         response.put("role", userDetails.getUser().getRole());
+        response.put("phone", userDetails.getUser().getPhone());
+        response.put("address", userDetails.getUser().getAddress());
+
         return ResponseEntity.ok(response);
     }
 }

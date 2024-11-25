@@ -1,14 +1,17 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "file")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class File {
     @Id
     @Column(name = "file_seq")
@@ -20,4 +23,9 @@ public class File {
 
     @Column(name = "name", length = 80)
     private String name;
+
+    @JsonCreator
+    public File(@JsonProperty("fileSeq") Long fileSeq) {
+        this.fileSeq = fileSeq;
+    }
 }

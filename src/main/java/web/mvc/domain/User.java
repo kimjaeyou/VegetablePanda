@@ -63,5 +63,4 @@ public class User {
         this.role = role;
         this.regDate = LocalDateTime.now();
     }
-
 }

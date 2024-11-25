@@ -8,8 +8,8 @@ import web.mvc.domain.UserCharge;
 @Getter
 @Setter
 public class UserChargeDTO {
-    private int userChargeSeq;
-    private int managementUserSeq;
+    private Long userChargeSeq;
+    private Long managementUserSeq;
     private String chargeDate;
     private long price;
     private String orderUid;
