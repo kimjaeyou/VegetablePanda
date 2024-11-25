@@ -22,13 +22,17 @@ import java.util.List;
 public class QaBoardServiceImpl implements QaBoardService {
 
     private final QaBoardRepository qaBoardRepository;
+    QaDTO qaDTO = new QaDTO();
 
     /**
      * 질문 등록
      * */
     @Override
     public QaDTO qaSave(QaBoard qaBoard) {
+
+
         String writerId = getCurrentUserId();
+        qaDTO.setWriterId(writerId);
         QaBoard savedQaBoard = qaBoardRepository.save(qaBoard);
         return toDto(savedQaBoard, writerId);
     }
