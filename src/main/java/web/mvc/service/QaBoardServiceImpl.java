@@ -29,6 +29,10 @@ public class QaBoardServiceImpl implements QaBoardService {
     @Override
     public QaDTO qaSave(QaBoard qaBoard) {
         String writerId = getCurrentUserId();
+
+        qaBoard.setReadnum(0);
+        qaBoard.setFile(null);
+
         QaBoard savedQaBoard = qaBoardRepository.save(qaBoard);
         return toDto(savedQaBoard, writerId);
     }
