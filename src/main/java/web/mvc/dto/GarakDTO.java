@@ -13,5 +13,5 @@ public class GarakDTO {
     private int garak_count;
     private String garak_type;
     private String garak_grade;
-    private int garak_category;
+    private long garak_category;
 }
