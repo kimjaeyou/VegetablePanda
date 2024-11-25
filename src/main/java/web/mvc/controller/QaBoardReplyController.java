@@ -50,6 +50,15 @@ public class QaBoardReplyController {
     }
 
     /**
+     * 질문 댓글 전체 조회
+     * */
+    @GetMapping("/")
+    public ResponseEntity<?> qaFindAll(){
+
+        return new ResponseEntity<>(qaBoardReplyService.qaFindAll(),HttpStatus.OK);
+    }
+
+    /**
      * 질문 댓글 삭제
      */
     @DeleteMapping("/{boardNoSeq}")
