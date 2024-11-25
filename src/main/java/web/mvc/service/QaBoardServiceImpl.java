@@ -3,14 +3,15 @@ package web.mvc.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.NoticeBoard;
 import web.mvc.domain.QaBoard;
+import web.mvc.dto.QaDTO;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.repository.QaBoardRepository;
-import java.time.LocalDateTime;
 
 import java.util.List;
 
@@ -26,18 +27,10 @@ public class QaBoardServiceImpl implements QaBoardService {
      * 질문 등록
      * */
     @Override
-    public QaBoard qaSave(QaBoard qaBoard) {
-
-
-        if (qaBoard.getRegDate() == null) {
-            qaBoard.setRegDate(LocalDateTime.now());
-        }
-
-        // 조회수 초기값 설정
-        if (qaBoard.getReadnum() == null) {
-            qaBoard.setReadnum(0);
-        }
-        return qaBoardRepository.save(qaBoard);
+    public QaDTO qaSave(QaBoard qaBoard) {
+        String writerId = getCurrentUserId();
+        QaBoard savedQaBoard = qaBoardRepository.save(qaBoard);
+        return toDto(savedQaBoard, writerId);
     }
 
 
@@ -45,7 +38,7 @@ public class QaBoardServiceImpl implements QaBoardService {
      * 질문 수정
      * */
     @Override
-    public QaBoard qaUpdate(Long boardNoSeq, QaBoard qaBoard) {
+    public QaDTO qaUpdate(Long boardNoSeq, QaBoard qaBoard) {
 
         QaBoard qa = qaBoardRepository.findById(boardNoSeq)
                 .orElseThrow(()->new DMLException(ErrorCode.NOTFOUND_BOARD));
@@ -53,7 +46,7 @@ public class QaBoardServiceImpl implements QaBoardService {
         qa.setSubject(qaBoard.getSubject());
         qa.setContent(qaBoard.getContent());
 
-        return qaBoardRepository.save(qa);
+        return toDto(qaBoardRepository.save(qa), getCurrentUserId());
     }
 
 
@@ -62,11 +55,11 @@ public class QaBoardServiceImpl implements QaBoardService {
      * */
     @Override
     @Transactional(readOnly = true)
-    public QaBoard qaFindBySeq(Long boardNoSeq) {
+    public QaDTO qaFindBySeq(Long boardNoSeq) {
 
-
-        return qaBoardRepository.findById(boardNoSeq)
-                .orElseThrow(()->new DMLException(ErrorCode.NOTFOUND_BOARD));
+        QaBoard qaBoard = qaBoardRepository.findById(boardNoSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+        return toDto(qaBoard, getCurrentUserId());
     }
 
 
@@ -74,10 +67,12 @@ public class QaBoardServiceImpl implements QaBoardService {
      * 전체 조회
      * */
     @Override
-    public List<QaBoard> qaFindAll() {
+    public List<QaDTO> qaFindAll() {
+        String writerId = getCurrentUserId();
 
-
-        return qaBoardRepository.findAll();
+        return qaBoardRepository.findAll().stream()
+                .map(qaBoard -> toDto(qaBoard, writerId))
+                .toList();
     }
 
 
@@ -90,29 +85,36 @@ public class QaBoardServiceImpl implements QaBoardService {
                 .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
 
         qaBoardRepository.delete(qaBoard);
-        log.info("공지사항 삭제 성공: ID={}", boardNoSeq);
 
         return "정상적으로 삭제되었습니다.";
     }
 
-    /**
-     *  조회수 증가
-     * */
+    @Override
     public QaBoard increaseReadnum(Long boardNoSeq) {
         QaBoard qaBoard = qaBoardRepository.findById(boardNoSeq)
-                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
 
         qaBoard.setReadnum(qaBoard.getReadnum() + 1);
         return qaBoardRepository.save(qaBoard);
     }
 
+    @Override
+    public QaDTO toDto(QaBoard qaBoard, String writerId) {
+        return QaDTO.builder()
+                .boardNoSeq(qaBoard.getBoardNoSeq())
+                .subject(qaBoard.getSubject())
+                .content(qaBoard.getContent())
+                .readnum(qaBoard.getReadnum())
+                .regDate(qaBoard.getRegDate())
+                .writerId(writerId) // 작성자 추가
+                .build();
+    }
 
-
-
-
-
-
-
-
+    /**
+     * 현재 로그인한 사용자 ID 가져오기
+     */
+    private String getCurrentUserId() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
 }

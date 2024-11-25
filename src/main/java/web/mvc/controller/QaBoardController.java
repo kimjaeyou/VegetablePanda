@@ -22,9 +22,6 @@ public class QaBoardController {
      * */
     @PostMapping("/")
     public ResponseEntity<?> qaSave(@RequestBody  QaBoard qaBoard) {
-        Authentication name = SecurityContextHolder.getContext().getAuthentication();
-
-        System.out.println("name = " + name );
 
         return new ResponseEntity<>(qaBoardService.qaSave(qaBoard),HttpStatus.CREATED);
     }
@@ -34,7 +31,6 @@ public class QaBoardController {
      * */
     @PutMapping("/{boardNoSeq}")
     public ResponseEntity<?> qaUpdate(@PathVariable Long boardNoSeq, @RequestBody QaBoard qaBoard ) {
-        SecurityContextHolder.getContext().getAuthentication();
 
         return new ResponseEntity<>(qaBoardService.qaUpdate(boardNoSeq, qaBoard),HttpStatus.OK);
     }
@@ -62,7 +58,6 @@ public class QaBoardController {
      * */
     @DeleteMapping("/{boardNoSeq}")
     public ResponseEntity<?> qaDelete(@PathVariable Long boardNoSeq){
-        SecurityContextHolder.getContext().getAuthentication();
         return new ResponseEntity<>(qaBoardService.qaDelete(boardNoSeq),HttpStatus.OK);
     }
     
