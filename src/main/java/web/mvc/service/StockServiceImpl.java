@@ -64,4 +64,22 @@ public class StockServiceImpl implements StockService {
         stockRepository.deleteById(id);
         return 1;
     }
+
+    @Override
+    public List<Stock> findPendingStocks() {
+        return stockRepository.findByStatus(2); // 2는 승인 대기 상태
+    }
+
+    @Override
+    public Stock approveStock(long stockSeq) {
+        Stock stock = stockRepository.findById(stockSeq)
+                .orElseThrow(() -> new RuntimeException("Stock not found"));
+
+        if (stock.getStatus() != 2) {
+            throw new RuntimeException("Stock is not in pending state");
+        }
+
+        stock.setStatus(1); // 1은 승인된 상태
+        return stockRepository.save(stock);
+    }
 }

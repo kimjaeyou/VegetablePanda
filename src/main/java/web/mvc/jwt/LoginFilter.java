@@ -2,7 +2,6 @@ package web.mvc.jwt;
 
 import com.google.gson.Gson;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,10 @@ import web.mvc.dto.GetAllUserDTO;
 import web.mvc.security.CustomMemberDetails;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 받는 컨트롤러 역할의 필터
@@ -75,19 +77,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
                 customMemberDetails.getUser(), role, 1000L*600*10L);//1초*60*10 10분
         //응답할 헤더를 설정
         //베어러 뒤에 공백을 준다. 관례적인  prefix
-        response.addHeader("Authorization", "Bearer " + token +"///");
+        response.addHeader("Authorization", "Bearer " + token);
 
         Map<String, Object> map = new HashMap<>();
         GetAllUserDTO user= customMemberDetails.getUser();
-        map.put("user_seq",Long.toString(user.getUser_seq()));
+        map.put("user_seq", Long.toString(user.getUser_seq()));
         map.put("id", user.getId());
         map.put("name", user.getName());
         map.put("role", user.getRole());
-
-        ServletContext servletContext = request.getServletContext();
-        Map<Long,String> notiUserMap = (Map<Long,String>)servletContext.getAttribute("notiUserMap");
-        notiUserMap.put(user.getUser_seq(),token);
-        System.out.println(notiUserMap);
+        map.put("phone", user.getPhone());
+        map.put("address", user.getAddress());
 
         Gson gson= new Gson();
         String arr = gson.toJson(map);

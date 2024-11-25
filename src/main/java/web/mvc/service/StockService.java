@@ -26,4 +26,8 @@ public interface StockService {
      * 상품 삭제
      */
     public int deleteStock(long id);
+
+    List<Stock> findPendingStocks();
+
+    Stock approveStock(long stockSeq);
 }
