@@ -12,5 +12,5 @@ public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Lo
 
     @Query("select s.content from UserBuyDetail d left join fetch UserBuy b left join fetch Stock s where d.userBuySeq = ?1 order by d.userBuySeq limit 1")
     //select content from user_buy_detail d join user_buy b join stock s;
-    String findByBuySeq(Long userBuySeq);
+    List<String> findByBuySeq(Long userBuySeq);
 }

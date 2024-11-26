@@ -89,19 +89,27 @@ public class PaymentServiceImpl implements PaymentService {
             case 2: // 일반 결제 요청
                 UserBuy userBuy = userBuyRepository.findById(Long.parseLong(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
                 log.info("일반 결제 요청 userBuy : {}", userBuy);
-                userM = findUserBuyByOrderUid(orderUid).getManagementUser();
+                userM = userBuy.getManagementUser();
+                log.info("일반 결제 요청 userM : {}", userM);
 
                 if("user".equals(userM.getContent())){
 
-                    List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
-                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
-                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
+                    //List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
+                    User user = userRepository.findByUserSeq(userM.getUserSeq());
+//                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
+//                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
+                    List<String> items = userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq());
+                    requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
+                            .itemName(items.get(0)).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
 
                 } else if ("company".equals(userM.getContent())){ // 업체 사용자 일반 물품 구매 안됐던거같은데
 
                     CompanyUser user = companyUserRepository.findByUserSeq(userM.getUserSeq());
+//                    requestPayDTO = RequestPayDTO.builder().buyerName(user.getComName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
+//                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
+                    List<String> items = userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq());
                     requestPayDTO = RequestPayDTO.builder().buyerName(user.getComName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
-                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
+                            .itemName(items.get(0)).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
 
                 } else {
                     throw new MemberAuthenticationException(ErrorCode.NOTFOUND_USER);

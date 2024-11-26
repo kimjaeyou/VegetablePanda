@@ -36,4 +36,10 @@ public class UserBuy {
 
     @OneToMany(mappedBy = "userBuy")
     private List<Payment> payments;
+
+    // 추가
+    @OneToMany(mappedBy = "userBuy")
+    private List<UserBuyDetail> userBuyDetails;
+
+    public UserBuy(long buySeq) {this.buySeq = buySeq;}
 }

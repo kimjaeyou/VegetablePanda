@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class UserBuyDetailDTO {
     private Long userBuyDetailSeq;
     private Long userBuySeq; // UserBuy의 ID (예시)
