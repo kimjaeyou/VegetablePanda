@@ -15,7 +15,7 @@ public interface ReviewCommentService {
 
     //리뷰 삭제
 
-    ReviewComment reviewCommentDelete (Long reviewCommentSeq);
+    String reviewCommentDelete (Long reviewCommentSeq);
 
 
 

@@ -31,7 +31,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     public ReviewComment reviewCommentFindAllById(Long reviewCommentSeq) {
 
 
-        return reviewCommentRepository.findAllById(reviewCommentSeq).orElse(null);
+        return null;
     }
 
     @Override
