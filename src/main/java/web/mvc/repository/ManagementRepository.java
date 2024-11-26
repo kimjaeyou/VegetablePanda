@@ -15,4 +15,6 @@ public interface ManagementRepository extends JpaRepository<ManagementUser, Long
     @Query("select u from ManagementUser m left join UserWallet u on m.userSeq=u.managementUser.userSeq  where u.managementUser.userSeq = ?1")
     int point(int seq);
 
+
+
 }
