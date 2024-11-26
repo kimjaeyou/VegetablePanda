@@ -26,13 +26,14 @@ public class StockController {
 
     // 상품 등록 -> 상품 이미지 어떻게 하는지
     @PostMapping("/stock")
-    public ResponseEntity<?> insert(long productSeq, long stockGradeSeq, long stockOrganicSeq, long farmerSeq, @RequestBody StockDTO stockDTO) {
+//    public ResponseEntity<?> insert(long productSeq, long stockGradeSeq, long stockOrganicSeq, long farmerSeq, @RequestBody StockDTO stockDTO) {
+    public ResponseEntity<?> insert(long farmerSeq, @RequestBody StockDTO stockDTO) {
         log.info("Controller Product : {}", stockDTO);
 
         Stock stock = modelMapper.map(stockDTO, Stock.class);
-        stock.setProduct(new Product(productSeq));
-        stock.setStockGrade(new StockGrade(stockGradeSeq));
-        stock.setStockOrganic(new StockOrganic(stockOrganicSeq));
+//        stock.setProduct(new Product(productSeq));
+//        stock.setStockGrade(new StockGrade(stockGradeSeq));
+//        stock.setStockOrganic(new StockOrganic(stockOrganicSeq));
         stock.setFarmerUser(new FarmerUser(farmerSeq));
 
         log.info("Stock 정보 : {}", stock);
