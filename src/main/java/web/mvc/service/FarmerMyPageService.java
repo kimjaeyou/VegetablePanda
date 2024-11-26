@@ -15,10 +15,10 @@ public interface FarmerMyPageService {
     FarmerUser selectUser(Long seq);
 
     // 회원정보 수정
-    void update (FarmerUser farmerUser, Long seq);
+    FarmerUser update (FarmerUser farmerUser, Long seq);
 
     // 회원정보 탈퇴
-    void delete (Long seq);
+    int delete (Long seq);
 
     void calcPoint(Long seq , UserBuyDTO userBuyDTO);
 }

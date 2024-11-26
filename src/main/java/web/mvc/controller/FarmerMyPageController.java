@@ -2,16 +2,22 @@ package web.mvc.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.CompanyUser;
 import web.mvc.domain.FarmerUser;
+import web.mvc.domain.ReviewComment;
+import web.mvc.domain.User;
 import web.mvc.dto.CalcPoint;
+import web.mvc.dto.ReviewDTO;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.service.FarmerMyPageService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -41,35 +47,43 @@ public class FarmerMyPageController {
 
     /**
      * 회원의 정보 조회
-     * 일단 값은 들고와야하니까..
      */
     @GetMapping("/list/{seq}")
-    public String selectUser(@PathVariable Long seq, Model model) {
-        FarmerUser farmerUser = farmerMyPageService.selectUser(seq);
-        log.info("farmerUser = {}", farmerUser);
-        model.addAttribute("farmerUser", farmerUser);
-        return "redirect:/list/" + seq;
+    public ResponseEntity<?> selectUser(@PathVariable Long seq) {
+        return new ResponseEntity<>(farmerMyPageService.selectUser(seq), HttpStatus.OK);
     }
 
     /**
      * 회원정보 수정
      */
-    @PostMapping("/update/{seq}")
-    public String update(@RequestBody FarmerUser farmerUser, @PathVariable Long seq) {
-        farmerMyPageService.update(farmerUser, seq);
-        return "redirect:/update";
+    @PutMapping("/update/{seq}")
+    public ResponseEntity<?> update(
+            @PathVariable Long seq,
+            @RequestParam String name,
+            @RequestParam String pw,
+            @RequestParam String address,
+            @RequestParam String phone,
+            @RequestParam String email,
+            @RequestParam String code) {
+
+        FarmerUser farmerUser = new FarmerUser();
+        farmerUser.setUser_seq(seq);
+        farmerUser.setName(name);
+        farmerUser.setPw(pw);
+        farmerUser.setAddress(address);
+        farmerUser.setPhone(phone);
+        farmerUser.setEmail(email);
+        farmerUser.setCode(code);
+
+        return new ResponseEntity<>( farmerMyPageService.update(farmerUser, seq), HttpStatus.OK);
     }
 
     /**
      * 탈퇴
-     * 사실상 말이 탈퇴지
-     * 그냥 계정 정지임. 그럼 상태값을 바꿔주기만 하면될듯.
-     * 근데 이거 Post로 해도 되나...?
      */
     @PostMapping("/delete/{seq}")
-    public String delete(@PathVariable Long seq) {
-        farmerMyPageService.delete(seq);
-        return "redirect:/main"; // 이건 아직 안넣었음, 왜냐면 이거 탈퇴하면 메인페이지로 갈라고, 메인페이지 url몰라...그래서 일단 main이라고만 적어두자
+    public int delete(@PathVariable Long seq) {
+        return farmerMyPageService.delete(seq);
     }
 
     /**
@@ -82,4 +96,22 @@ public class FarmerMyPageController {
         farmerMyPageService.calcPoint(seq, userBuyDTO);
         return "/calcPoint/" + seq;
     }
+
+    /**
+     * 나한테 쓴 리뷰 조회하기
+     */
+//    @GetMapping("review/List/{seq}")
+//    public ResponseEntity<?> reviewList(@PathVariable Long seq) {
+//        List<ReviewComment> reviewComments = farmerMyPageService.reviewList(seq);
+//
+//        // ReviewDTO로 변환
+//        List<ReviewDTO> reviewDTO = reviewComments.stream()
+//                .map(review -> new ReviewDTO(
+//                        review.getReviewCommentSeq(),
+//                        review.getContent(),
+//                        review.getScore(),
+//                        review.getDate(),
+//                        review.getName()
+//                ))            .collect(Collectors.toList());
+//    }
 }

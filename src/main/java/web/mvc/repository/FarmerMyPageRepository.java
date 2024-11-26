@@ -12,7 +12,7 @@ public interface FarmerMyPageRepository extends JpaRepository<FarmerUser, Long> 
     @Query("select u from FarmerUser u where u.user_seq = ?1 ")
     FarmerUser selectUser(Long seq);
 
-    //회원 탈퇴(그냥 상태값 바꾸는거임.)
+    //회원 탈퇴
     @Modifying
     @Query("update FarmerUser u set u.state = 0 where u.user_seq = ?1")
     int delete(Long seq);

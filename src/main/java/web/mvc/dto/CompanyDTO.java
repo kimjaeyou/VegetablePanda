@@ -18,4 +18,6 @@ public class CompanyDTO {
     private String address;
     private String code;
     private String email;
+    private String regName;
+    private String regDate;
 }

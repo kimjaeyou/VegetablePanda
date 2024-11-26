@@ -47,23 +47,25 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
      */
     @Modifying
     @Override
-    public void update(FarmerUser farmerUser, Long seq) {
+    public FarmerUser update(FarmerUser farmerUser, Long seq) {
         log.info(farmerUser.toString());
         String pw = passwordEncoder.encode(farmerUser.getPw());
         int no = farmerUserRepository.updateUser(pw, farmerUser.getAddress(), farmerUser.getPhone(), farmerUser.getEmail(), seq);
         log.info("no={}", no);
 
+        FarmerUser farmerUser1 = farmerMyPageRepository.selectUser(seq);
         log.info("회원 수정 성공~");
-
+        return farmerUser1;
     }
 
     /**
      * 회원정보 탈퇴..? 정지라고 하자
      */
     @Override
-    public void delete(Long seq) {
+    public int delete(Long seq) {
         int i = farmerMyPageRepository.delete(seq);
-        log.info("i = {}", i);
+        log.info("i = {}",i);
+        return i;
     }
 
     @Override
@@ -77,4 +79,6 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
         calcPointRepository.save(calcPoint);
         log.info("calcPoint = {}", calcPoint);
     }
+
+
 }

@@ -49,49 +49,36 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 회원정보 가져오기
      */
     @Override
-    public UserDTO selectUser(Long seq) {
+    public User selectUser(Long seq) {
         User user = userMyPageRepository.selectUser(seq);
-
-        // 기존 UserDTO 사용
-        UserDTO userDTO = UserDTO.builder()
-                .userSeq(user.getUserSeq())
-                .id(user.getId())
-                .name(user.getName())
-                .address(user.getAddress())
-                .phone(user.getPhone())
-                .email(user.getEmail())
-                .build();
-
-        return userDTO;
+        return user;
     }
 
     /**
      * 회원정보 수정
      */
+    @Modifying
     @Override
-    @Transactional
-    public void update(UserUpdateDTO userUpdateDTO, Long seq) {
-        User user = userRepository.findById(seq)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    public User update(User user, Long seq) {
+        String pw = passwordEncoder.encode(user.getPw());
+        log.info("user={}", user.getGender());
+        int no = userMyPageRepository.updateUser(pw, user.getName(),user.getEmail(),user.getPhone(), user.getAddress(),user.getGender(), seq);
+        log.info("성공?={}",no);
 
-        if (userUpdateDTO.getPassword() != null && !userUpdateDTO.getPassword().isEmpty()) {
-            user.setPw(passwordEncoder.encode(userUpdateDTO.getPassword()));
-        }
-        user.setName(userUpdateDTO.getName());
-        user.setAddress(userUpdateDTO.getAddress());
-        user.setPhone(userUpdateDTO.getPhone());
-        user.setEmail(userUpdateDTO.getEmail());
+        User user1 = userRepository.findByUserSeq(seq);
+        log.info("유저정보={}",user1);
 
-        userRepository.save(user);
+        return user1;
     }
 
     /**
      * 회원정보 탈퇴..? 정지라고 하자
      */
     @Override
-    public void delete(Long seq) {
+    public int delete(Long seq) {
         int i = userMyPageRepository.delete(seq);
         log.info("i = {}",i);
+        return i;
     }
 
     // 포인트 조회

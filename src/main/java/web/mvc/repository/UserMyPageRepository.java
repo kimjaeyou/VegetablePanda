@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import web.mvc.domain.*;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.dto.UserDTO;
@@ -16,9 +17,11 @@ public interface UserMyPageRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.userSeq = ?1 ")
     User selectUser(Long seq);
 
-    //회원 탈퇴(그냥 상태값 바꾸는거임.)
     @Modifying
     @Query("update User u set u.state = 0 where u.userSeq = ?1")
     int delete(Long seq);
 
+    @Modifying
+    @Query("update User u set u.pw=:pw , u.name=:name , u.email=:email, u.phone=:phone , u.address=:address, u.gender=:gender where u.userSeq = :seq")
+    int updateUser(@Param("pw") String pw , @Param("name") String name , @Param("email") String email , @Param("phone") String phone , @Param("address") String address , @Param("gender") String gender , Long seq);
 }

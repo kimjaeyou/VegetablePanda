@@ -2,6 +2,7 @@ package web.mvc.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Bid;
@@ -20,19 +21,9 @@ import java.util.List;
 public class UserMyPageController {
 
     private final UserMyPageService userMyPageService;
-    private final CompanyMyPageService companyMyPageService;
 
     /**
-     * 일단 페이지가 잘 만들어 졌는지 테스트
-     */
-    @GetMapping("/")
-    public ResponseEntity<String> test() {
-        log.info("일반 마이페이지 test");
-        return ResponseEntity.ok("일반 마이페이지");
-    }
-
-    /**
-     * 판매내역 조회
+     * 주문내역 조회
      */
     @GetMapping("/buyList/{seq}")
     public ResponseEntity<List<UserBuyDTO>> buyList(@PathVariable Long seq) {
@@ -46,36 +37,43 @@ public class UserMyPageController {
      * 회원의 정보 조회
      */
     @GetMapping("/list/{seq}")
-    public ResponseEntity<UserDTO> selectUser(@PathVariable Long seq) {
-        UserDTO userDTO = userMyPageService.selectUser(seq);
-        log.info("userDTO = {}", userDTO);
-        return ResponseEntity.ok(userDTO);
-    }
-
-    @GetMapping("/list/company/{seq}")
-    public ResponseEntity<CompanyDTO> selectCompany(@PathVariable Long seq) {
-        CompanyDTO companyDTO = companyMyPageService.selectCompany(seq);
-        log.info("companyDTO = {}", companyDTO);
-        return ResponseEntity.ok(companyDTO);
+    public ResponseEntity<?> selectUser(@PathVariable Long seq) {
+        return new ResponseEntity<>(userMyPageService.selectUser(seq), HttpStatus.OK);
     }
 
     /**
      * 회원정보 수정
      */
-    @PostMapping("/update/{seq}")
-    public ResponseEntity<String> update(@RequestBody UserUpdateDTO userUpdateDTO, @PathVariable Long seq) {
-        userMyPageService.update(userUpdateDTO, seq);
-        return ResponseEntity.ok("회원정보 수정 완료");
+    @PutMapping("/update/{seq}")
+    public ResponseEntity<?> update(
+            @PathVariable Long seq,
+            @RequestParam String name,
+            @RequestParam String pw,
+            @RequestParam String address,
+            @RequestParam String phone,
+            @RequestParam String email,
+            @RequestParam String gender) {
+
+        User user = new User();
+        user.setUserSeq(seq);
+        user.setName(name);
+        user.setPw(pw);
+        user.setAddress(address);
+        user.setPhone(phone);
+        user.setEmail(email);
+        user.setGender(gender);
+
+        return new ResponseEntity<>( userMyPageService.update(user, seq), HttpStatus.OK);
     }
 
     /**
      * 탈퇴 (계정 상태 변경)
      */
     @PostMapping("/delete/{seq}")
-    public ResponseEntity<String> delete(@PathVariable Long seq) {
-        userMyPageService.delete(seq);
-        return ResponseEntity.ok("계정 정지 완료");
+    public int delete(@PathVariable Long seq) {
+        return userMyPageService.delete(seq);
     }
+
 
     /**
      * 지갑 잔액 조회
