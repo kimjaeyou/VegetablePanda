@@ -38,5 +38,8 @@ public class QaBoard {
     @JoinColumn(name = "file_seq", nullable = true)
     private File file;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_seq", nullable = false)
+    private ManagementUser managementUser;
 
 }

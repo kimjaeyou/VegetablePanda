@@ -42,6 +42,12 @@ public class ManagementUser {
     @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
     private List<CalcPoint> calcPoints;
 
+    @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
+    private List<QaBoard> qaBoard;
+
+    @OneToOne
+    @JoinColumn(name = "file_seq")
+    private File file;
 
     public ManagementUser(String id, String content) {
         this.id = id;

@@ -24,8 +24,20 @@ public class File {
     @Column(name = "name", length = 80)
     private String name;
 
-    @JsonCreator
-    public File(@JsonProperty("fileSeq") Long fileSeq) {
-        this.fileSeq = fileSeq;
-    }
+    @OneToOne(mappedBy = "file", fetch = FetchType.LAZY)
+    private ManagementUser managementUser;
+
+    @OneToOne(mappedBy = "file",fetch = FetchType.LAZY)
+    private Stock stock;
+
+    @OneToOne(mappedBy = "file",fetch = FetchType.LAZY)
+    private QaBoard qaBoard;
+
+    @OneToOne(mappedBy = "file",fetch = FetchType.LAZY)
+    private ReviewComment reviewComment;
+
+//    @JsonCreator
+//    public File(@JsonProperty("fileSeq") Long fileSeq) {
+//        this.fileSeq = fileSeq;
+//    }
 }
