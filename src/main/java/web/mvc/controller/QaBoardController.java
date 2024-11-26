@@ -60,4 +60,12 @@ public class QaBoardController {
     public ResponseEntity<?> qaDelete(@PathVariable Long boardNoSeq){
         return new ResponseEntity<>(qaBoardService.qaDelete(boardNoSeq),HttpStatus.OK);
     }
+    
+    /**
+     *  조회수 증가
+     * */
+    @PutMapping("/increaseReadnum/{boardNoSeq}")
+    public ResponseEntity<?> increaseReadnum(@PathVariable Long boardNoSeq) {
+        return new ResponseEntity<>(qaBoardService.increaseReadnum(boardNoSeq), HttpStatus.OK);
+    }
 }

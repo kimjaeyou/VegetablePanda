@@ -24,7 +24,7 @@ public interface PaymentService {
     /**
      * 충전 및 일반 결제 요청 데이터 조회 : 충전 1, 일반결제 2
      */
-    RequestPayDTO findRequestDto (int status, String orderUid);
+    RequestPayDTO findRequestDto (String orderUid, int status);
 
     /**
      * 결제 후 검증

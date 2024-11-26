@@ -10,7 +10,8 @@ import web.mvc.domain.Bid;
 import web.mvc.domain.CompanyUser;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
-import web.mvc.dto.AuctionDTO2;
+import web.mvc.dto.CompanyDTO;
+import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.repository.*;
 
@@ -86,8 +87,12 @@ public class CompanyMyPageServiceImpl implements CompanyMyPageService {
      * 리뷰 작성 목록 조회
      */
     @Override
-    public List<ReviewComment> review(Long seq) {
-        return reviewRepository.review(seq);
+    public List<ReviewCommentDTO> review(Long seq) {
+        // 처음에 유저 시퀀스에 해당하는 review 시퀀스를 가져오자
+        Long reviewSeq = reviewRepository.selectSeq(seq);
+
+        // 그럼 그 리뷰 시퀀스에 해당하는 리뷰들을 가져오자
+        return reviewRepository.review(reviewSeq);
     }
 
     /**
@@ -104,9 +109,24 @@ public class CompanyMyPageServiceImpl implements CompanyMyPageService {
      * 그러면 일단 먼저 시퀀스로 값을 찾아서 목록 가져오기?
      */
     @Override
-    public List<AuctionDTO2> auctionList(Long seq) {
-        List<AuctionDTO2> list = bidRepository.auctionList(seq);
+    public List<Bid> auctionList(Long seq) {
+        List<Bid> list = bidRepository.auctionList(seq);
         return list;
     }
-}
 
+    public CompanyDTO selectCompany(Long seq) {
+        CompanyUser company = companyUserRepository.findById(seq)
+                .orElseThrow(() -> new RuntimeException("업체 회원을 찾을 수 없습니다."));
+
+        return CompanyDTO.builder()
+                .userSeq(company.getUserSeq())
+                .companyId(company.getCompanyId())
+                .comName(company.getComName())
+                .ownerName(company.getOwnerName())
+                .phone(company.getPhone())
+                .address(company.getAddress())
+                .code(company.getCode())
+                .email(company.getEmail())
+                .build();
+    }
+}

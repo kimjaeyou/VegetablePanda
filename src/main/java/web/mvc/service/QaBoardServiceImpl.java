@@ -22,17 +22,17 @@ import java.util.List;
 public class QaBoardServiceImpl implements QaBoardService {
 
     private final QaBoardRepository qaBoardRepository;
-    QaDTO qaDTO = new QaDTO();
 
     /**
      * 질문 등록
      * */
     @Override
     public QaDTO qaSave(QaBoard qaBoard) {
-
-
         String writerId = getCurrentUserId();
-        qaDTO.setWriterId(writerId);
+
+        qaBoard.setReadnum(0);
+        qaBoard.setFile(null);
+
         QaBoard savedQaBoard = qaBoardRepository.save(qaBoard);
         return toDto(savedQaBoard, writerId);
     }
@@ -93,7 +93,17 @@ public class QaBoardServiceImpl implements QaBoardService {
         return "정상적으로 삭제되었습니다.";
     }
 
-    private QaDTO toDto(QaBoard qaBoard, String writerId) {
+    @Override
+    public QaBoard increaseReadnum(Long boardNoSeq) {
+        QaBoard qaBoard = qaBoardRepository.findById(boardNoSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+
+        qaBoard.setReadnum(qaBoard.getReadnum() + 1);
+        return qaBoardRepository.save(qaBoard);
+    }
+
+    @Override
+    public QaDTO toDto(QaBoard qaBoard, String writerId) {
         return QaDTO.builder()
                 .boardNoSeq(qaBoard.getBoardNoSeq())
                 .subject(qaBoard.getSubject())

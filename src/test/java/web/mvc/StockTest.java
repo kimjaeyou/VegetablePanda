@@ -6,15 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import web.mvc.domain.Product;
-import web.mvc.domain.Stock;
-import web.mvc.domain.StockGrade;
-import web.mvc.domain.StockOrganic;
+import web.mvc.domain.*;
 import web.mvc.repository.StockGradeRepository;
 import web.mvc.repository.StockOrganicRepository;
 import web.mvc.repository.StockRepository;
 
-//@SpringBootTest
+@SpringBootTest
 @Rollback(false)
 @Slf4j
 public class StockTest {
@@ -28,16 +25,22 @@ public class StockTest {
     //private Stock stock;
 
     /**
-     * 재고 등급 등록
+     * 재고 등급, 유기농 분류 등록
      */
     @Test
     @Rollback(false)
     @Disabled
-    public void stockGradeInsert(){
+    public void stockDataInsert(){
         stockGradeRepository.save(StockGrade.builder().grade("1등급").build());
         stockGradeRepository.save(StockGrade.builder().grade("2등급").build());
         stockGradeRepository.save(StockGrade.builder().grade("3등급").build());
         stockGradeRepository.save(StockGrade.builder().grade("4등급").build());
+
+        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("유기농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("전환기 유기농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("무농약 농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("저농약 농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("분류없음").build());
     }
 
     /**
@@ -56,6 +59,7 @@ public class StockTest {
 
     /**
      * 재고 샘플 등록
+     * ** 등록 전에 ProductCategory, Product, StockGrade, StockOrganic 정보 확인 필수
      */
     @Test
     @Rollback(value = false)
@@ -64,6 +68,18 @@ public class StockTest {
         //stock.setProduct(new Product(1));
 
         log.info("Stock 정보 : ");
-        stockRepository.save(Stock.builder().content("알감자").count(500).product(Product.builder().productSeq(1L).build()).stockGrade(StockGrade.builder().stockGradeSeq(1L).build()).stockOrganic(StockOrganic.builder().stockOrganicSeq(1L).build()).build());
+        //stockRepository.save(Stock.builder().content("알감자").count(500).product(new Product(2L)).stockGrade(new StockGrade(1L)).stockOrganic(new StockOrganic(1L)).farmerUser(new FarmerUser(1)).color(1).build());
+        //stockRepository.save(Stock.builder().content("알감자").count(500).product(new Product(2L)).stockGrade(new StockGrade(1L)).stockOrganic(new StockOrganic(1L)).farmerUser(new FarmerUser(1L)).color(1).build());
+
+        stockRepository.save(Stock.builder()
+                .content("알감자")
+                .count(500)
+                .status(2)
+                .color(1)
+                .product(Product.builder().productSeq(1L).build())
+                .stockGrade(StockGrade.builder().stockGradeSeq(1L).build())
+                .stockOrganic(StockOrganic.builder().stockOrganicSeq(1L).build())
+                .farmerUser(FarmerUser.builder().user_seq(2L).build())
+                .build());
     }
 }

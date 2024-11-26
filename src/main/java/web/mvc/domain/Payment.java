@@ -20,9 +20,9 @@ public class Payment {
     private PaymentStatus status;
     private String paymentUid;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_charge_seq")
-    private UserCharge usercharge;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_charge_seq")
+//    private UserCharge usercharge;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buy_seq")

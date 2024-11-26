@@ -18,4 +18,5 @@ public interface WalletRepository extends JpaRepository<UserWallet , Long> {
     @Modifying
     @Query("update UserWallet u set u.point = ?2 where u.managementUser.userSeq=?1")
     public void updateWallet(Long userSeq, Integer point);
+
 }
