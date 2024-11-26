@@ -88,7 +88,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             case 2: // 일반 결제 요청
                 UserBuy userBuy = userBuyRepository.findById(Long.parseLong(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
-                log.info("userBuy : {}", userBuy);
+                log.info("일반 결제 요청 userBuy : {}", userBuy);
                 userM = findUserBuyByOrderUid(orderUid).getManagementUser();
 
                 if("user".equals(userM.getContent())){

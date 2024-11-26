@@ -15,8 +15,7 @@ public class UserBuyReq {
     private Long buySeq;
     private Long userSeq; // user pk
     private Integer state;
-    private Integer stockPrice;
-    private Integer stockDiscount;
+    private Integer totalPrice;
 
     public UserBuy toUserBuy (UserBuyReq userBuyReq) {
         // UserBuyReq를 UserBuy 엔티티로 변환

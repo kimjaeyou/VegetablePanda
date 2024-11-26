@@ -15,8 +15,8 @@ public class StockDTO {
     private String color;
 
     private Long productSeq;
-    private String stockGradeSeq;
-    private String stockOrganicSeq;
+    private Long stockGradeSeq;
+    private Long stockOrganicSeq;
     private Long farmerUserSeq;
 //    ProductDTO productDTO;
 //
