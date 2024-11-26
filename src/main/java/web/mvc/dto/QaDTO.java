@@ -21,4 +21,5 @@ public class QaDTO {
     private String writerId; //작성자
 
 
+
 }
