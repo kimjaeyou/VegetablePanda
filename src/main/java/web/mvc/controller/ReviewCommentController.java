@@ -31,7 +31,7 @@ public class ReviewCommentController {
      */
     @PostMapping("/")
     public ResponseEntity<?> reviewCommentSave (@RequestBody ReviewComment reviewComment) {
-        validateAdminRole();
+        validateRole();
         return new ResponseEntity<>(reviewCommentService.reviewCommentSave(reviewComment), HttpStatus.CREATED);
     }
 
@@ -40,7 +40,7 @@ public class ReviewCommentController {
      */
     @PutMapping("/{reviewCommentSeq}")
     public ResponseEntity<?> reviewCommentUpdate (@PathVariable Long reviewCommentSeq, @RequestBody ReviewComment reviewComment) {
-        validateAdminRole();
+        validateRole();
         return new ResponseEntity<>(reviewCommentService.reviewCommentUpdate(reviewCommentSeq, reviewComment), HttpStatus.OK);
     }
 
@@ -60,13 +60,13 @@ public class ReviewCommentController {
      */
     @DeleteMapping("/{reviewCommentSeq}")
     public ResponseEntity<?> reviewCommentDelete (@PathVariable Long reviewCommentSeq) {
-        validateAdminRole();
+        validateRole();
         reviewCommentService.reviewCommentDelete(reviewCommentSeq);
         return ResponseEntity.ok("댓글이 삭제되었습니다.");
     }
 
 
-    private void validateAdminRole() {
+    private void validateRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         boolean user = authorities.stream()

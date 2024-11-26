@@ -38,5 +38,14 @@ public class QaBoard {
     @JoinColumn(name = "file_seq", nullable = true)
     private File file;
 
+    public QaBoard(String subject, String content, Integer readnum, LocalDateTime regDate, File file) {
+
+        this.subject = subject;
+        this.content = content;
+        this.readnum = readnum;
+        this.regDate = regDate;
+        this.file = file;
+
+    }
 
 }

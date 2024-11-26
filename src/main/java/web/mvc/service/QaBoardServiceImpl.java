@@ -96,7 +96,7 @@ public class QaBoardServiceImpl implements QaBoardService {
 
         return "정상적으로 삭제되었습니다.";
     }
-
+    //조회수 증가
     @Override
     public QaBoard increaseReadnum(Long boardNoSeq) {
         QaBoard qaBoard = qaBoardRepository.findById(boardNoSeq)
