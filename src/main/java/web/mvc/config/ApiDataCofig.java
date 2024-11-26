@@ -52,7 +52,7 @@ public class ApiDataCofig implements ServletContextListener {
 
     public GarakStructList Test(String start, String end) throws IOException {
 
-        LocalDate yesterday = LocalDate.now().minusDays(2);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String strYesterdayDate = yesterday.format(formatter);
 
