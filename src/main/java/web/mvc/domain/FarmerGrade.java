@@ -23,4 +23,8 @@ public class FarmerGrade {
 
     @OneToMany(mappedBy = "farmerGrade", fetch = FetchType.LAZY)
     private List<FarmerUser> farmerUsers;
+
+    public FarmerGrade(Long farmerGrade) {
+        this.fammerGradeSeq =farmerGrade;
+    }
 }
