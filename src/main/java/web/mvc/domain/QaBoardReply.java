@@ -1,5 +1,6 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class QaBoardReply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +23,12 @@ public class QaBoardReply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_no_seq", nullable = false)
+    @JsonIgnore
     private QaBoard qaBoard;
+
+    QaBoardReply(QaBoard qaBoard, String comment) {
+
+        this.qaBoard = qaBoard;
+        this.comment = comment;
+    }
 }

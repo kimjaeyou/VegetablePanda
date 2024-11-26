@@ -60,7 +60,6 @@ public class StockController {
     public ResponseEntity<?> update(@RequestBody StockDTO stockDTO) {
         // 값 확인용
         System.out.println(stockDTO.getProductSeq());
-        //System.out.println(stockDTO.getProductDTO().getProductCategorySeq());
         System.out.println(stockDTO.getStockGradeSeq());
         System.out.println(stockDTO.getStockOrganicSeq());
 
@@ -85,4 +84,21 @@ public class StockController {
         stockService.deleteStock(id);
         return new ResponseEntity<>(id +"번 재고 삭제완료", HttpStatus.OK);
     }
+
+    @GetMapping("/stock/pending")
+    public ResponseEntity<?> getPendingStocks() {
+        List<Stock> pendingStocks = stockService.findPendingStocks();
+        List<StockDTO> pendingStockDTOs = pendingStocks.stream()
+                .map(stock -> modelMapper.map(stock, StockDTO.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(pendingStockDTOs, HttpStatus.OK);
+    }
+
+    @PutMapping("/stock/approve/{stockSeq}")
+    public ResponseEntity<?> approveStock(@PathVariable long stockSeq) {
+        Stock approvedStock = stockService.approveStock(stockSeq);
+        return new ResponseEntity<>(modelMapper.map(approvedStock, StockDTO.class), HttpStatus.OK);
+    }
+
+
 }

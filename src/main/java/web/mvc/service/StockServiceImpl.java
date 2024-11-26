@@ -27,6 +27,7 @@ public class StockServiceImpl implements StockService {
     public Stock addStock(Stock stock) {
         log.info("addProduct service 동작");
         log.info("Product : {}", stock);
+        stock.setStatus(2);
         return stockRepository.save(stock);
     }
 
@@ -52,6 +53,7 @@ public class StockServiceImpl implements StockService {
 
         dbStock.setCount(stock.getCount());
         dbStock.setContent(stock.getContent());
+        dbStock.setColor(stock.getColor());
 
        // stockRepository.save(dbStock);
         return dbStock;
@@ -63,5 +65,23 @@ public class StockServiceImpl implements StockService {
         log.info("delect stock : {}", stock);
         stockRepository.deleteById(id);
         return 1;
+    }
+
+    @Override
+    public List<Stock> findPendingStocks() {
+        return stockRepository.findByStatus(2); // 2는 승인 대기 상태
+    }
+
+    @Override
+    public Stock approveStock(long stockSeq) {
+        Stock stock = stockRepository.findById(stockSeq)
+                .orElseThrow(() -> new RuntimeException("Stock not found"));
+
+        if (stock.getStatus() != 2) {
+            throw new RuntimeException("Stock is not in pending state");
+        }
+
+        stock.setStatus(1); // 1은 승인된 상태
+        return stockRepository.save(stock);
     }
 }

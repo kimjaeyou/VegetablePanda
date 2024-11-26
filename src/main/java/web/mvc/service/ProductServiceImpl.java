@@ -32,6 +32,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findProductsByCategory(long categorySeq) {
+        return productRepository.findByProductCategory(categorySeq);
+    }
+
+    @Override
     public Product updateProduct(Product product) {
         Product dbProduct = productRepository.findById(product.getProductSeq()).orElseThrow(()-> new ProductException(ErrorCode.PRODUCT_UPDATE_FAILED));
 

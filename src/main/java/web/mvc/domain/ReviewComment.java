@@ -2,6 +2,7 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +32,7 @@ public class ReviewComment {
     @Column(name="user_seq" , nullable = false)
     private Long userSeq;
 
+    @CreationTimestamp
     @Column(name="reg_date" , nullable = false)
     private LocalDateTime date;
 

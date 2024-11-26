@@ -17,6 +17,11 @@ public interface ProductService {
     public List<Product> findAllProducts();
 
     /**
+     * 카테고리에 따른 상품 조회
+     */
+    public List<Product> findProductsByCategory(long categorySeq);
+
+    /**
      * 상품 수정
      */
     public Product updateProduct(Product product);

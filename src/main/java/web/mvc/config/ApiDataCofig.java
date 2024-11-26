@@ -4,11 +4,16 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import jakarta.transaction.Transactional;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import web.mvc.domain.Product;
+import web.mvc.domain.ProductCategory;
 import web.mvc.dto.*;
+import web.mvc.repository.ProductRepository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,12 +30,15 @@ import java.util.*;
 @WebListener
 public class ApiDataCofig implements ServletContextListener {
 
+    @Autowired
+    private ProductRepository productRepository;
+
     private List<row> dataList = new ArrayList<>();
 
 
     @Override
     public void contextInitialized(ServletContextEvent e) {
-        List<GarakDTO> dto=null;
+        List<GarakTotalCost> dto=null;
         ServletContext app=e.getServletContext();
         try {
             dto= calcGarakAvg();
@@ -42,7 +50,7 @@ public class ApiDataCofig implements ServletContextListener {
     }
 
 
-    public static GarakStructList Test(String start, String end) throws IOException {
+    public GarakStructList Test(String start, String end) throws IOException {
 
         LocalDate yesterday = LocalDate.now().minusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -131,7 +139,7 @@ public class ApiDataCofig implements ServletContextListener {
         return null;
         }
 
-    public static GarakAvgPrice calcGarak() throws Exception{
+    public GarakAvgPrice calcGarak() throws Exception{
 
         GarakStructList dto= Test("1", "1000");
         List<row> rList= new ArrayList<>();
@@ -167,7 +175,7 @@ public class ApiDataCofig implements ServletContextListener {
         return new GarakAvgPrice(nameList,rList);
     }//calcGarak-end
 
-    public static int findSet(String name){
+    public int findSet(String name){
         List<String> mealSet= Arrays.asList(new String[]{"감자","고구마","버섯","호박","벼","보리","조"});
         List<String> yupVeg= Arrays.asList(new String[]{"부추","갓","기타엽체","고추","피망","오이","쑥갓","시금치","깻잎","상추","배추","아욱","적채"});
         List<String> gwaSet= Arrays.asList(new String[]{"모과","토마토","수박","파인애플","딸기"});
@@ -193,7 +201,7 @@ public class ApiDataCofig implements ServletContextListener {
         return 7;
     }
 
-    public static List<GarakDTO> calcGarakAvg() throws Exception {
+    public List<GarakTotalCost> calcGarakAvg() throws Exception {
         GarakAvgPrice gp=calcGarak();
         List<row> rList= gp.getRowList();
         Set<String> nameList= gp.getNameList();
@@ -232,8 +240,53 @@ public class ApiDataCofig implements ServletContextListener {
                 }
             }//inner -for-end
         }//outer -for-end
-
-        return garakDTOList;
+        InsertProduct(garakDTOList);
+        return InsertProduct(garakDTOList);
     }//calcGarakAvg-end
-}
 
+    @Transactional
+    public List<GarakTotalCost> InsertProduct(List<GarakDTO> garakDTOList) {
+        List<GarakTotalCost> garakTotalList = new ArrayList<>();
+        List<Product> ProductList = new ArrayList<>();
+        List<String> productNameList=new ArrayList<>();
+
+        ProductList=productRepository.findAll();
+        for (Product p:ProductList ){
+            productNameList.add(p.getProductName());
+        }
+
+        for (int i=0; i<garakDTOList.size();i+=12) {
+            GarakDTO dto = garakDTOList.get(i);
+            // Product 저장
+            if(!productNameList.contains(dto.getGarak_name())){
+                productRepository.save(new Product(
+                        dto.getGarak_name(),
+                        new ProductCategory(dto.getGarak_category())
+                ));
+            }
+
+            if (dto.getGarak_count() > 0) {
+                garakTotalList.add(
+                        new GarakTotalCost(
+                                dto.getGarak_name(),
+                                (int) (dto.getGarak_price() / dto.getGarak_count()),
+                                dto.getGarak_type(),
+                                dto.getGarak_grade(),
+                                dto.getGarak_category()
+                        )
+                );
+            } else {
+                garakTotalList.add(
+                        new GarakTotalCost(
+                                dto.getGarak_name(),
+                                0,
+                                dto.getGarak_type(),
+                                dto.getGarak_grade(),
+                                dto.getGarak_category()
+                        )
+                );
+            }
+        }
+        return garakTotalList;
+    }
+}

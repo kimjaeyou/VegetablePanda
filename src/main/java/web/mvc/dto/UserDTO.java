@@ -11,11 +11,8 @@ import lombok.*;
 public class UserDTO {
     private Long userSeq;
     private String id;
-    private String pw;
     private String name;
     private String address;
     private String phone;
-    private Integer state;
-    private String gender;
     private String email;
 }

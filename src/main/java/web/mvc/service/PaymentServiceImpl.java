@@ -8,6 +8,7 @@ import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.*;
 import web.mvc.dto.PaymentReq;
 import web.mvc.dto.RequestPayDTO;
@@ -22,17 +23,17 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Transactional
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
     private final UserChargeRepository userChargeRepository;
-    private final ManagementRepository managementRepository;
-    private final FarmerUserRepository farmerUserRepository;
     private final CompanyUserRepository companyUserRepository;
+    private final WalletRepository walletRepository;
     private final UserRepository userRepository;
-    private final UserBuyRepository buyRepository;
+    private final UserBuyDetailRepository userBuyDetailRepository;
 
     private final IamportClient iamportClient;
     private final PaymentRepository paymentRepository;
@@ -57,47 +58,64 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public RequestPayDTO findRequestDto(int status, String orderUid) {
-        //UserCharge userCharge = userChargeRepository.findUserChargeAndPaymentAndManagementUser(orderUid).orElseThrow(()-> new PaymentException(ErrorCode.ORDER_NOTFOUND));
+    public RequestPayDTO findRequestDto(String orderUid, int status) {
         ManagementUser userM = null;
-        List<UserCharge> userCharge = userChargeRepository.findByOrderUid(orderUid);
-        log.info("userChage : {}", userCharge);
-        userM = userCharge.get(0).getManagementUser();
+        RequestPayDTO requestPayDTO = null;
 
         switch(status){
             case 1: // 포인트 충전
-                userCharge = userChargeRepository.findByOrderUid(orderUid);
-                log.info("userChage : {}", userCharge);
+                List<UserCharge> userCharge = userChargeRepository.findByOrderUid(orderUid);
+                log.info("findRequestDto에서 검색한 userChrage : {}", userCharge);
                 userM = userCharge.get(0).getManagementUser();
 
+                if("user".equals(userM.getContent())){
+
+                    List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
+                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
+                            .itemName("포인트").paymentPrice(userCharge.get(0).getPrice()).orderUid(orderUid).build();
+
+                } else if ("company".equals(userM.getContent())){
+
+                    CompanyUser user = companyUserRepository.findByUserSeq(userM.getUserSeq());
+                    requestPayDTO = RequestPayDTO.builder().buyerName(user.getComName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
+                            .itemName("포인트").paymentPrice(userCharge.get(0).getPrice()).orderUid(orderUid).build();
+
+                } else {
+                    throw new MemberAuthenticationException(ErrorCode.NOTFOUND_USER);
+                }
+
                 break;
+
             case 2: // 일반 결제 요청
                 UserBuy userBuy = userBuyRepository.findById(Long.parseLong(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
-                System.out.println(userBuy);
                 log.info("userBuy : {}", userBuy);
-                userM = userBuy.getManagementUser();
+                userM = findUserBuyByOrderUid(orderUid).getManagementUser();
+
+                if("user".equals(userM.getContent())){
+
+                    List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
+                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
+                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
+
+                } else if ("company".equals(userM.getContent())){ // 업체 사용자 일반 물품 구매 안됐던거같은데
+
+                    CompanyUser user = companyUserRepository.findByUserSeq(userM.getUserSeq());
+                    requestPayDTO = RequestPayDTO.builder().buyerName(user.getComName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
+                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
+
+                } else {
+                    throw new MemberAuthenticationException(ErrorCode.NOTFOUND_USER);
+                }
 
                 break;
         }
 
-        RequestPayDTO requestPayDTO;
         log.info("findRequestDto userM : {}", userM);
         //User user;
         //ManagementUser user = managementRepository.findById(userCharge.getManagementUser().getUserSeq()).orElseThrow(()-> new MemberAuthenticationException(ErrorCode.NOTFOUND_USER));
 
         // ManagementUser에서 각 사용자 꺼내기
         // 아니면 쿼리문 사용 (select m.user_seq, u.name, c.com_name, f.name, u.email, c.email, f.email, u.address, c.address, f.address from management_user m left join user u on m.user_seq = u.user_seq left join company_user c on m.user_seq = c.user_seq left join farmer_user f on m.user_seq = f.user_seq;)
-        if("user".equals(userM.getContent())){
-            List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
-            requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
-                    .itemName("포인트").paymentPrice(userCharge.get(0).getPrice()).orderUid(orderUid).build();
-        } else if ("company".equals(userM.getContent())){
-            CompanyUser user = companyUserRepository.findByUserSeq(userM.getUserSeq());
-            requestPayDTO = RequestPayDTO.builder().buyerName(user.getComName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
-                    .itemName("포인트").paymentPrice(userCharge.get(0).getPrice()).orderUid(orderUid).build();
-        } else {
-            throw new MemberAuthenticationException(ErrorCode.NOTFOUND_USER);
-        }
 
         return requestPayDTO;
     }
@@ -138,6 +156,9 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new UserChargeException(ErrorCode.ORDER_CANCELED);
             }
 
+            // 검증 후 포인트 충전
+            chargeWallet(price, userCharge.getManagementUser().getUserSeq());
+
             // 결제 상태 OK로 변경
             userCharge.getPayment().changePaymentBySuccess(PaymentStatus.OK, iamportResponse.getResponse().getImpUid());
             return iamportResponse;
@@ -149,4 +170,29 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
     }
+
+
+    // 유저 지갑에 포인트 충전
+    public UserWallet chargeWallet(long point, long userSeq) {
+        UserWallet wallet = walletRepository.findByUserSeq(userSeq);
+        int dbPoint = wallet.getPoint();
+        int finalPoint = dbPoint + (int)point;
+        wallet.setPoint(finalPoint);
+        return wallet;
+    }
+
+    // 포인트 충전을 위한 결제 요청 객체 검색 메소드
+    public List<UserCharge> findUserChargeByOrderUid(String orderUid) {
+        List<UserCharge> userCharge = userChargeRepository.findByOrderUid(orderUid);
+        log.info("userCharge : {}", userCharge);
+        return userCharge;
+    }
+
+    // 일반 결제를 위한 결제 요청 객체 검색 메소드
+    public UserBuy findUserBuyByOrderUid(String orderUid) {
+        UserBuy userBuy = userBuyRepository.findById(Long.parseLong(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
+        log.info("userBuy : {}", userBuy);
+        return userBuy;
+    }
+
 }

@@ -81,12 +81,12 @@ public class SecurityConfig {
 
         // 권한 허용 설정
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/index", "/user", "/user/**", "boards", "/myPage/**").permitAll()
-                .requestMatchers("/members", "/members/**").permitAll()
+                .requestMatchers("/index", "/user", "/user/**", "boards","/api/shop/**").permitAll()
+                .requestMatchers("/members", "/members/**", "/product/**","/stock", "/stock/**", "/paymnet/**","/myPage/**").permitAll()
                 .requestMatchers("/swagger-ui", "/swagger-ui/**", "/api/logistics", "/api/swagger-config", "/v3/api-docs/**").permitAll()
-                .requestMatchers("http://openapi.seoul.go.kr:8088/**", "/topic/notifications").permitAll()
-                .requestMatchers("/ws/**", "/send","/sendNormal","/api/streaming/**").permitAll()
-                .requestMatchers("/admin").permitAll()
+                .requestMatchers("http://openapi.seoul.go.kr:8088/**", "/topic/notifications","/charge").permitAll()
+                .requestMatchers("/ws/**", "/send","/api/streaming/**").permitAll()
+                .requestMatchers("/admin","/QABoard/","/QABoard/**","/QaReplyBoard","/QaReplyBoard/**").permitAll() //성민 수정
                 .anyRequest().authenticated()
         );
 

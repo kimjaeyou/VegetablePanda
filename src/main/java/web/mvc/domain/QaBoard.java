@@ -2,6 +2,7 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class QaBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +28,15 @@ public class QaBoard {
     private String content;
 
     @Column(name = "readnum", nullable = false, length = 45)
-    private String readnum;
+    private Integer readnum;
 
+    @CreationTimestamp
     @Column(name = "reg_date", nullable = false)
     private LocalDateTime regDate;
 
     @OneToOne
-    @JoinColumn(name = "file_seq", nullable = false)
+    @JoinColumn(name = "file_seq", nullable = true)
     private File file;
+
+
 }
