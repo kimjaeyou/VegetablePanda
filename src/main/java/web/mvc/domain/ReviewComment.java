@@ -39,4 +39,9 @@ public class ReviewComment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_seq", nullable = false)
     private Review review;
+
+    @OneToOne
+    @JoinColumn(name="user_buy_detail_seq", nullable = false)
+    private UserBuyDetail userBuyDetail;
+
 }
