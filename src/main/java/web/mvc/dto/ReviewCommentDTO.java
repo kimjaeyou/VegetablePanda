@@ -1,14 +1,13 @@
 package web.mvc.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ReviewCommentDTO {
     private Long reviewCommentSeq;
     private String content;

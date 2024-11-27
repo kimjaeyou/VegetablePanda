@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FarmerUserDTO {
-    private String user_seq;
+    private String userSeq;
     private String farmer_id;
     private String name;
     private String pw;

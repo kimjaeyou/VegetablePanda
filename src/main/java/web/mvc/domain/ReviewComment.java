@@ -26,7 +26,7 @@ public class ReviewComment {
     private Integer score;
 
     @OneToOne
-    @JoinColumn(name = "file_seq", nullable = false)
+    @JoinColumn(name = "file_seq")
     private File file;
 
     @ManyToOne(fetch = FetchType.LAZY)
