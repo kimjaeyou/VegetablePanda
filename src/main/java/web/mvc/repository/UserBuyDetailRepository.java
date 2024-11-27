@@ -18,18 +18,21 @@ public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Lo
     //select content from user_buy_detail d join user_buy b join stock s;
     String findByBuySeq(Long userBuySeq);
     @Query("SELECT NEW web.mvc.dto.ProductStatisticsDTO(" +
-            "s.product.productName, " +
+            "p.productName, " +
             "SUM(ubd.count), " +
             "SUM(ubd.price), " +
             "COUNT(DISTINCT ubd.userBuy)) " +
             "FROM UserBuyDetail ubd " +
             "JOIN ubd.stock s " +
+            "JOIN s.product p " +
             "JOIN ubd.userBuy ub " +
             "WHERE ub.buyDate BETWEEN :startDate AND :endDate " +
             "AND ub.state = 1 " +
-            "GROUP BY s.product.productName " +
+            "GROUP BY p.productName " +
             "ORDER BY SUM(ubd.price) DESC")
-    List<ProductStatisticsDTO> getProductSalesStatistics(LocalDateTime startDate, LocalDateTime endDate);
+    List<ProductStatisticsDTO> findProductStats(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
 
     @Query(value =
             "SELECT " +
