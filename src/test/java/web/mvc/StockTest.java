@@ -79,7 +79,7 @@ public class StockTest {
                 .product(Product.builder().productSeq(1L).build())
                 .stockGrade(StockGrade.builder().stockGradeSeq(1L).build())
                 .stockOrganic(StockOrganic.builder().stockOrganicSeq(1L).build())
-                .farmerUser(FarmerUser.builder().user_seq(2L).build())
+                .farmerUser(FarmerUser.builder().userSeq(2L).build())
                 .build());
     }
 }

@@ -84,7 +84,7 @@ public class JWTUtil {
     public String createJwt(GetAllUserDTO getAllUserDTO, String role, Long expiredMs) {
         log.info("createJwt call");
         return Jwts.builder()
-                .claim("user_seq", Long.toString(getAllUserDTO.getUser_seq()))
+                .claim("user_seq", Long.toString(getAllUserDTO.getUserSeq()))
                 .claim("name", getAllUserDTO.getName())
                 .claim("id", getAllUserDTO.getId())
                 .claim("role", role)

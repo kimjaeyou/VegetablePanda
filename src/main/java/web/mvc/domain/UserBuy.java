@@ -36,4 +36,7 @@ public class UserBuy {
 
     @OneToMany(mappedBy = "userBuy")
     private List<Payment> payments;
+
+    @OneToMany(mappedBy = "userBuy")
+    private List<UserBuyDetail> userBuyDetailList;
 }
