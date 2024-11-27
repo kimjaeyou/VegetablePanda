@@ -14,6 +14,7 @@ import web.mvc.dto.BidDTO;
 import web.mvc.dto.HighestBidDTO;
 import web.mvc.dto.UserTempWalletDTO;
 import web.mvc.service.BidService;
+import web.mvc.service.SendTopService;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class BidController {
     private final ModelMapper modelMapper;
 
     private final BidService bidService;
+    private final SendTopService sendTopService;
 
 
     // 입찰
@@ -36,7 +38,10 @@ public class BidController {
         HighestBidDTO highestBidDTO = bidService.checkHighestBid(newBidder.getAuctionSeq(),newBidder.getUserSeq());
         UserTempWalletDTO userTempWalletDTO = bidService.checkUserTempWallet(newBidder.getUserSeq());
         BidDTO result = modelMapper.map(bidService.bid(newBidder,highestBidDTO,userTempWalletDTO), BidDTO.class);
-
+        if(result!=null){
+            String message = "1";
+            sendTopService.sendTopMessage(message);
+        }
         /*
             redis 등록
          */

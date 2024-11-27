@@ -53,4 +53,17 @@ public class NotificationController {
         return "ok";
     }
 
+
+    @PostMapping("/sendTop")
+    public String sendTopMessage(@RequestBody MessageReq messageRequest) {
+
+        // Publish message to Redis channel
+        redisPublisher.publish("notifications", messageRequest.getMessage());
+
+        // 메시지를 특정 top으로 전송
+        System.out.println(messageRequest.getMessage());
+        messagingTemplate.convertAndSend("/top/notifications", messageRequest.getMessage());
+        return "ok";
+    }
+
 }

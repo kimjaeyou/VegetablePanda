@@ -8,6 +8,7 @@ import web.mvc.domain.Stock;
 import web.mvc.dto.ShopListDTO;
 import web.mvc.dto.StockDTO;
 import web.mvc.repository.ShopRepository;
+import web.mvc.repository.UserBuyDetailRepository;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class ShopServiceImpl implements ShopService {
 
     private final ShopRepository shopRepository;
+    private final UserBuyDetailRepository userBuyDetailRepository;
 
     public int shopInsert(StockDTO stock) {
         Shop shop = new Shop();
