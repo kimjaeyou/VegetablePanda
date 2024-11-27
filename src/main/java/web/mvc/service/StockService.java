@@ -30,4 +30,8 @@ public interface StockService {
     List<Stock> findPendingStocks();
 
     Stock approveStock(long stockSeq);
+
+    void approveAllPendingStocks();
+
+    boolean hasRegisteredToday(long farmerSeq);
 }

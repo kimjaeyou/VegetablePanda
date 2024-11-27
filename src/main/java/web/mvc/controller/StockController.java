@@ -29,18 +29,27 @@ public class StockController {
     public ResponseEntity<?> insert(long productSeq, long stockGradeSeq, long stockOrganicSeq, long farmerSeq, @RequestBody StockDTO stockDTO) {
         log.info("Controller Product : {}", stockDTO);
 
-        Stock stock = modelMapper.map(stockDTO, Stock.class);
-        stock.setProduct(new Product(productSeq));
-        stock.setStockGrade(new StockGrade(stockGradeSeq));
-        stock.setStockOrganic(new StockOrganic(stockOrganicSeq));
-        stock.setFarmerUser(new FarmerUser(farmerSeq));
+        try {
+            // 오늘 등록한 상품이 있는지 확인
+            if (stockService.hasRegisteredToday(farmerSeq)) {
+                return new ResponseEntity<>("하루에 한 상품만 등록할 수 있습니다.", HttpStatus.BAD_REQUEST);
+            }
 
-        log.info("Stock 정보 : {}", stock);
+            Stock stock = modelMapper.map(stockDTO, Stock.class);
+            stock.setProduct(new Product(productSeq));
+            stock.setStockGrade(new StockGrade(stockGradeSeq));
+            stock.setStockOrganic(new StockOrganic(stockOrganicSeq));
+            stock.setFarmerUser(new FarmerUser(farmerSeq));
 
-        StockDTO result = modelMapper.map(stockService.addStock(stock), StockDTO.class);
+            log.info("Stock 정보 : {}", stock);
 
-        //Stock result = stockService.addStock(stock);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+            StockDTO result = modelMapper.map(stockService.addStock(stock), StockDTO.class);
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            log.error("상품 등록 실패: ", e);
+            return new ResponseEntity<>("상품 등록에 실패했습니다: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // 상품 조회 (판매자 재고 보기)
