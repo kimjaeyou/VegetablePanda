@@ -2,6 +2,9 @@ package web.mvc.service;
 
 import web.mvc.domain.Auction;
 import web.mvc.dto.AuctionDTO;
+import web.mvc.dto.AuctionStatusDTO;
+
+import java.util.List;
 
 public interface AuctionService {
     /**
@@ -15,4 +18,6 @@ public interface AuctionService {
     public int updateAuction(long auctionSeq);
 
     Auction getAuction(Long userSeq);
+
+    List<AuctionStatusDTO> getCurrentAuctions();
 }
