@@ -144,6 +144,16 @@ public class BidServiceImpl implements BidService {
          return highestBid;
     }
 
+    public HighestBidDTO getHighestBid(Long auctionSeq) {
+        HighestBidDTO highestBid =redisUtils.getData("highestBid:"+auctionSeq, HighestBidDTO.class).orElseThrow(()-> new BidException(ErrorCode.NOTFOUND_HIGHESTBID));
+        return highestBid;
+    }
+
+    @Override
+    public List<Bid> getBids(Long auctionSeq) {
+        return bidRepository.auctionBidList(auctionSeq);
+    }
+
     // 1.redis에 유저 지갑 임시지갑 존재하는지? ->없으면 userWallet 정보를 userTempWallet에 담아서 redis에 저장
     public UserTempWalletDTO checkUserTempWallet(Long userSeq) {
         redisUtils.deleteData("userTempWallet:"+userSeq);

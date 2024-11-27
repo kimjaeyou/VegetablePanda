@@ -45,7 +45,7 @@ public class MemberController {
                 (CustomMemberDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Map<String, Object> response = new HashMap<>();
-        response.put("user_seq", userDetails.getUser().getUser_seq());
+        response.put("user_seq", userDetails.getUser().getUserSeq());
         response.put("id", userDetails.getUser().getId());
         response.put("name", userDetails.getUser().getName());
         response.put("role", userDetails.getUser().getRole());

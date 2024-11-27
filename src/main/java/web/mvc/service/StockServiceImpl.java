@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import web.mvc.domain.Product;
 import web.mvc.domain.ProductCategory;
 import web.mvc.domain.Stock;
+import web.mvc.dto.AllStockDTO;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.ProductException;
 import web.mvc.exception.StockException;
@@ -32,6 +33,12 @@ public class StockServiceImpl implements StockService {
         stock.setRegDate(LocalDateTime.now());
         return stockRepository.save(stock);
     }
+
+    @Override
+    public AllStockDTO findAuctionStocksById(long farmerSeq) {
+        AllStockDTO stock = stockRepository.findAuctionStocksById(farmerSeq);
+        log.info("");
+        return stock;    }
 
     @Override
     public List<Stock> findStocksById(long farmerSeq) {
