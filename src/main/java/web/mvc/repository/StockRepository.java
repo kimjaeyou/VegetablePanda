@@ -26,7 +26,7 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     List<Stock> findByStatusAndRegDateAfter(@Param("status") Integer status, @Param("regDate") LocalDateTime regDate);
 
     @Query("SELECT COUNT(s) > 0 FROM Stock s " +
-            "WHERE s.farmerUser.user_seq = :farmerSeq " +
+            "WHERE s.farmerUser.userSeq = :farmerSeq " +
             "AND s.regDate BETWEEN :startDate AND :endDate")
     boolean existsByFarmerAndDateRange(
             @Param("farmerSeq") long farmerSeq,
