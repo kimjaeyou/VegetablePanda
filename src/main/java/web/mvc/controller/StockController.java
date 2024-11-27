@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.*;
+import web.mvc.dto.AllStockDTO;
 import web.mvc.dto.FarmerUserDTO;
 import web.mvc.dto.StockDTO;
 import web.mvc.service.StockService;
@@ -61,6 +62,16 @@ public class StockController {
         List<StockDTO> stockDTOList = stockList.stream().map(data -> modelMapper.map(data, StockDTO.class)).toList();
         System.out.println("stocklist 값" + stockList);
         return new ResponseEntity<>(stockDTOList, HttpStatus.OK);
+    }
+
+    // 상품 조회 (판매자 재고 보기)
+    @GetMapping("/auctionStock/{userSeq}")
+    public ResponseEntity<?> findAuctionStocksById(@PathVariable long userSeq) {
+        log.info("상품 목록 조회");
+
+        AllStockDTO stockDTO = stockService.findAuctionStocksById(userSeq);
+        System.out.println("stock값" + stockDTO);
+        return new ResponseEntity<>(stockDTO, HttpStatus.OK);
     }
 
     // 상품 수정 -> userId와 StockDTO 에 정보를 담아 가져간다

@@ -6,9 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Auction;
 import web.mvc.domain.Bid;
 import web.mvc.dto.AuctionDTO;
@@ -16,6 +14,9 @@ import web.mvc.dto.BidDTO;
 import web.mvc.dto.HighestBidDTO;
 import web.mvc.dto.UserTempWalletDTO;
 import web.mvc.service.BidService;
+
+import java.util.List;
+
 
 @RestController
 @Slf4j
@@ -40,6 +41,12 @@ public class BidController {
             redis 등록
          */
 
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/bid/{auctionSeq}")
+    public ResponseEntity<?> bidList(@PathVariable Long auctionSeq) {
+        List<Bid> result = bidService.getBids(auctionSeq);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
