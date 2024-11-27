@@ -52,7 +52,7 @@ public class FarmerUser {
     private String role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "farmer_grade_seq")
+    @JoinColumn(name = "farmer_grade_seq")
     private FarmerGrade farmerGrade;
 
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
