@@ -2,6 +2,7 @@ package web.mvc.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.Payment;
@@ -19,6 +20,7 @@ import java.util.Date;
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
+@DynamicUpdate
 public class UserBuyServiceImpl implements UserBuyService {
 
     private final UserBuyRepository userBuyRepository;
@@ -35,7 +37,6 @@ public class UserBuyServiceImpl implements UserBuyService {
     @Override
     public UserBuy insertShopOrder(UserBuy userBuy) {
 
-
         // 임시 주문내역 생성
         UserBuy result = userBuyRepository.save(userBuy);
 
@@ -44,6 +45,8 @@ public class UserBuyServiceImpl implements UserBuyService {
                 .userBuy(UserBuy.builder().buySeq(result.getBuySeq()).build())
                 .build();
         paymentRepository.save(payment);
+
+        userBuy.setPayment(payment);
 
         // 주문 생성
         //UserCharge usercharge = UserCharge.builder().managementUser(userCharge.getManagementUser()).price(1000L).build();

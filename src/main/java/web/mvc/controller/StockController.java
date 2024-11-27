@@ -12,6 +12,7 @@ import web.mvc.domain.*;
 import web.mvc.dto.AllStockDTO;
 import web.mvc.dto.FarmerUserDTO;
 import web.mvc.dto.StockDTO;
+import web.mvc.service.S3ImageService;
 import web.mvc.service.StockService;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class StockController {
 
     private final ModelMapper modelMapper;
     private final StockService stockService;
+    private final S3ImageService s3ImageService;
 
     // 상품 등록 -> 상품 이미지 어떻게 하는지
     @PostMapping("/stock")

@@ -23,7 +23,7 @@ import java.util.Optional;
 public class StockServiceImpl implements StockService {
 
     @Autowired
-    StockRepository stockRepository;
+    private StockRepository stockRepository;
 
     @Override
     public Stock addStock(Stock stock) {

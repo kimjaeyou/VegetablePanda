@@ -179,8 +179,10 @@ public class PaymentServiceImpl implements PaymentService {
             IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
             // 주문내역 조회
             //UserCharge userCharge = userChargeRepository.findByOrderUid(request.getOrderUid()).get(0);
-            UserBuy userBuy = userBuyRepository.findOrderAndPayment(Long.parseLong(request.getOrderUid())).orElseThrow(()-> new UserChargeException(ErrorCode.ORDER_NOTFOUND));
+            UserBuy userBuy = userBuyRepository.findOrderAndPayment(Long.parseLong(request.getOrderUid())).orElseThrow(()-> new UserBuyException(ErrorCode.ORDER_NOTFOUND));
+            web.mvc.domain.Payment payment = paymentRepository.findOrderAndPayment(Long.parseLong(request.getOrderUid())).orElseThrow(()-> new UserBuyException(ErrorCode.ORDER_NOTFOUND));
             log.info("userBuy : {}", userBuy);
+            log.info("payment : {}", payment);
 
             // 결제가 완료되지 않은 상태인 경우
             if(!iamportResponse.getResponse().getStatus().equals("paid")){
@@ -192,7 +194,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             // DB에 저장된 결제 금액
-            Long price = (long)userBuy.getTotalPrice();
+            Long price = userBuy.getPayment().getPrice();
             // 실 결제 금액
             long iamportPrice = iamportResponse.getResponse().getAmount().longValue();
 
