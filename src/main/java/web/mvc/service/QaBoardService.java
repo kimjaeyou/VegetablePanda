@@ -32,7 +32,7 @@ public interface QaBoardService {
      * */
     public String qaDelete(Long boardNoSeq);
 
+    QaBoard increaseReadnum(Long boardNoSeq);
 
-    QaDTO increaseReadnum(Long boardNoSeq);
-
+    QaDTO toDto(QaBoard qaBoard, String writerId);
 }

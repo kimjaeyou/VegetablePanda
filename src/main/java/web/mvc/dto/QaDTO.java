@@ -20,18 +20,5 @@ public class QaDTO {
     private LocalDateTime regDate; // 등록일
     private String writerId; //작성자
 
-    public QaDTO(String subject, String content, Integer readnum, LocalDateTime regDate, String writerId) {
-        this.subject = subject;
-        this.content = content;
-        this.readnum = readnum;
-        this.regDate = regDate;
-        this.writerId = writerId;
-    }
-
-    public QaDTO(QaDTO qaDTO) {
-
-        this.writerId = qaDTO.getWriterId();
-    }
-
 
 }

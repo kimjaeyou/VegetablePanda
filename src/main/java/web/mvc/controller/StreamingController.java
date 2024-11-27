@@ -5,6 +5,7 @@
     import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
     import web.mvc.domain.Streaming;
+    import web.mvc.service.StockServiceImpl;
     import web.mvc.service.StreamingServiceImpl;
 
     import java.util.List;
@@ -15,6 +16,8 @@
 
         @Autowired
         private StreamingServiceImpl streamingService;
+        @Autowired
+        private StockServiceImpl stockService;
 
         /**
          * 사용 가능한 스트리밍을 가져오는 엔드포인트
@@ -84,14 +87,24 @@
          */
         @PostMapping("/approve/{id}")
         public ResponseEntity<String> approveStreaming(@PathVariable Long id) {
-            Streaming streaming = streamingService.findById(id);
-            if (streaming != null) {
-                streaming.setState(1);
-                streamingService.save(streaming);
-                return ResponseEntity.ok("Streaming room approved successfully.");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Streaming room not found.");
+            try {
+                Streaming streaming = streamingService.findById(id);
+                if (streaming != null) {
+                    // 스트리밍 승인
+                    streaming.setState(1);
+                    streamingService.save(streaming);
+
+                    // 승인 대기중인 모든 상품들 승인
+                    stockService.approveAllPendingStocks();
+
+                    return ResponseEntity.ok("스트리밍과 대기중인 상품들이 승인되었습니다.");
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .body("스트리밍을 찾을 수 없습니다.");
+                }
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("승인 처리 중 오류가 발생했습니다: " + e.getMessage());
             }
         }
 
