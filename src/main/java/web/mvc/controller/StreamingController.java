@@ -128,6 +128,9 @@
         @GetMapping("/active-rooms")
         public ResponseEntity<List<Streaming>> getActiveStreamingRooms() {
             List<Streaming> activeStreamings = streamingService.findByState(1);
+            for (Streaming streaming : activeStreamings) {
+                System.out.println(streaming.getFarmerUser().getUserSeq());
+            }
             if (activeStreamings.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }

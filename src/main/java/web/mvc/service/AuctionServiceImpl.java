@@ -28,7 +28,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuctionServiceImpl implements AuctionService {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
 
     private final AuctionRepository auctionRepository;

@@ -39,4 +39,9 @@ public class StreamingServiceImpl implements StreamingService {
     public Streaming findByChatRoomId(String chatRoomId) {
         return streamingRepository.findByChatRoomId(chatRoomId);
     }
+
+    @Override
+    public List<Streaming> streaming() {
+        return streamingRepository.streaming();
+    }
 }

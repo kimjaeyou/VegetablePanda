@@ -18,4 +18,7 @@ public interface     StreamingService {
     List<Streaming> findByState(Integer state);
 
     Streaming findByChatRoomId(String chatRoomId);
+
+    List<Streaming> streaming();
+
 }
