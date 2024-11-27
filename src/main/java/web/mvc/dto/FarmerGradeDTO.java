@@ -1,7 +1,7 @@
 package web.mvc.dto;
 
 public class FarmerGradeDTO {
-    private Long farmer_grade_seq;
+    private Long farmerGradeSeq;
 
     private String grade;
 }

@@ -102,7 +102,7 @@ public class StockController {
     }
 
 
-    // 상품 삭제
+    // 상품 삭제 : 상태값 바꾸기
     @DeleteMapping("/stock/{id}")
     public ResponseEntity<?> deleteStock (@PathVariable int id) {
         log.info("삭제 컨트롤러");

@@ -8,15 +8,15 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "fammer_grade")
+@Table(name = "farmer_grade")
 @Getter
 @Setter
 @NoArgsConstructor
 public class FarmerGrade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "fammer_grade_seq")
-    private Long fammerGradeSeq;
+    @Column(name = "farmer_grade_seq")
+    private Long farmerGradeSeq;
 
     @Column(name = "grade_content", nullable = false, length = 60)
     private String gradeContent;
@@ -25,6 +25,6 @@ public class FarmerGrade {
     private List<FarmerUser> farmerUsers;
 
     public FarmerGrade(Long farmerGrade) {
-        this.fammerGradeSeq =farmerGrade;
+        this.farmerGradeSeq =farmerGrade;
     }
 }

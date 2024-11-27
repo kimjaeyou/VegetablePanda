@@ -73,7 +73,8 @@ public class StockServiceImpl implements StockService {
     public int deleteStock(long id) {
         Stock stock = stockRepository.findById(id).orElseThrow(()-> new StockException(ErrorCode.STOCK_NOTFOUND));
         log.info("delect stock : {}", stock);
-        stockRepository.deleteById(id);
+        stock.setStatus(4);
+        //stockRepository.deleteById(id);
         return 1;
     }
 
