@@ -20,8 +20,8 @@ public class StockOrganic {
     @Column(name = "stock_organic")
     private Long stockOrganicSeq;
 
-    @Column(name = "oranic_status", nullable = false, length = 45)
-    private String oranicStatus;
+    @Column(name = "organic_status", nullable = false, length = 45)
+    private String organicStatus;
 
     @OneToMany(mappedBy = "stockOrganic",fetch = FetchType.LAZY)
     private List<Stock> stocks;

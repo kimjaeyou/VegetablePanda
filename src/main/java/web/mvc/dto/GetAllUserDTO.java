@@ -12,7 +12,7 @@ import web.mvc.domain.User;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAllUserDTO {
-    private Long user_seq;
+    private Long userSeq;
     private String id;
     private String pw;
     private String content;

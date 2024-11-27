@@ -40,25 +40,25 @@ public class UserBuyController {
         UserBuy userBuy = modelMapper.map(userBuyReq, UserBuy.class);
         userBuy.setManagementUser(ManagementUser.builder().userSeq(userBuyReq.getUserSeq()).build());
 
-        userBuy.setUserBuyDetails(userBuyReq.getUserBuyDetailDTOs().stream()
+        userBuy.setUserBuyDetailList(userBuyReq.getUserBuyDetailDTOs().stream()
                 .map(detail -> modelMapper.map(detail, UserBuyDetail.class))
                 .collect(Collectors.toList()));
 
         log.info("UserBuy의 user_seq: {}", userBuy.getManagementUser().getUserSeq());
         System.out.println(userBuy);
 
-        log.info("UserBuyDetail List 정보 {}", userBuy.getUserBuyDetails().get(0).getUserBuySeq()); // 왜 null이지?
+        log.info("UserBuyDetail List 정보 {}", userBuy.getUserBuyDetailList().get(0).getUserBuySeq()); // 왜 null이지?
         log.info("userbuyreq의 정보 {}", userBuyReq.getUserBuyDetailDTOs());
 
         // 주문 상세 품목 변수 dtoList
         List<UserBuyDetailDTO> dtoList = userBuyReq.getUserBuyDetailDTOs();
 
         // 가격 합계 계산
-        int sum = 0;
-        for(UserBuyDetailDTO dto : dtoList) {
-            sum += (dto.getCount()*dto.getPrice());
-        }
-        userBuy.setTotalPrice(sum);
+//        int sum = 0;
+//        for(UserBuyDetailDTO dto : dtoList) {
+//            sum += (dto.getCount()*dto.getPrice());
+//        }
+//        userBuy.setTotalPrice(sum);
 
         // UserBuy 주문 넣기
         UserBuyRes result = modelMapper.map(userBuyService.insertShopOrder(userBuy), UserBuyRes.class);

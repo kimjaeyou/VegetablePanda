@@ -192,7 +192,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             // DB에 저장된 결제 금액
-            Long price = userBuy.getPayment().getPrice();
+            Long price = (long)userBuy.getTotalPrice();
             // 실 결제 금액
             long iamportPrice = iamportResponse.getResponse().getAmount().longValue();
 
