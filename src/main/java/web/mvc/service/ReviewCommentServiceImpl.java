@@ -45,7 +45,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
      */
     @Override
     public List<ReviewCommentDTO> reviewCommentFindAllById(Long reviewCommentSeq) {
-        List<ReviewComment> comments = reviewCommentRepository.findAllByReviewSeq(reviewCommentSeq);
+        List<ReviewComment> comments = reviewCommentRepository.findAllByReview_ReviewSeq(reviewCommentSeq);
         return comments.stream()
                 .map(this::convertToDto)
                 .toList();

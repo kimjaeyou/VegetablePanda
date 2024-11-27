@@ -36,11 +36,11 @@ public class StockTest {
         stockGradeRepository.save(StockGrade.builder().grade("3등급").build());
         stockGradeRepository.save(StockGrade.builder().grade("4등급").build());
 
-        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("유기농산물").build());
-        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("전환기 유기농산물").build());
-        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("무농약 농산물").build());
-        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("저농약 농산물").build());
-        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("분류없음").build());
+        stockOrganicRepository.save(StockOrganic.builder().organicStatus("유기농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().organicStatus("전환기 유기농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().organicStatus("무농약 농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().organicStatus("저농약 농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().organicStatus("분류없음").build());
     }
 
     /**
@@ -50,11 +50,11 @@ public class StockTest {
     @Rollback(false)
     @Disabled
     public void stockOrganicInsert(){
-        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("유기농산물").build());
-        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("전환기 유기농산물").build());
-        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("무농약 농산물").build());
-        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("저농약 농산물").build());
-        stockOrganicRepository.save(StockOrganic.builder().oranicStatus("분류없음").build());
+        stockOrganicRepository.save(StockOrganic.builder().organicStatus("유기농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().organicStatus("전환기 유기농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().organicStatus("무농약 농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().organicStatus("저농약 농산물").build());
+        stockOrganicRepository.save(StockOrganic.builder().organicStatus("분류없음").build());
     }
 
     /**
