@@ -36,7 +36,7 @@ public class QaBoardReplyController {
      * 질문 댓글 수정
      */
     @PutMapping("/{boardNoSeq}")
-    public ResponseEntity<?> qaReplyUpdate(@PathVariable Long boardNoSeq, @RequestBody QaBoardReply qaBoardReply) {
+    public ResponseEntity<?> noticeUpdate(@PathVariable Long boardNoSeq, @RequestBody QaBoardReply qaBoardReply) {
         validateAdminRole();
         return new ResponseEntity<>(qaBoardReplyService.qaReplyUpdate(boardNoSeq, qaBoardReply), HttpStatus.OK);
     }

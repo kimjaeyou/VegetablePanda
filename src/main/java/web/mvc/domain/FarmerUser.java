@@ -57,9 +57,6 @@ public class FarmerUser {
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
     private List<Likes> likes;
 
-    @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
-    private List<Stock> Stock;
-
 
     public FarmerUser(Long user_seq,String farmerId, String pw,String name,
                       String address,String code,String account,String phone,

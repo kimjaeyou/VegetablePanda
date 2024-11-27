@@ -1,6 +1,5 @@
 package web.mvc.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,6 +38,5 @@ public class ReviewComment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_seq", nullable = false)
-    @JsonIgnore
     private Review review;
 }
