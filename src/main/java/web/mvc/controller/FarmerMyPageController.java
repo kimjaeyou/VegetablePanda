@@ -11,10 +11,7 @@ import web.mvc.domain.CompanyUser;
 import web.mvc.domain.FarmerUser;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
-import web.mvc.dto.CalcPoint;
-import web.mvc.dto.FarmerUserDTO;
-import web.mvc.dto.ReviewDTO;
-import web.mvc.dto.UserBuyDTO;
+import web.mvc.dto.*;
 import web.mvc.service.FarmerMyPageService;
 
 import java.util.List;
@@ -109,18 +106,10 @@ public class FarmerMyPageController {
     /**
      * 나한테 쓴 리뷰 조회하기
      */
-//    @GetMapping("review/List/{seq}")
-//    public ResponseEntity<?> reviewList(@PathVariable Long seq) {
-//        List<ReviewComment> reviewComments = farmerMyPageService.reviewList(seq);
-//
-//        // ReviewDTO로 변환
-//        List<ReviewDTO> reviewDTO = reviewComments.stream()
-//                .map(review -> new ReviewDTO(
-//                        review.getReviewCommentSeq(),
-//                        review.getContent(),
-//                        review.getScore(),
-//                        review.getDate(),
-//                        review.getName()
-//                ))            .collect(Collectors.toList());
-//    }
+    @GetMapping("review/List/{seq}")
+    public ResponseEntity<?> reviewList(@PathVariable Long reviewSeq) {
+        List<ReviewCommentDTO> reviewComments = farmerMyPageService.reviewList(reviewSeq);
+
+        return new ResponseEntity<>(reviewComments, HttpStatus.OK);
+    }
 }

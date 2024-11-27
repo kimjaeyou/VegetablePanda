@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import web.mvc.domain.CalcPoint;
 import web.mvc.domain.FarmerUser;
 import web.mvc.domain.ManagementUser;
+import web.mvc.domain.ReviewComment;
 import web.mvc.dto.FarmerUserDTO;
+import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.repository.*;
 
@@ -28,6 +30,7 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
     private final FarmerMyPageRepository farmerMyPageRepository;
     private final PasswordEncoder passwordEncoder;
     private final CalcPointRepository calcPointRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public List<UserBuyDTO> buyList(Long seq) {
@@ -68,6 +71,12 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
         int i = farmerMyPageRepository.delete(seq);
         log.info("i = {}",i);
         return i;
+    }
+
+    @Override
+    public List<ReviewCommentDTO> reviewList(Long reviewSeq) {
+        List<ReviewCommentDTO> list = reviewRepository.selectReview(reviewSeq);
+        return list;
     }
 
     @Override

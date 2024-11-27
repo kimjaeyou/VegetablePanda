@@ -30,4 +30,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Modifying
     @Query("Delete from ReviewComment r where r.review.managementUser.userSeq = ?2 and r.reviewCommentSeq = ?1 ")
     int deleteReview(Long reviewSeq, Long userSeq);
+
+    /**
+     * 판매자 입장 : 나에게 쓴 리뷰들 전부다 출력
+     */
+    @Query("select r from ReviewComment r where r.review.reviewSeq = ?1")
+    List<ReviewCommentDTO> selectReview(Long reviewSeq);
+
 }
