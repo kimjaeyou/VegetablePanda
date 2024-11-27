@@ -21,7 +21,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
     @Query("update Auction a set a.status=1 where a.status=0 and a.auctionSeq=?1")
     public void setStatus(Long auctionSeq);
 
-    @Query("select a from Auction a where a.stock.farmerUser.user_seq=?1 and a.status=0")
+    @Query("select a from Auction a where a.stock.farmerUser.userSeq=?1 and a.status=0")
     public Auction findByUserSeq(Long UserSeq);
 
 }

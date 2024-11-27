@@ -32,7 +32,7 @@ public class GetAllUserDTO {
 
 
     public GetAllUserDTO(FarmerUser fuser) {
-        this.user_seq=fuser.getUser_seq();
+        this.user_seq=fuser.getUserSeq();
         this.id=fuser.getFarmerId();
         this.name= fuser.getName();
         this.pw = fuser.getPw();

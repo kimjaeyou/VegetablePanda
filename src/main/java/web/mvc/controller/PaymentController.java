@@ -87,8 +87,14 @@ public class PaymentController {
 
     // 포인트 결제 검증
     @PostMapping("/payment/charge")
-    public ResponseEntity<IamportResponse<Payment>> validatePayment(@RequestBody PaymentReq paymentReq) {
-        IamportResponse<Payment> iamportResponse = paymentService.paymentByCallback(paymentReq);
+    public ResponseEntity<IamportResponse<Payment>> validatePayment(@RequestBody PaymentReq paymentReq, int status) {
+        IamportResponse<Payment> iamportResponse = null;
+        if(status == 1) {
+            iamportResponse = paymentService.paymentByChargeCallback(paymentReq);
+        } else {
+            iamportResponse = paymentService.paymentByCallback(paymentReq);
+
+        }
 
         log.info("결제 응답 : {}", iamportResponse.getResponse().toString());
         return new ResponseEntity<>(iamportResponse, HttpStatus.OK);

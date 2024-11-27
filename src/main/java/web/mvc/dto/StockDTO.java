@@ -17,13 +17,14 @@ public class StockDTO {
     private Long productSeq;
     private Long stockGradeSeq;
     private Long stockOrganicSeq;
-    private Long farmerUserSeq;
+    private Long userSeq;
+
 //    ProductDTO productDTO;
 //
 //    StockGradeDTO stockGradeDTO;
 //
 //    StockOrganicDTO stockOrganicDTO;
 //
-//    FarmerUserDTO farmerUserDTO;
+//    private FarmerUserDTO farmerUserDTO;
 
 }

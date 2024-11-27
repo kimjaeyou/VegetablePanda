@@ -34,6 +34,8 @@ public class UserBuyServiceImpl implements UserBuyService {
 
     @Override
     public UserBuy insertShopOrder(UserBuy userBuy) {
+
+
         // 임시 주문내역 생성
         UserBuy result = userBuyRepository.save(userBuy);
 

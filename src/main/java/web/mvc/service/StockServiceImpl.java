@@ -34,6 +34,7 @@ public class StockServiceImpl implements StockService {
     @Override
     public List<Stock> findStocksById(long farmerSeq) {
         List<Stock> stockList = stockRepository.findStocksById(farmerSeq);
+        log.info("재고 유저 아이디 조회 : {}", stockList.get(0).getFarmerUser().getUserSeq());
         log.info("아이디로 재고 조회 {}", stockList);
         return stockList;
     }

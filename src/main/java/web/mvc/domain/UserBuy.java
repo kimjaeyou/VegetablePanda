@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString(exclude = {"payments","userBuyDetails","managementUser"})
 public class UserBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,8 +35,12 @@ public class UserBuy {
     @Column(name = "total_price")
     private Integer totalPrice;
 
-    @OneToMany(mappedBy = "userBuy")
-    private List<Payment> payments;
+//    @OneToMany(mappedBy = "userBuy")
+//    private List<Payment> payments;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_seq")
+    private Payment payment;
 
     // 추가
     @OneToMany(mappedBy = "userBuy")
