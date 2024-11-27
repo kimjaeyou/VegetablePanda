@@ -1,5 +1,6 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -36,10 +37,22 @@ public class QaBoard {
 
     @OneToOne
     @JoinColumn(name = "file_seq", nullable = true)
+    @JsonIgnore
     private File file;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)
     private ManagementUser managementUser;
 
+
+
+    public QaBoard(String subject, String content, Integer readnum, LocalDateTime regDate, File file) {
+
+        this.subject = subject;
+        this.content = content;
+        this.readnum = readnum;
+        this.regDate = regDate;
+        this.file = file;
+
+    }
 }
