@@ -31,16 +31,18 @@ public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Lo
             "ORDER BY SUM(ubd.price) DESC")
     List<ProductStatisticsDTO> getProductSalesStatistics(LocalDateTime startDate, LocalDateTime endDate);
 
-    @Query("SELECT " +
-            "DATE_FORMAT(ub.buyDate, '%Y-%m-%d') as date, " +
-            "SUM(ubd.count) as totalQuantity, " +
-            "SUM(ubd.price) as totalAmount " +
-            "FROM UserBuyDetail ubd " +
-            "JOIN ubd.userBuy ub " +
-            "WHERE ub.buyDate BETWEEN :startDate AND :endDate " +
-            "AND ub.state = 1 " +
-            "GROUP BY DATE_FORMAT(ub.buyDate, '%Y-%m-%d') " +
-            "ORDER BY DATE_FORMAT(ub.buyDate, '%Y-%m-%d') ASC")
+    @Query(value =
+            "SELECT " +
+                    "   DATE_FORMAT(ub.buy_date, '%Y-%m-%d') as date, " +
+                    "   CAST(COALESCE(SUM(ubd.count), 0) as SIGNED) as total_quantity, " +
+                    "   CAST(COALESCE(SUM(ub.total_price), 0) as SIGNED) as total_amount " +
+                    "FROM user_buy ub " +
+                    "LEFT JOIN user_buy_detail ubd ON ubd.user_buy_seq = ub.buy_seq " +
+                    "WHERE ub.buy_date BETWEEN :startDate AND :endDate " +
+                    "AND ub.state = 1 " +
+                    "GROUP BY DATE_FORMAT(ub.buy_date, '%Y-%m-%d') " +
+                    "ORDER BY date ASC",
+            nativeQuery = true)
     List<Object[]> findDailyStats(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
