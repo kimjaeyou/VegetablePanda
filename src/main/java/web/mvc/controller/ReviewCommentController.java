@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.QaBoardReply;
 import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
+import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.service.ReviewCommentService;
 
 import java.util.Collection;
@@ -32,7 +33,8 @@ public class ReviewCommentController {
     @PostMapping("/")
     public ResponseEntity<?> reviewCommentSave (@RequestBody ReviewComment reviewComment) {
         validateRole();
-        return new ResponseEntity<>(reviewCommentService.reviewCommentSave(reviewComment), HttpStatus.CREATED);
+        ReviewCommentDTO savedComment = reviewCommentService.reviewCommentSave(reviewComment);
+        return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
 
     /**
@@ -41,18 +43,17 @@ public class ReviewCommentController {
     @PutMapping("/{reviewCommentSeq}")
     public ResponseEntity<?> reviewCommentUpdate (@PathVariable Long reviewCommentSeq, @RequestBody ReviewComment reviewComment) {
         validateRole();
-        return new ResponseEntity<>(reviewCommentService.reviewCommentUpdate(reviewCommentSeq, reviewComment), HttpStatus.OK);
-    }
+        ReviewCommentDTO updatedComment = reviewCommentService.reviewCommentUpdate(reviewCommentSeq, reviewComment);
+        return new ResponseEntity<>(updatedComment, HttpStatus.OK);    }
 
 
     /**
      * 리뷰 게시글 별 조회
      */
     @GetMapping("/{reviewCommentSeq}")
-    public ResponseEntity<?> reviewCommentFindAllById (@PathVariable Long  reviewSeq) {
-        List<ReviewComment> rc = (List<ReviewComment>) reviewCommentService.reviewCommentFindAllById(reviewSeq);
-
-        return new ResponseEntity<>(rc, HttpStatus.OK);
+    public ResponseEntity<?> reviewCommentFindByReviewSeq(@PathVariable Long reviewSeq) {
+        List<ReviewCommentDTO> comments = reviewCommentService.reviewCommentFindAllById(reviewSeq);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
     /**
