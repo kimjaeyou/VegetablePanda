@@ -5,6 +5,8 @@ import web.mvc.dto.BidDTO;
 import web.mvc.dto.HighestBidDTO;
 import web.mvc.dto.UserTempWalletDTO;
 
+import java.util.List;
+
 public interface BidService {
 
     /*
@@ -19,9 +21,9 @@ public interface BidService {
 
     HighestBidDTO checkHighestBid(Long auctionSeq, Long userSeq);
 
-
-
     UserTempWalletDTO checkUserTempWallet(Long userSeq);
 
+    HighestBidDTO getHighestBid(Long auctionSeq);
 
+    List<Bid> getBids(Long auctionSeq);
 }
