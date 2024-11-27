@@ -24,5 +24,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
     @Query("select a from Auction a where a.stock.farmerUser.userSeq=?1 and a.status=0")
     public Auction findByUserSeq(Long UserSeq);
 
+    @Query("SELECT a FROM Auction a WHERE a.status = 1 AND a.closeTime > CURRENT_TIMESTAMP ORDER BY a.closeTime ASC")
+    List<Auction> findAllActiveAuctions();
 }
 
