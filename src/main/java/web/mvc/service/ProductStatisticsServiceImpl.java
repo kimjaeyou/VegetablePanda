@@ -20,7 +20,7 @@ public class ProductStatisticsServiceImpl implements ProductStatisticsService {
 
     @Override
     public List<ProductStatisticsDTO> getProductSalesStatistics(LocalDateTime startDate, LocalDateTime endDate) {
-        return userBuyDetailRepository.getProductSalesStatistics(startDate, endDate);
+        return userBuyDetailRepository.findProductStats(startDate, endDate);
     }
 
     @Override
