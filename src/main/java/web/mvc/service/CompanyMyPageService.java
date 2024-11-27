@@ -18,4 +18,7 @@ public interface CompanyMyPageService {
     // 회원정보 수정
     CompanyUser update (CompanyUser companyUser, Long seq);
 
+    // 회원정보 탈퇴
+    int delete (Long seq);
+
 }

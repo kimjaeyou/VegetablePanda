@@ -2,6 +2,7 @@ package web.mvc.service;
 
 import web.mvc.domain.FarmerUser;
 import web.mvc.domain.UserBuy;
+import web.mvc.dto.FarmerUserDTO;
 import web.mvc.dto.UserBuyDTO;
 
 import java.util.List;

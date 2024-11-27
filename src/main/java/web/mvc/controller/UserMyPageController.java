@@ -44,7 +44,7 @@ public class UserMyPageController {
     /**
      * 회원정보 수정
      */
-    @PutMapping("/update/{seq}")
+    @PutMapping("/user/update/{seq}")
     public ResponseEntity<?> update(
             @PathVariable Long seq,
             @RequestParam String name,
@@ -69,7 +69,7 @@ public class UserMyPageController {
     /**
      * 탈퇴 (계정 상태 변경)
      */
-    @PostMapping("/delete/{seq}")
+    @PutMapping("/delete/{seq}")
     public int delete(@PathVariable Long seq) {
         return userMyPageService.delete(seq);
     }

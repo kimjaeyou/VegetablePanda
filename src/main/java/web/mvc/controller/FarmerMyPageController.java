@@ -12,6 +12,7 @@ import web.mvc.domain.FarmerUser;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
 import web.mvc.dto.CalcPoint;
+import web.mvc.dto.FarmerUserDTO;
 import web.mvc.dto.ReviewDTO;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.service.FarmerMyPageService;
@@ -27,11 +28,6 @@ public class FarmerMyPageController {
 
     private final FarmerMyPageService farmerMyPageService;
 
-    @GetMapping("")
-    public String test() {
-        log.info("판매자 마이페이지 test");
-        return "판매자 마이페이지";
-    }
     /**
      * 판매내역
      */
@@ -50,7 +46,20 @@ public class FarmerMyPageController {
      */
     @GetMapping("/list/{seq}")
     public ResponseEntity<?> selectUser(@PathVariable Long seq) {
-        return new ResponseEntity<>(farmerMyPageService.selectUser(seq), HttpStatus.OK);
+        FarmerUser farmerUser = farmerMyPageService.selectUser(seq);
+
+        FarmerUserDTO farmerUserDTO = new FarmerUserDTO();
+        farmerUserDTO.setFarmerId(farmerUser.getFarmerId());
+        farmerUserDTO.setName(farmerUser.getName());
+        farmerUserDTO.setCode(farmerUser.getCode());
+        farmerUserDTO.setAddress(farmerUser.getAddress());
+        farmerUserDTO.setPw(farmerUser.getPw());
+        farmerUserDTO.setPhone(farmerUser.getFarmerId());
+        farmerUserDTO.setEmail(farmerUser.getEmail());
+        farmerUserDTO.setGrade(String.valueOf(farmerUser.getFarmerGrade()));
+        farmerUserDTO.setRegDate(String.valueOf(farmerUser.getRegDate()));
+
+        return new ResponseEntity<>(farmerUserDTO, HttpStatus.OK);
     }
 
     /**
@@ -67,7 +76,7 @@ public class FarmerMyPageController {
             @RequestParam String code) {
 
         FarmerUser farmerUser = new FarmerUser();
-        farmerUser.setUser_seq(seq);
+        farmerUser.setUserSeq(seq);
         farmerUser.setName(name);
         farmerUser.setPw(pw);
         farmerUser.setAddress(address);

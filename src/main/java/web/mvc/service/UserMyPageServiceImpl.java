@@ -92,6 +92,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public List<ReviewCommentDTO> review(Long seq) {
+
         // 처음에 유저 시퀀스에 해당하는 review 시퀀스를 가져오자
         Long reviewSeq = reviewRepository.selectSeq(seq);
 

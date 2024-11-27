@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import web.mvc.domain.CalcPoint;
 import web.mvc.domain.FarmerUser;
 import web.mvc.domain.ManagementUser;
+import web.mvc.dto.FarmerUserDTO;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.repository.*;
 
@@ -39,6 +40,7 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
     @Override
     public FarmerUser selectUser(Long seq) {
         FarmerUser farmerUser = farmerMyPageRepository.selectUser(seq);
+        System.out.println("farmerUser: " + farmerUser.toString());
         return farmerUser;
     }
 

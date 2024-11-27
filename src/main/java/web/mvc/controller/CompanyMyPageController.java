@@ -60,5 +60,12 @@ public class CompanyMyPageController {
 
         return new ResponseEntity<>( companyMyPageService.update(companyUser, seq), HttpStatus.OK);
     }
+    /**
+     * 탈퇴 (계정 상태 변경)
+     */
+    @PutMapping("/delete/{seq}")
+    public int delete(@PathVariable Long seq) {
+        return companyMyPageService.delete(seq);
+    }
 
 }

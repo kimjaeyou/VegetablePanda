@@ -1,23 +1,23 @@
 package web.mvc.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 @NoArgsConstructor
 public class FarmerUserDTO {
-    private String user_seq;
-    private String farmer_id;
+    private String userSeq;
+    private String farmerId;
     private String name;
     private String pw;
+    private String email;
+    private String phone;
+    private String grade;
+    private String regDate;
     private String address;
     private String code;
     private String account;
     private String nickName;
-
-
 }

@@ -59,4 +59,10 @@ public class CompanyMyPageServiceImpl implements CompanyMyPageService {
 
         return companyUser1;
     }
+    @Override
+    public int delete(Long seq) {
+        int i = companyUserRepository.delete(seq);
+        log.info("i = {}",i);
+        return i;
+    }
 }
