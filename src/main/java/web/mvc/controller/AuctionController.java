@@ -62,4 +62,14 @@ public class AuctionController {
     }
 
 
+    @GetMapping("/highestBid/{userSeq}")
+    public ResponseEntity<?> getHighestBid(@PathVariable Long userSeq) {
+        Auction result = auctionService.getAuction(userSeq);
+        System.out.println(result.getAuctionSeq());
+        HighestBidDTO highestBidDTO = bidService.getHighestBid(result.getAuctionSeq());
+        return new ResponseEntity<>(highestBidDTO, HttpStatus.CREATED);
+
+    }
+
+
 }

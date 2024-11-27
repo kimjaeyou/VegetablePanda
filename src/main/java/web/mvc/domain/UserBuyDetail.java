@@ -32,4 +32,7 @@ public class UserBuyDetail {
     @JoinColumn(name = "stock_seq", nullable = false)
     private Stock stock;
 
+    @OneToOne(mappedBy = "userBuyDetail")
+    private ReviewComment reviewComment;
+
 }

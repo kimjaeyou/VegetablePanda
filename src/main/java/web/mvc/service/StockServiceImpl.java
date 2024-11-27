@@ -7,11 +7,13 @@ import org.springframework.stereotype.Service;
 import web.mvc.domain.Product;
 import web.mvc.domain.ProductCategory;
 import web.mvc.domain.Stock;
+import web.mvc.dto.AllStockDTO;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.ProductException;
 import web.mvc.exception.StockException;
 import web.mvc.repository.StockRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +29,16 @@ public class StockServiceImpl implements StockService {
     public Stock addStock(Stock stock) {
         log.info("addProduct service 동작");
         log.info("Product : {}", stock);
-        stock.setStatus(2);
+        stock.setStatus(0);
+        stock.setRegDate(LocalDateTime.now());
         return stockRepository.save(stock);
     }
+
+    @Override
+    public AllStockDTO findAuctionStocksById(long farmerSeq) {
+        AllStockDTO stock = stockRepository.findAuctionStocksById(farmerSeq);
+        log.info("");
+        return stock;    }
 
     @Override
     public List<Stock> findStocksById(long farmerSeq) {
@@ -70,7 +79,8 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<Stock> findPendingStocks() {
-        return stockRepository.findByStatus(2); // 2는 승인 대기 상태
+        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+        return stockRepository.findByStatusAndRegDateAfter(0, oneDayAgo);
     }
 
     @Override
@@ -84,5 +94,24 @@ public class StockServiceImpl implements StockService {
 
         stock.setStatus(1); // 1은 승인된 상태
         return stockRepository.save(stock);
+    }
+
+    @Override
+    public void approveAllPendingStocks() {
+        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+        List<Stock> pendingStocks = stockRepository.findByStatusAndRegDateAfter(0, oneDayAgo);
+
+        for (Stock stock : pendingStocks) {
+            stock.setStatus(1); // 승인 상태로 변경
+            stockRepository.save(stock);
+        }
+    }
+
+    @Override
+    public boolean hasRegisteredToday(long farmerSeq) {
+        LocalDateTime startOfDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+        return stockRepository.existsByFarmerAndDateRange(farmerSeq, startOfDay, endOfDay);
     }
 }

@@ -2,6 +2,7 @@ package web.mvc.service;
 
 import web.mvc.domain.Product;
 import web.mvc.domain.Stock;
+import web.mvc.dto.AllStockDTO;
 
 import java.util.List;
 
@@ -17,6 +18,11 @@ public interface StockService {
     public List<Stock> findStocksById(long id);
 
     /**
+     * 경매 재고 조회
+     */
+    public AllStockDTO findAuctionStocksById(long id);
+
+    /**
      * 상품 수정
      */
     //public Stock updateStock(long farmerUserSeq, int id, Stock stock);
@@ -30,4 +36,8 @@ public interface StockService {
     List<Stock> findPendingStocks();
 
     Stock approveStock(long stockSeq);
+
+    void approveAllPendingStocks();
+
+    boolean hasRegisteredToday(long farmerSeq);
 }

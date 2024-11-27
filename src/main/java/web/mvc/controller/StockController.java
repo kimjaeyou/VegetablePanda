@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.*;
+import web.mvc.dto.AllStockDTO;
 import web.mvc.dto.FarmerUserDTO;
 import web.mvc.dto.StockDTO;
 import web.mvc.service.StockService;
@@ -30,21 +31,30 @@ public class StockController {
     public ResponseEntity<?> insert(long farmerSeq, @RequestBody StockDTO stockDTO) {
         log.info("Controller Product : {}", stockDTO);
 
-        Stock stock = modelMapper.map(stockDTO, Stock.class);
-//        stock.setProduct(new Product(productSeq));
-//        stock.setStockGrade(new StockGrade(stockGradeSeq));
-//        stock.setStockOrganic(new StockOrganic(stockOrganicSeq));
-        stock.setProduct(new Product(stockDTO.getProductSeq()));
-        stock.setStockGrade(new StockGrade(stockDTO.getStockGradeSeq()));
-        stock.setStockOrganic(new StockOrganic(stockDTO.getStockOrganicSeq()));
-        stock.setFarmerUser(new FarmerUser(farmerSeq));
+        try {
+            // 오늘 등록한 상품이 있는지 확인
+            if (stockService.hasRegisteredToday(farmerSeq)) {
+                return new ResponseEntity<>("하루에 한 상품만 등록할 수 있습니다.", HttpStatus.BAD_REQUEST);
+            }
 
-        log.info("Stock 정보 : {}", stock);
+            Stock stock = modelMapper.map(stockDTO, Stock.class);
+    //        stock.setProduct(new Product(productSeq));
+    //        stock.setStockGrade(new StockGrade(stockGradeSeq));
+    //        stock.setStockOrganic(new StockOrganic(stockOrganicSeq));
+            stock.setProduct(new Product(stockDTO.getProductSeq()));
+            stock.setStockGrade(new StockGrade(stockDTO.getStockGradeSeq()));
+            stock.setStockOrganic(new StockOrganic(stockDTO.getStockOrganicSeq()));
+            stock.setFarmerUser(new FarmerUser(farmerSeq));
 
-        StockDTO result = modelMapper.map(stockService.addStock(stock), StockDTO.class);
+            log.info("Stock 정보 : {}", stock);
 
-        //Stock result = stockService.addStock(stock);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+            StockDTO result = modelMapper.map(stockService.addStock(stock), StockDTO.class);
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            log.error("상품 등록 실패: ", e);
+            return new ResponseEntity<>("상품 등록에 실패했습니다: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // 상품 조회 (판매자 재고 보기)
@@ -56,6 +66,16 @@ public class StockController {
         List<StockDTO> stockDTOList = stockList.stream().map(data -> modelMapper.map(data, StockDTO.class)).toList();
         System.out.println("stocklist 값" + stockList);
         return new ResponseEntity<>(stockDTOList, HttpStatus.OK);
+    }
+
+    // 상품 조회 (판매자 재고 보기)
+    @GetMapping("/auctionStock/{userSeq}")
+    public ResponseEntity<?> findAuctionStocksById(@PathVariable long userSeq) {
+        log.info("상품 목록 조회");
+
+        AllStockDTO stockDTO = stockService.findAuctionStocksById(userSeq);
+        System.out.println("stock값" + stockDTO);
+        return new ResponseEntity<>(stockDTO, HttpStatus.OK);
     }
 
     // 상품 수정 -> userId와 StockDTO 에 정보를 담아 가져간다

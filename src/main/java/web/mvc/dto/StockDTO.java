@@ -2,6 +2,8 @@ package web.mvc.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Builder
@@ -18,13 +20,14 @@ public class StockDTO {
     private Long stockGradeSeq;
     private Long stockOrganicSeq;
     private Long userSeq;
-
+    private Long farmerUserSeq;
+    private LocalDateTime regDate;
 //    ProductDTO productDTO;
 //
 //    StockGradeDTO stockGradeDTO;
 //
 //    StockOrganicDTO stockOrganicDTO;
 //
-//    private FarmerUserDTO farmerUserDTO;
+//    FarmerUserDTO farmerUserDTO;
 
 }

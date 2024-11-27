@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"payments","userBuyDetails","managementUser"})
 public class UserBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,9 +41,8 @@ public class UserBuy {
     @JoinColumn(name = "payment_seq")
     private Payment payment;
 
-    // 추가
     @OneToMany(mappedBy = "userBuy")
-    private List<UserBuyDetail> userBuyDetails;
+    private List<UserBuyDetail> userBuyDetailList;
 
     public UserBuy(long buySeq) {this.buySeq = buySeq;}
 }

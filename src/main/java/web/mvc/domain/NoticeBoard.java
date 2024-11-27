@@ -26,7 +26,7 @@ public class NoticeBoard {
     private String content;
 
     @Column(name = "readnum", nullable = false, length = 45)
-    private String readnum;
+    private int readnum;
 
     @CreationTimestamp
     @Column(name = "reg_date", nullable = false)

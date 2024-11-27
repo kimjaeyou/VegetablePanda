@@ -81,7 +81,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
 
         Map<String, Object> map = new HashMap<>();
         GetAllUserDTO user= customMemberDetails.getUser();
-        map.put("user_seq", Long.toString(user.getUser_seq()));
+        map.put("user_seq", Long.toString(user.getUserSeq()));
         map.put("id", user.getId());
         map.put("name", user.getName());
         map.put("role", user.getRole());

@@ -51,8 +51,8 @@ public class FarmerUser {
 
     private String role;
 
-    @Column(name = "farmer_grade", nullable = false)
-    private String farmerGrade;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private FarmerGrade farmerGrade;
 
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
     private List<Likes> likes;
@@ -60,7 +60,7 @@ public class FarmerUser {
 
     public FarmerUser(Long user_seq,String farmerId, String pw,String name,
                       String address,String code,String account,String phone,
-                      String email,int state,String role,String farmerGrade) {
+                      String email,int state,String role) {
         this.userSeq = user_seq;
         this.farmerId = farmerId;
         this.name = name;

@@ -3,7 +3,6 @@ package web.mvc.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.hadoop.shaded.org.checkerframework.checker.units.qual.A;
 
 @Data
 @NoArgsConstructor

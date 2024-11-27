@@ -70,9 +70,7 @@ public class MemberServiceImpl implements MemberService {
                         user.getPhone(),
                         user.getEmail(),
                         1,
-                        "ROLE_FARMER",
-                        "브론즈" // 등급 일단 넣을게 없어서 이거 넣었습니다, 근데 난 등급 별로,,,
-
+                        "ROLE_FARMER" // 등급 일단 넣을게 없어서 이거 넣었습니다, 근데 난 등급 별로,,,
                 );
         farmerRepository.save(fuser);
     }

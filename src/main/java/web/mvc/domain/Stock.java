@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -27,7 +29,6 @@ public class Stock {
     @Column(name = "count")
     private Integer count;
 
-
     @Column(name = "status")
     private Integer status;
 
@@ -49,6 +50,14 @@ public class Stock {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)
     private FarmerUser farmerUser;
+
+    @Column(name = "reg_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime regDate;
+
+    @OneToOne
+    @JoinColumn(name = "file_seq")
+    private File file;
 
     public Stock(Long stockSeq){
         this.stockSeq = stockSeq;
