@@ -16,7 +16,7 @@ import java.util.List;
 public class FarmerUser {
     @Id
     @Column(name = "user_seq")
-    private Long user_seq;
+    private Long userSeq;
 
     @Column(name = "farmer_id", nullable = false, length = 60, unique = true)
     private String farmerId;
@@ -64,7 +64,7 @@ public class FarmerUser {
     public FarmerUser(Long user_seq,String farmerId, String pw,String name,
                       String address,String code,String account,String phone,
                       String email,int state,String role) {
-        this.user_seq = user_seq;
+        this.userSeq = user_seq;
         this.farmerId = farmerId;
         this.name = name;
         this.pw = pw;
@@ -79,6 +79,6 @@ public class FarmerUser {
         this.regDate = LocalDateTime.now();
     }
     public FarmerUser (long farmerSeq){
-        this.user_seq = farmerSeq;
+        this.userSeq = farmerSeq;
     }
 }
