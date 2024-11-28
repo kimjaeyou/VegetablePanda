@@ -27,9 +27,8 @@ public class UserMyPageController {
      */
     @GetMapping("/buyList/{seq}")
     public ResponseEntity<List<UserBuyDTO>> buyList(@PathVariable Long seq) {
-        log.info("주문내역 조회시작");
         List<UserBuyDTO> list = userMyPageService.buyList(seq);
-        log.info("list = {}", list);
+        log.info("UserBuyDTO = {}", list);
         return ResponseEntity.ok(list);
     }
 
@@ -108,8 +107,7 @@ public class UserMyPageController {
      * 경매 참여내역 조회
      */
     @GetMapping("/auction/{seq}")
-    public ResponseEntity<List<Bid>> auctionList(@PathVariable Long seq) {
-        List<Bid> list = userMyPageService.auctionList(seq);
-        return ResponseEntity.ok(list);
+    public ResponseEntity<List<BidAuctionDTO>> auctionList(@PathVariable Long seq) {
+        return new ResponseEntity<> (userMyPageService.auctionList(seq), HttpStatus.OK);
     }
 }

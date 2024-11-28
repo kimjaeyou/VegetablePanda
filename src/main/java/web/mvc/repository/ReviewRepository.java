@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
 import web.mvc.dto.ReviewCommentDTO;
+import web.mvc.dto.ReviewCommentDTO2;
 
 import java.util.List;
 
@@ -34,7 +35,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     /**
      * 판매자 입장 : 나에게 쓴 리뷰들 전부다 출력
      */
-    @Query("select r from ReviewComment r where r.review.reviewSeq = ?1")
-    List<ReviewCommentDTO> selectReview(Long reviewSeq);
+    @Query("select new web.mvc.dto.ReviewCommentDTO2(r.content, " +
+            "COALESCE(r.file.path, 'defaultPath'), " + // file.path가 null이면 'defaultPath'를 반환
+            "r.score, r.date, r.userSeq) " +
+            "from ReviewComment r " +
+            "left join Review v on r.review.reviewSeq = v.reviewSeq " +
+            "left join File f on r.file.fileSeq = f.fileSeq " + // 파일 관련 LEFT JOIN 추가
+            "where v.managementUser.userSeq = ?1")
+    List<ReviewCommentDTO2> reviewList(Long userSeq);
 
 }

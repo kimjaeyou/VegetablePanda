@@ -18,7 +18,7 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fileSeq;
 
-    @Column(name = "path", length = 300)
+    @Column(name = "path", length = 300 , nullable = true)
     private String path;
 
     @Column(name = "name", length = 80)

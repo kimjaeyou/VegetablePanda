@@ -2,19 +2,28 @@ package web.mvc.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@ToString
 public class UserBuyDTO {
-    private Long userBuySeq; // 주문번호
-    private String content; // 상품명
-    private Integer price; // 가격
-    private Integer count; // 수량
-    private String date; // 구매날짜
-    private String name; // 이건 구매입장은 판매자가 들어갈꺼고 판매자 입장에선 누가 구매했는지 나올거에요
+    private Long userBuySeq;
+    private String content;
+    private Integer count;
+    private Integer price;
+    private LocalDateTime buyDate;
+    private Integer state;
 
+    public UserBuyDTO(Long userBuySeq, String content, Integer count, Integer price, LocalDateTime buyDate, Integer state) {
+        this.userBuySeq = userBuySeq;
+        this.content = content;
+        this.count = count;
+        this.price = price;
+        this.buyDate = buyDate;
+        this.state = state;
+    }
 }

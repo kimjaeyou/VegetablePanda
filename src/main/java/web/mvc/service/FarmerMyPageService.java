@@ -1,18 +1,14 @@
 package web.mvc.service;
 
 import web.mvc.domain.FarmerUser;
-import web.mvc.domain.ReviewComment;
-import web.mvc.domain.UserBuy;
-import web.mvc.dto.FarmerUserDTO;
-import web.mvc.dto.ReviewCommentDTO;
-import web.mvc.dto.UserBuyDTO;
+import web.mvc.dto.*;
 
 import java.util.List;
 
 public interface FarmerMyPageService {
 
     // 판매 내역
-    List<UserBuyDTO> buyList(Long seq);
+    List<UserBuyDTO> saleList(Long seq);
 
     // 회원정보 출력
     FarmerUser selectUser(Long seq);
@@ -24,7 +20,9 @@ public interface FarmerMyPageService {
     int delete (Long reviewSeq);
 
     // 리뷰조회
-    List<ReviewCommentDTO> reviewList(Long seq);
+    List<ReviewCommentDTO2> reviewList(Long seq);
 
-    void calcPoint(Long seq , UserBuyDTO userBuyDTO);
+    List<CalcPoint> calcPoint(Long seq);
+
+    void settle(Long seq, List<CalcPoint> list);
 }

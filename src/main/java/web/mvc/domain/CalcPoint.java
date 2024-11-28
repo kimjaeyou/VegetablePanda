@@ -1,8 +1,7 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +9,9 @@ import java.time.LocalDateTime;
 @Table(name = "calc_point")
 @Getter
 @Setter
+@AllArgsConstructor
+@ToString
+@NoArgsConstructor
 public class CalcPoint {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

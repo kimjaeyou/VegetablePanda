@@ -4,18 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import web.mvc.domain.CompanyUser;
 import web.mvc.domain.FarmerUser;
-import web.mvc.domain.ReviewComment;
-import web.mvc.domain.User;
 import web.mvc.dto.*;
 import web.mvc.service.FarmerMyPageService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,13 +23,10 @@ public class FarmerMyPageController {
      * 판매내역
      */
     @GetMapping("/saleList/{seq}")
-    public String buyList(@PathVariable Long seq, Model model) {
-        log.info("판매내역 조회시작");
-
-        List<UserBuyDTO> list = farmerMyPageService.buyList(seq);
-        model.addAttribute("list", list);
-        log.info("list = {}", list);
-        return "redirect:/,saleList/" + seq;
+    public ResponseEntity<List<UserBuyDTO>> saleList(@PathVariable Long seq) {
+        List<UserBuyDTO> list = farmerMyPageService.saleList(seq);
+        log.info("UserBuyDTO = {}", list);
+        return ResponseEntity.ok(list);
     }
 
     /**
@@ -93,23 +84,31 @@ public class FarmerMyPageController {
     }
 
     /**
-     * 정산 신청
-     * 이건 뭐 어떻게 해줘야할까...
-     * 그냥 신청서처럼 해줘야하나...
+     * 정산 내역
      */
-    @PostMapping("/calcPoint/{seq}")
-    public String calcPoint(@PathVariable Long seq, @RequestBody UserBuyDTO userBuyDTO) {
-        farmerMyPageService.calcPoint(seq, userBuyDTO);
-        return "/calcPoint/" + seq;
+    @GetMapping("/point/calc/{seq}")
+    public ResponseEntity<?> calcPoint(@PathVariable Long seq) {
+        return new ResponseEntity<>(farmerMyPageService.calcPoint(seq), HttpStatus.OK);
     }
 
     /**
      * 나한테 쓴 리뷰 조회하기
      */
-    @GetMapping("review/List/{seq}")
-    public ResponseEntity<?> reviewList(@PathVariable Long reviewSeq) {
-        List<ReviewCommentDTO> reviewComments = farmerMyPageService.reviewList(reviewSeq);
-
-        return new ResponseEntity<>(reviewComments, HttpStatus.OK);
+    @GetMapping("/review/List/{seq}")
+    public ResponseEntity<?> reviewList(@PathVariable Long seq) {
+        return new ResponseEntity<>(farmerMyPageService.reviewList(seq), HttpStatus.OK);
     }
+
+    /**
+     * 정산 신청하기
+     */
+    @PostMapping("/settle/{seq}")
+    public void settle(@PathVariable Long seq, @RequestBody CalculateDTO calculateDTO) {
+        // 클라이언트로부터 받은 settlements 데이터
+        List<CalcPoint> list = calculateDTO.getCalculateDTO();
+
+        // settlements를 사용하여 필요한 처리 수행 (예: DB에 저장)
+        farmerMyPageService.settle(seq, list);
+    }
+
 }
