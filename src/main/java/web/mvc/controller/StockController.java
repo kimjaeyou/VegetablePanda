@@ -61,12 +61,12 @@ public class StockController {
                 log.info("file생성 - stockImage : {}", stockImage);
 
                 // File 객체 생성 및 저장
-                File newFile = new File(stockImage, stockDTO.getFileContent());
+                File newFile = new File(stockImage, stockDTO.getFile().getName());
                 File file = fileService.save(newFile);
                 stock.setFile(file);
             }
 
-            log.info("Stock 정보 : {}", stock);
+            log.info("Stock 정보 : {}", stock.getFile());
 
             StockDTO result = modelMapper.map(stockService.addStock(stock), StockDTO.class);
             return new ResponseEntity<>(result, HttpStatus.CREATED);
@@ -108,7 +108,7 @@ public class StockController {
         System.out.println(stockDTO.getStockOrganicSeq());
 
         long id = stockDTO.getStockSeq();
-        long fileSeq = stockDTO.getFileSeq();
+        long fileSeq = stockDTO.getFile().getFileSeq();
 
         Stock stock = modelMapper.map(stockDTO, Stock.class);
 
@@ -127,8 +127,8 @@ public class StockController {
             log.info("OriginalFileNmae : {}", image.getOriginalFilename());
             log.info("getName : {}", image.getName());
 
-            if(stockDTO.getFileContent() != null) {
-                dbFile.setName(stockDTO.getFileContent());
+            if(stockDTO.getFile().getName() != null) {
+                dbFile.setName(stockDTO.getFile().getName());
             }
             dbFile.setPath(stockImage);
             //File file = fileService.save(dbFile);

@@ -21,10 +21,11 @@ public class StockDTO {
     private Long stockOrganicSeq;
     private Long userSeq;
     private Long farmerUserSeq;
-    private Long fileSeq;
     private LocalDateTime regDate;
 
-    private String fileContent;
+    private FileDTO file;
+//    private Long fileSeq;
+//    private String fileContent;
 //    ProductDTO productDTO;
 //
 //    StockGradeDTO stockGradeDTO;

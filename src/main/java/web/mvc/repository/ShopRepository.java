@@ -16,7 +16,8 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "CAST(s.insertDate AS string), " +
             "s.stock.product.productName, " +
             "s.stock.stockGrade.grade, " +
-            "s.stock.stockOrganic.organicStatus) " +
+            "s.stock.stockOrganic.organicStatus, " +
+            "s.stock.file.path)" +
             "FROM Shop s " +
             "WHERE s.stock.status = 1 " +
             "ORDER BY s.insertDate DESC")
