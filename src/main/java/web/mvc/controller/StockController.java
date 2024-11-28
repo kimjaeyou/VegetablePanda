@@ -6,16 +6,21 @@ import org.apache.coyote.Response;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.*;
 import web.mvc.dto.AllStockDTO;
 import web.mvc.dto.FarmerUserDTO;
 import web.mvc.dto.StockDTO;
+import web.mvc.service.FileService;
 import web.mvc.service.S3ImageService;
 import web.mvc.service.StockService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,12 +30,13 @@ public class StockController {
 
     private final ModelMapper modelMapper;
     private final StockService stockService;
+    private final FileService fileService;
     private final S3ImageService s3ImageService;
 
     // 상품 등록 -> 상품 이미지 어떻게 하는지
-    @PostMapping("/stock")
+    @PostMapping(value = "/stock")
     //public ResponseEntity<?> insert(long productSeq, long stockGradeSeq, long stockOrganicSeq, long farmerSeq, @RequestBody StockDTO stockDTO) {
-    public ResponseEntity<?> insert(long farmerSeq, @RequestBody StockDTO stockDTO) {
+    public ResponseEntity<?> insert(long farmerSeq, @RequestPart StockDTO stockDTO, @RequestPart(value = "image", required = false) MultipartFile image) {
         log.info("Controller Product : {}", stockDTO);
 
         try {
@@ -47,6 +53,19 @@ public class StockController {
             stock.setStockGrade(new StockGrade(stockDTO.getStockGradeSeq()));
             stock.setStockOrganic(new StockOrganic(stockDTO.getStockOrganicSeq()));
             stock.setFarmerUser(new FarmerUser(farmerSeq));
+
+            // 파일 업로드
+            if(image != null) {
+                String stockImage = s3ImageService.upload(image);
+                log.info("file생성 - stockImage : {}", stockImage);
+
+                // File 객체 생성 및 저장
+                log.info("OriginalFileNmae : {}", image.getOriginalFilename());
+                log.info("getName : {}", image.getName());
+                File newFile = new File(stockImage, image.getOriginalFilename());
+                File file = fileService.save(newFile);
+                stock.setFile(file);
+            }
 
             log.info("Stock 정보 : {}", stock);
 
