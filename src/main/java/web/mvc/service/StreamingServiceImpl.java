@@ -3,6 +3,7 @@ package web.mvc.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.Streaming;
+import web.mvc.dto.StreamingDTO;
 import web.mvc.repository.StreamingRepository;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class StreamingServiceImpl implements StreamingService {
     }
 
     @Override
-    public List<Streaming> streaming() {
+    public List<StreamingDTO> streaming() {
         return streamingRepository.streaming();
     }
 }

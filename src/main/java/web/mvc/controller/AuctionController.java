@@ -40,7 +40,7 @@ public class AuctionController {
 
     // 경매 취소 : 삭제가 아닌 취소 상태로 바꾼다?
     // 경매 종료 : highestBidDTO를 레디스에서 꺼내서
-    @PostMapping("/auction/{auctionSeq}")
+    @PatchMapping("/auction/{auctionSeq}")
     public ResponseEntity<?> update(@PathVariable Long auctionSeq) {
         log.info("경매 종료~~");
         auctionService.updateAuction(auctionSeq);

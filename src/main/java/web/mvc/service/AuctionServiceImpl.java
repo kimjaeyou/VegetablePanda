@@ -60,7 +60,7 @@ public class AuctionServiceImpl implements AuctionService {
         log.info("insert auction ServiceImpl");
         Auction saveAc = Auction.builder()
                 .stock(stockRepository.findById(auction.getStockSeq()).orElse(null))
-                .closeTime(LocalDateTime.parse(auction.getCloseTime(), FORMATTER))
+                .closeTime(LocalDateTime.   parse(auction.getCloseTime(), FORMATTER))
                 .count(auction.getCount())
                 .status(auction.getStatus())
                 .build();
@@ -114,7 +114,7 @@ public class AuctionServiceImpl implements AuctionService {
         Optional<AuctionDTO> auctionDTO = redisUtils.getData("auction:"+auctionSeq, AuctionDTO.class);
         AuctionDTO auction = auctionDTO.orElse(null);
         auction.setStatus(1);
-
+        System.out.println(auction.toString());
         HighestBidDTO highestBidDTO = redisUtils.getData("highestBid:"+auctionSeq, HighestBidDTO.class).orElse(null);
         //입찰자 존재 하는지 여부  1. 존재x 재고 감소x 끝 | 2. 존재시 유저번호로 일반, 업체 구분해서 구매상태 전달! 하기
         auctionRepository.setStatus(highestBidDTO.getAuctionSeq());
@@ -171,13 +171,16 @@ public class AuctionServiceImpl implements AuctionService {
             UserTempWalletDTO userTempWalletDTO = redisUtils.getData("userTempWallet:"+highestBidDTO.getUserSeq(),UserTempWalletDTO.class).orElse(null);
             userWalletRepository.updateWallet(userTempWalletDTO.getUserSeq(),userTempWalletDTO.getPoint());
             stockRepository.reduceCount(auction.getStockSeq(),auction.getCount());
+            redisUtils.deleteData("highestBid:"+highestBidDTO.getAuctionSeq());
+
         }
+
 
 
         return 1;
     }
 
-    @Scheduled(cron = "0 * * * * ?")
+    //@Scheduled(cron = "0 * * * * ?")
     public void exitAuction() {
         LocalDateTime now = LocalDateTime.now();
 

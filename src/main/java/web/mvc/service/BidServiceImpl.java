@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import web.mvc.domain.Bid;
 import web.mvc.domain.ManagementUser;
 import web.mvc.domain.UserWallet;
-import web.mvc.dto.BidDTO;
-import web.mvc.dto.HighestBidDTO;
-import web.mvc.dto.UserTempWalletDTO;
+import web.mvc.dto.*;
 import web.mvc.exception.BidException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.redis.RedisUtils;
@@ -137,7 +135,7 @@ public class BidServiceImpl implements BidService {
       2.redis에서 highestBid정보 갖고오기(경매 등록과 동시에 캐쉬에 무조건 등록할 것- 없는경우 생각 x)
      */
     public HighestBidDTO checkHighestBid(Long auctionSeq, Long userSeq) {
-         HighestBidDTO highestBid =redisUtils.getData("highestBid:"+auctionSeq, HighestBidDTO.class).orElseThrow(()-> new BidException(ErrorCode.NOTFOUND_HIGHESTBID));
+         HighestBidDTO highestBid =redisUtils.getData("highestBid:"+auctionSeq, HighestBidDTO.class).orElseThrow(()->  new BidException(ErrorCode.NOTFOUND_HIGHESTBID));
          if(highestBid.getUserSeq()==userSeq){
              throw new BidException(ErrorCode.HIGH_BIDDER);
          }
@@ -150,9 +148,16 @@ public class BidServiceImpl implements BidService {
     }
 
     @Override
-    public List<Bid> getBids(Long auctionSeq) {
-        return bidRepository.auctionBidList(auctionSeq);
+    public List<BidCompanyListDTO> getComBids(Long auctionSeq) {
+        return bidRepository.auctionCompanyBidList(auctionSeq);
+
     }
+
+    @Override
+    public List<BidUserListDTO> getUserBids(Long auctionSeq) {
+        return List.of();
+    }
+
 
     // 1.redis에 유저 지갑 임시지갑 존재하는지? ->없으면 userWallet 정보를 userTempWallet에 담아서 redis에 저장
     public UserTempWalletDTO checkUserTempWallet(Long userSeq) {
