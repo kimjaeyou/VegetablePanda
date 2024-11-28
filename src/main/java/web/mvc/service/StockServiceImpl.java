@@ -2,6 +2,7 @@ package web.mvc.service;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.Product;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @Transactional
+@DynamicUpdate
 public class StockServiceImpl implements StockService {
 
     @Autowired
@@ -114,5 +116,12 @@ public class StockServiceImpl implements StockService {
         LocalDateTime endOfDay = startOfDay.plusDays(1);
 
         return stockRepository.existsByFarmerAndDateRange(farmerSeq, startOfDay, endOfDay);
+    }
+
+    @Override
+    public Stock changeQuantity(long stockSeq, int quantity) {
+        Stock stock = stockRepository.findById(stockSeq).orElseThrow(()-> new StockException(ErrorCode.STOCK_NOTFOUND));
+        stock.setCount(stock.getCount()-quantity);
+        return stock;
     }
 }

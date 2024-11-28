@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.File;
+import web.mvc.exception.ErrorCode;
+import web.mvc.exception.StockException;
 import web.mvc.repository.FileRepository;
 
 @Service
@@ -18,5 +20,10 @@ public class FileServiceImpl implements FileService {
     @Override
     public File save(File file) {
         return fileRepository.save(file);
+    }
+
+    @Override
+    public File findById(long id) {
+        return fileRepository.findById(id).orElseThrow(()-> new StockException(ErrorCode.FILE_NOTFOUND));
     }
 }

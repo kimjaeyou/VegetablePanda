@@ -40,7 +40,9 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
     HIGH_BIDDER (HttpStatus.NOT_FOUND, "Bidding", "입찰중인 상품입니다 ."),
     LOW_BID(HttpStatus.NOT_FOUND, "low Bid", "현재 입찰가보다 높게 입력하세요."),
 
-    NOTFOUND_HIGHESTBID (HttpStatus.NOT_FOUND, "Not Found HighestBid", "진행중인 경매가 아닙니다.");
+    NOTFOUND_HIGHESTBID (HttpStatus.NOT_FOUND, "Not Found HighestBid", "진행중인 경매가 아닙니다."),
+
+    FILE_NOTFOUND (HttpStatus.NOT_FOUND, "File Not Found", "파일을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private  final String title;

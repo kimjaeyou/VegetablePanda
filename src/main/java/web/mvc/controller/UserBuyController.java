@@ -53,13 +53,6 @@ public class UserBuyController {
         // 주문 상세 품목 변수 dtoList
         List<UserBuyDetailDTO> dtoList = userBuyReq.getUserBuyDetailDTOs();
 
-        // 가격 합계 계산
-//        int sum = 0;
-//        for(UserBuyDetailDTO dto : dtoList) {
-//            sum += (dto.getCount()*dto.getPrice());
-//        }
-//        userBuy.setTotalPrice(sum);
-
         // UserBuy 주문 넣기
         UserBuyRes result = modelMapper.map(userBuyService.insertShopOrder(userBuy), UserBuyRes.class);
         log.info("UserBuyRes 정보 : {}", result);
