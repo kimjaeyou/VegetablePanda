@@ -41,15 +41,14 @@ public class NotificationController {
         return "ok";
     }
 
-    @PostMapping("/sendNormal")
+    @PostMapping("/sendBidAll")
     public String sendNormalMessage(@RequestBody MessageReq messageRequest) {
 
         // Publish message to Redis channel
         redisPublisher.publish("notifications", messageRequest.getMessage());
 
-        // 메시지를 특정 topic으로 전송
         System.out.println(messageRequest.getMessage());
-        messagingTemplate.convertAndSend("/topic/notifications", messageRequest.getMessage());
+        messagingTemplate.convertAndSend("/all/notifications", messageRequest.getMessage());
         return "ok";
     }
 
@@ -60,10 +59,23 @@ public class NotificationController {
         // Publish message to Redis channel
         redisPublisher.publish("notifications", messageRequest.getMessage());
 
-        // 메시지를 특정 top으로 전송
         System.out.println(messageRequest.getMessage());
         messagingTemplate.convertAndSend("/top/notifications", messageRequest.getMessage());
         return "ok";
+    }
+
+    // 특정 사용자에게 알림 전송
+    @PostMapping("/sendToUser")
+    public String sendToUser(@RequestBody MessageReq messageRequest) {
+        String userId = messageRequest.getUserId(); // 메시지를 받을 사용자 ID
+        String message = messageRequest.getMessage();
+
+        // Redis를 통해 메시지 발행
+        redisPublisher.publish("notifications", message);
+
+        // 특정 사용자에게 메시지 전송
+        messagingTemplate.convertAndSend("/user/"+userId+"/notifications", messageRequest.getMessage());
+        return "Message sent to user: " + message;
     }
 
 }

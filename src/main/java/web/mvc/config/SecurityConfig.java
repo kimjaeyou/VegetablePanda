@@ -85,7 +85,7 @@ public class SecurityConfig {
                 .requestMatchers("/members", "/members/**", "/product/**","/stock", "/stock/**", "/paymnet/**","/myPage/**").permitAll()
                 .requestMatchers("/swagger-ui", "/swagger-ui/**", "/api/logistics", "/api/swagger-config", "/v3/api-docs/**").permitAll()
                 .requestMatchers("http://openapi.seoul.go.kr:8088/**", "/topic/notifications","/charge").permitAll()
-                .requestMatchers("/ws/**", "/send","/api/streaming/**","/api/statistics/**","/current").permitAll()
+                .requestMatchers("/ws/**", "/api/streaming/**","/api/statistics/**","/current").permitAll()
                 .requestMatchers("/admin","/QABoard","/QABoard/**","/QaReplyBoard","/QaReplyBoard/**").permitAll() //성민 수정
                 .anyRequest().authenticated()
         );

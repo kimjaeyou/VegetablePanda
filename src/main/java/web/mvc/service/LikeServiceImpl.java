@@ -17,12 +17,21 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public Likes like(LikeDTO likeDTO) {
-        Likes like=likeRepository.save(
-                LikeDTO.LikeInvert(
-                        likeDTO.getUserSeq(),
-                        likeDTO.getFarmerSeq()
-                )
-        );
+        Likes like=likeRepository.findByUserSeqAndFarmerSeq(
+                likeDTO.getUserSeq(),
+                likeDTO.getFarmerSeq());
+
+        if(like!=null) {
+            like.setState(!like.getState());
+            like = likeRepository.save(like);
+        }else{
+            like = likeRepository.save(
+                    new Likes(
+                            likeDTO.getUserSeq(),
+                            likeDTO.getFarmerSeq()));
+        }
+
+
         return like;
     }
 
