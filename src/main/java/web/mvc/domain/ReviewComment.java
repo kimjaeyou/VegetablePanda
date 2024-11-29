@@ -26,11 +26,12 @@ public class ReviewComment {
     private Integer score;
 
     @OneToOne
-    @JoinColumn(name = "file_seq", nullable = false)
+    @JoinColumn(name = "file_seq")
     private File file;
 
-    @Column(name="user_seq" , nullable = false)
-    private Long userSeq;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_seq", nullable = false)
+    private ManagementUser managementUser;
 
     @CreationTimestamp
     @Column(name="reg_date" , nullable = false)

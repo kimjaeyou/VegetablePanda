@@ -8,8 +8,10 @@ import web.mvc.domain.Stock;
 import web.mvc.dto.ShopListDTO;
 import web.mvc.dto.StockDTO;
 import web.mvc.repository.ShopRepository;
+import web.mvc.repository.UserBuyDetailRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,7 @@ import java.util.Optional;
 public class ShopServiceImpl implements ShopService {
 
     private final ShopRepository shopRepository;
+    private final UserBuyDetailRepository userBuyDetailRepository;
 
     public int shopInsert(StockDTO stock) {
         Shop shop = new Shop();
@@ -45,10 +48,17 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<ShopListDTO> getAllShopItems() {
-        List<ShopListDTO> items = shopRepository.findAllShopItems();
-        log.info("조회된 상품 개수: {}", items.size());
-        items.forEach(item -> log.info("상품 정보: {}", item));  // 각 상품 정보 출력
+    public List<ShopListDTO> getAllShopItems(long seq) {
+        List<ShopListDTO> items=new ArrayList<>();
+        if(seq==0){
+            items = shopRepository.findAllShopItems();
+            log.info("조회된 상품 개수: {}", items.size());
+            items.forEach(item -> log.info("상품 정보: {}", item));  // 각 상품 정보 출력
+        }
+        else{
+            //items = shopRepository.findByUserSeq(seq);
+        }
+
         return items;
     }
 }

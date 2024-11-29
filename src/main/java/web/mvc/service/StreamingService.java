@@ -1,6 +1,7 @@
 package web.mvc.service;
 
 import web.mvc.domain.Streaming;
+import web.mvc.dto.StreamingDTO;
 
 import java.util.List;
 
@@ -18,4 +19,7 @@ public interface     StreamingService {
     List<Streaming> findByState(Integer state);
 
     Streaming findByChatRoomId(String chatRoomId);
+
+    List<StreamingDTO> streaming();
+
 }

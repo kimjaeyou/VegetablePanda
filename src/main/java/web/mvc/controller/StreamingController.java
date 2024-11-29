@@ -5,6 +5,7 @@
     import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
     import web.mvc.domain.Streaming;
+    import web.mvc.dto.StreamingDTO;
     import web.mvc.service.StockServiceImpl;
     import web.mvc.service.StreamingServiceImpl;
 
@@ -126,8 +127,11 @@
          * 상태가 1(사용 중)인 스트리밍 방 목록을 가져오는 엔드포인트
          */
         @GetMapping("/active-rooms")
-        public ResponseEntity<List<Streaming>> getActiveStreamingRooms() {
-            List<Streaming> activeStreamings = streamingService.findByState(1);
+        public ResponseEntity<List<StreamingDTO>> getActiveStreamingRooms() {
+            List<StreamingDTO> activeStreamings = streamingService.streaming();
+            for (StreamingDTO streaming : activeStreamings) {
+                System.out.println(streaming.getFarmerSeq());
+            }
             if (activeStreamings.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }

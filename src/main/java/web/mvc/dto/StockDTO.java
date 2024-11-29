@@ -24,8 +24,7 @@ public class StockDTO {
     private LocalDateTime regDate;
 
     private FileDTO file;
-//    private Long fileSeq;
-//    private String fileContent;
+
 //    ProductDTO productDTO;
 //
 //    StockGradeDTO stockGradeDTO;

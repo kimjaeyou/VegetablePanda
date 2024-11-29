@@ -1,5 +1,7 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"farmerGrade", "likes", "streaming"})
 public class FarmerUser {
     @Id
     @Column(name = "user_seq")
@@ -51,13 +54,16 @@ public class FarmerUser {
 
     private String role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "farmer_grade_seq")
+    @ManyToOne(fetch = FetchType.LAZY)  // Lazy loading을 EAGER로 변경
+    @JoinColumn(name="farmerGradeSeq")
     private FarmerGrade farmerGrade;
 
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
     private List<Likes> likes;
 
+    @JsonIgnore  // streaming 관계에만 JsonIgnore 추가
+    @OneToOne(mappedBy = "farmerUser")
+    private Streaming streaming;
 
     public FarmerUser(Long user_seq,String farmerId, String pw,String name,
                       String address,String code,String account,String phone,
@@ -73,7 +79,7 @@ public class FarmerUser {
         this.email = email;
         this.state = state;
         this.role = role;
-        this.farmerGrade = farmerGrade;
+        this.farmerGrade = new FarmerGrade(0L);
         this.regDate = LocalDateTime.now();
     }
     public FarmerUser (long farmerSeq){

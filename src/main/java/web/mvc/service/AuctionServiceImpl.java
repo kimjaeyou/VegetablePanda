@@ -8,14 +8,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.mvc.domain.Auction;
-import web.mvc.domain.ManagementUser;
-import web.mvc.domain.UserBuy;
-import web.mvc.domain.UserBuyDetail;
-import web.mvc.dto.AuctionDTO;
-import web.mvc.dto.HighestBidDTO;
-import web.mvc.dto.UserBuyDetailDTO;
-import web.mvc.dto.UserTempWalletDTO;
+import web.mvc.domain.*;
+import web.mvc.dto.*;
 import web.mvc.exception.AuctionException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.redis.RedisUtils;
@@ -24,6 +18,7 @@ import web.mvc.repository.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +28,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuctionServiceImpl implements AuctionService {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
 
     private final AuctionRepository auctionRepository;
@@ -50,6 +45,8 @@ public class AuctionServiceImpl implements AuctionService {
 
     private final WalletRepository userWalletRepository;
 
+    private final BidRepository bidRepository;
+
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -63,7 +60,7 @@ public class AuctionServiceImpl implements AuctionService {
         log.info("insert auction ServiceImpl");
         Auction saveAc = Auction.builder()
                 .stock(stockRepository.findById(auction.getStockSeq()).orElse(null))
-                .closeTime(LocalDateTime.parse(auction.getCloseTime(), FORMATTER))
+                .closeTime(LocalDateTime.   parse(auction.getCloseTime(), FORMATTER))
                 .count(auction.getCount())
                 .status(auction.getStatus())
                 .build();
@@ -117,7 +114,7 @@ public class AuctionServiceImpl implements AuctionService {
         Optional<AuctionDTO> auctionDTO = redisUtils.getData("auction:"+auctionSeq, AuctionDTO.class);
         AuctionDTO auction = auctionDTO.orElse(null);
         auction.setStatus(1);
-
+        System.out.println(auction.toString());
         HighestBidDTO highestBidDTO = redisUtils.getData("highestBid:"+auctionSeq, HighestBidDTO.class).orElse(null);
         //입찰자 존재 하는지 여부  1. 존재x 재고 감소x 끝 | 2. 존재시 유저번호로 일반, 업체 구분해서 구매상태 전달! 하기
         auctionRepository.setStatus(highestBidDTO.getAuctionSeq());
@@ -174,13 +171,16 @@ public class AuctionServiceImpl implements AuctionService {
             UserTempWalletDTO userTempWalletDTO = redisUtils.getData("userTempWallet:"+highestBidDTO.getUserSeq(),UserTempWalletDTO.class).orElse(null);
             userWalletRepository.updateWallet(userTempWalletDTO.getUserSeq(),userTempWalletDTO.getPoint());
             stockRepository.reduceCount(auction.getStockSeq(),auction.getCount());
+            redisUtils.deleteData("highestBid:"+highestBidDTO.getAuctionSeq());
+
         }
+
 
 
         return 1;
     }
 
-    @Scheduled(cron = "0 * * * * ?")
+    //@Scheduled(cron = "0 * * * * ?")
     public void exitAuction() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -252,6 +252,38 @@ public class AuctionServiceImpl implements AuctionService {
 
 
         }
+    }
+
+    @Override
+    public List<AuctionStatusDTO> getCurrentAuctions() {
+        List<Auction> activeAuctions = auctionRepository.findAllActiveAuctions();
+        List<AuctionStatusDTO> auctionStatuses = new ArrayList<>();
+
+        for (Auction auction : activeAuctions) {
+            AuctionStatusDTO dto = new AuctionStatusDTO();
+            Stock stock = auction.getStock();
+
+            dto.setAuctionSeq(auction.getAuctionSeq());
+            dto.setStockSeq(stock.getStockSeq());
+            dto.setProductName(stock.getProduct().getProductName());
+            dto.setContent(stock.getContent());
+            dto.setCount(auction.getCount());
+            dto.setCloseTime(auction.getCloseTime());
+            dto.setStatus(auction.getStatus());
+            dto.setStockGrade(stock.getStockGrade().getGrade());
+            dto.setStockOrganic(stock.getStockOrganic().getOrganicStatus());
+
+            // 현재 최고 입찰가 조회
+            Integer highestBid = bidRepository.findHighestBidPrice(auction.getAuctionSeq());
+            dto.setCurrentPrice(highestBid != null ? highestBid : 0);
+
+            // 총 입찰 횟수 조회
+            dto.setBidCount(bidRepository.countBidsByAuction(auction.getAuctionSeq()));
+
+            auctionStatuses.add(dto);
+        }
+
+        return auctionStatuses;
     }
 
 
