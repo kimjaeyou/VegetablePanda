@@ -18,7 +18,7 @@ public class UserBuyDetail {
     private Long userBuySeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buy_seq", nullable = false)
+    @JoinColumn(name = "user_buy_seq", nullable = false)
     private UserBuy userBuy;
 
     @Column(name = "price")
