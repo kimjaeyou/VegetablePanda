@@ -20,6 +20,8 @@ public class UserBuyRes {
     private LocalDateTime buyDate;
     private Integer state;
     private Integer totalPrice;
+    private String orderUid;
+
 
     // UserBuy Entity를 UserBuyRes로 변환
     public UserBuyRes (UserBuy userBuy) {
@@ -28,6 +30,7 @@ public class UserBuyRes {
         buyDate = userBuy.getBuyDate();
         state = userBuy.getState();
         totalPrice = userBuy.getTotalPrice();
+        orderUid = userBuy.getOrderUid();
 
     }
 }

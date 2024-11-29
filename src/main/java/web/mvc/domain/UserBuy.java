@@ -41,8 +41,11 @@ public class UserBuy {
     @JoinColumn(name = "payment_seq")
     private Payment payment;
 
-    @OneToMany(mappedBy = "userBuy")
+    @OneToMany(mappedBy = "userBuy", cascade = CascadeType.REMOVE)
     private List<UserBuyDetail> userBuyDetailList;
+
+    @Column(name = "order_uid", unique = true)
+    private String orderUid;
 
     public UserBuy(long buySeq) {this.buySeq = buySeq;}
 }

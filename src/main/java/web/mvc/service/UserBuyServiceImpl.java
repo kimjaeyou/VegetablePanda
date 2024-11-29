@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.Payment;
 import web.mvc.domain.UserBuy;
+import web.mvc.exception.ErrorCode;
+import web.mvc.exception.UserBuyException;
 import web.mvc.payment.PaymentStatus;
 import web.mvc.repository.PaymentRepository;
 import web.mvc.repository.UserBuyRepository;
@@ -42,19 +44,18 @@ public class UserBuyServiceImpl implements UserBuyService {
 
         // 임시 결제내역 생성
         Payment payment = Payment.builder().price(userBuy.getTotalPrice()).status(PaymentStatus.READY)//.usercharge(UserCharge.builder().userChargeSeq())
-                .userBuy(UserBuy.builder().buySeq(result.getBuySeq()).build())
+                //.userBuy(UserBuy.builder().buySeq(result.getBuySeq()).build())
                 .build();
         paymentRepository.save(payment);
 
         userBuy.setPayment(payment);
-
-        // 주문 생성
-        //UserCharge usercharge = UserCharge.builder().managementUser(userCharge.getManagementUser()).price(1000L).build();
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd- HH:mm:ss");
-//        String date = format.format(new Date());
-//        LocalDateTime dateTime = LocalDateTime.parse(date);
-//        userBuy.setBuyDate(dateTime);
-
         return result;
+    }
+
+    @Override
+    public int deleteOrder(long userBuySeq) {
+        UserBuy userBuy = userBuyRepository.findById(userBuySeq).orElseThrow(()-> new UserBuyException(ErrorCode.ORDER_NOTFOUND));
+        userBuyRepository.delete(userBuy);
+        return 1;
     }
 }

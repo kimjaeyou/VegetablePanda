@@ -64,51 +64,59 @@ public class PaymentServiceImpl implements PaymentService {
             case 1: // 포인트 충전
                 List<UserCharge> userCharge = userChargeRepository.findByOrderUid(orderUid);
                 log.info("findRequestDto에서 검색한 userChrage : {}", userCharge);
-                userM = userCharge.get(0).getManagementUser();
+                try {
+                    userM = userCharge.get(0).getManagementUser();
 
-                if("user".equals(userM.getContent())){
+                    if ("user".equals(userM.getContent())) {
 
-                    List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
-                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
-                            .itemName("포인트").paymentPrice(userCharge.get(0).getPrice()).orderUid(orderUid).build();
+                        List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
+                        requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
+                                .itemName("포인트").paymentPrice(userCharge.get(0).getPrice()).orderUid(orderUid).build();
 
-                } else if ("company".equals(userM.getContent())){
+                    } else if ("company".equals(userM.getContent())) {
 
-                    CompanyUser user = companyUserRepository.findByUserSeq(userM.getUserSeq());
-                    requestPayDTO = RequestPayDTO.builder().buyerName(user.getComName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
-                            .itemName("포인트").paymentPrice(userCharge.get(0).getPrice()).orderUid(orderUid).build();
+                        CompanyUser user = companyUserRepository.findByUserSeq(userM.getUserSeq());
+                        requestPayDTO = RequestPayDTO.builder().buyerName(user.getComName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
+                                .itemName("포인트").paymentPrice(userCharge.get(0).getPrice()).orderUid(orderUid).build();
 
-                } else {
-                    throw new MemberAuthenticationException(ErrorCode.NOTFOUND_USER);
+                    } else {
+                        throw new MemberAuthenticationException(ErrorCode.NOTFOUND_USER);
+                    }
+
+                    break;
+                } catch (RuntimeException e) {
+                    throw new RuntimeException("주문에 실패했습니다. - 아이디를 찾을 수 없음");
                 }
-
-                break;
 
             case 2: // 일반 결제 요청
-                UserBuy userBuy = userBuyRepository.findById(Long.parseLong(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
+                List<UserBuy> userBuy = userBuyRepository.findByOrderUid(orderUid);
                 log.info("일반 결제 요청 userBuy : {}", userBuy);
-                userM = userBuy.getManagementUser();
-                log.info("일반 결제 요청 userM : {}", userM);
+                try {
+                    userM = userBuy.get(0).getManagementUser();
+                    log.info("일반 결제 요청 userM : {}", userM);
 
-                if("user".equals(userM.getContent())){
+                    if ("user".equals(userM.getContent())) {
 
-                    //List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
-                    User user = userRepository.findByUserSeq(userM.getUserSeq());
+                        //List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
+                        User user = userRepository.findByUserSeq(userM.getUserSeq());
 //                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
 //                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
-                    List<String> items = userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq());
-                    requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
-                            .itemName(items.get(0)).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
+                        List<String> items = userBuyDetailRepository.findByBuySeq(userBuy.get(0).getBuySeq());
+                        requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
+                                .itemName(items.get(0)).paymentPrice((long) (userBuy.get(0).getTotalPrice())).orderUid(orderUid).build();
 
-                } else if ("company".equals(userM.getContent())){ // 업체 사용자 일반 물품 구매 안됐던거같은데
+                    } else if ("company".equals(userM.getContent())) { // 업체 사용자 일반 물품 구매 안됐던거같은데
 
-                    throw new MemberAuthenticationException(ErrorCode.ORDER_FORBIDDEN);
+                        throw new MemberAuthenticationException(ErrorCode.ORDER_FORBIDDEN);
 
-                } else {
-                    throw new MemberAuthenticationException(ErrorCode.NOTFOUND_USER);
+                    } else {
+                        throw new MemberAuthenticationException(ErrorCode.NOTFOUND_USER);
+                    }
+
+                    break;
+                } catch (RuntimeException e) {
+                    throw new RuntimeException("주문에 실패했습니다. - 아이디를 찾을 수 없음");
                 }
-
-                break;
         }
 
         log.info("findRequestDto userM : {}", userM);
@@ -179,16 +187,16 @@ public class PaymentServiceImpl implements PaymentService {
             IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
             // 주문내역 조회
             //UserCharge userCharge = userChargeRepository.findByOrderUid(request.getOrderUid()).get(0);
-            UserBuy userBuy = userBuyRepository.findOrderAndPayment(Long.parseLong(request.getOrderUid())).orElseThrow(()-> new UserBuyException(ErrorCode.ORDER_NOTFOUND));
-            web.mvc.domain.Payment payment = paymentRepository.findOrderAndPayment(Long.parseLong(request.getOrderUid())).orElseThrow(()-> new UserBuyException(ErrorCode.ORDER_NOTFOUND));
+            UserBuy userBuy = userBuyRepository.findOrderAndPayment(request.getOrderUid()).orElseThrow(()-> new UserBuyException(ErrorCode.ORDER_NOTFOUND));
             log.info("userBuy : {}", userBuy);
-            log.info("payment : {}", payment);
+            log.info("payment : {}", userBuy.getPayment());
 
             // 결제가 완료되지 않은 상태인 경우
             if(!iamportResponse.getResponse().getStatus().equals("paid")){
                 // 충전, 결제 정보 삭제
                 paymentRepository.delete(userBuy.getPayment());
                 userBuyRepository.delete(userBuy);
+                userBuyDetailRepository.deleteAll(userBuy.getUserBuyDetailList());
 
                 throw new UserChargeException(ErrorCode.ORDER_NOTPAID);
             }
@@ -214,7 +222,7 @@ public class PaymentServiceImpl implements PaymentService {
             // chargeWallet(price, userCharge.getManagementUser().getUserSeq());
 
             // 검증 후 주문상태 변경
-            UserBuy result = changeOrder(Long.parseLong(request.getOrderUid()));
+            UserBuy result = changeOrder(userBuy.getBuySeq());
 
             // 결제 상태 OK로 변경
             userBuy.getPayment().changePaymentBySuccess(PaymentStatus.OK, iamportResponse.getResponse().getImpUid());

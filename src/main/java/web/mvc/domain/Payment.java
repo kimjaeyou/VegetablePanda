@@ -29,9 +29,9 @@ public class Payment {
 //    @JoinColumn(name = "buy_seq")
 //    private UserBuy userBuy;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buy_seq")
-    private UserBuy userBuy;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "buy_seq")
+//    private UserBuy userBuy;
 
     @Builder
     public Payment(long price, PaymentStatus status){
