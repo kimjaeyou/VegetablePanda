@@ -27,7 +27,12 @@ public interface PaymentService {
     RequestPayDTO findRequestDto (String orderUid, int status);
 
     /**
-     * 결제 후 검증
+     * 결제 후 검증 (포인트 충전)
+     */
+    IamportResponse<Payment> paymentByChargeCallback(PaymentReq request);
+
+    /**
+     * 결제 후 검증 (상품 구매)
      */
     IamportResponse<Payment> paymentByCallback(PaymentReq request);
 }

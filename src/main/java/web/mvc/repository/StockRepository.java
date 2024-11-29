@@ -22,6 +22,8 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     @Query("update Stock s set s.count=s.count -?2 where s.stockSeq=?1 ")
     public void reduceCount(long stockSeq, int count);
 
+    List<Stock> findByStatus(Integer status);
+
     @Query("SELECT s FROM Stock s WHERE s.status = :status AND s.regDate > :regDate")
     List<Stock> findByStatusAndRegDateAfter(@Param("status") Integer status, @Param("regDate") LocalDateTime regDate);
 

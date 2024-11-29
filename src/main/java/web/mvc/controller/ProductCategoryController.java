@@ -23,7 +23,7 @@ public class ProductCategoryController {
     private final ProductCategoryService productCategoryService;
 
     // 상품 카테고리 조회
-    @GetMapping("/productCategory")
+    @GetMapping("/category")
     public ResponseEntity<?> getAllProductCategory () {
         List<ProductCategory> productCategoryList = productCategoryService.findAll();
         List<ProductCategoryDTO> productCategoryDTOList = productCategoryList.stream().map(data -> modelMapper.map(data, ProductCategoryDTO.class)).toList();

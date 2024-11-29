@@ -2,6 +2,7 @@ package web.mvc.service;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.Product;
@@ -20,10 +21,11 @@ import java.util.Optional;
 @Service
 @Slf4j
 @Transactional
+@DynamicUpdate
 public class StockServiceImpl implements StockService {
 
     @Autowired
-    StockRepository stockRepository;
+    private StockRepository stockRepository;
 
     @Override
     public Stock addStock(Stock stock) {
@@ -43,7 +45,8 @@ public class StockServiceImpl implements StockService {
     @Override
     public List<Stock> findStocksById(long farmerSeq) {
         List<Stock> stockList = stockRepository.findStocksById(farmerSeq);
-        log.info("");
+        log.info("재고 유저 아이디 조회 : {}", stockList.get(0).getFarmerUser().getUserSeq());
+        log.info("아이디로 재고 조회 {}", stockList);
         return stockList;
     }
 
@@ -72,7 +75,8 @@ public class StockServiceImpl implements StockService {
     public int deleteStock(long id) {
         Stock stock = stockRepository.findById(id).orElseThrow(()-> new StockException(ErrorCode.STOCK_NOTFOUND));
         log.info("delect stock : {}", stock);
-        stockRepository.deleteById(id);
+        stock.setStatus(4);
+        //stockRepository.deleteById(id);
         return 1;
     }
 
@@ -112,5 +116,12 @@ public class StockServiceImpl implements StockService {
         LocalDateTime endOfDay = startOfDay.plusDays(1);
 
         return stockRepository.existsByFarmerAndDateRange(farmerSeq, startOfDay, endOfDay);
+    }
+
+    @Override
+    public Stock changeQuantity(long stockSeq, int quantity) {
+        Stock stock = stockRepository.findById(stockSeq).orElseThrow(()-> new StockException(ErrorCode.STOCK_NOTFOUND));
+        stock.setCount(stock.getCount()-quantity);
+        return stock;
     }
 }

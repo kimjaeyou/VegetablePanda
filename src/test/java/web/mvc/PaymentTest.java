@@ -12,4 +12,8 @@ public class PaymentTest {
     public void chargeTest() {
 
     }
+
+    public void orderTest() {
+
+    }
 }
