@@ -3,6 +3,7 @@ package web.mvc.service;
 import web.mvc.domain.Product;
 import web.mvc.domain.Stock;
 import web.mvc.dto.AllStockDTO;
+import web.mvc.dto.StockInfoDTO;
 
 import java.util.List;
 
@@ -16,6 +17,11 @@ public interface StockService {
      * 상품 조회
      */
     public List<Stock> findStocksById(long id);
+
+    /**
+     * 상품 조회 - stockInfo 반환
+     */
+    public List<StockInfoDTO> findStockInfoById(long id);
 
     /**
      * 경매 재고 조회

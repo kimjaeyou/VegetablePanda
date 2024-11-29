@@ -9,6 +9,7 @@ import web.mvc.domain.Product;
 import web.mvc.domain.ProductCategory;
 import web.mvc.domain.Stock;
 import web.mvc.dto.AllStockDTO;
+import web.mvc.dto.StockInfoDTO;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.ProductException;
 import web.mvc.exception.StockException;
@@ -123,5 +124,10 @@ public class StockServiceImpl implements StockService {
         Stock stock = stockRepository.findById(stockSeq).orElseThrow(()-> new StockException(ErrorCode.STOCK_NOTFOUND));
         stock.setCount(stock.getCount()-quantity);
         return stock;
+    }
+
+    @Override
+    public List<StockInfoDTO> findStockInfoById(long id) {
+        return stockRepository.findStockInfoById(id);
     }
 }

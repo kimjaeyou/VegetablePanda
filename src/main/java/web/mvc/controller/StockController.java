@@ -12,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.*;
-import web.mvc.dto.AllStockDTO;
-import web.mvc.dto.FarmerUserDTO;
-import web.mvc.dto.StockDTO;
-import web.mvc.dto.StockQuantityDTO;
+import web.mvc.dto.*;
 import web.mvc.service.FileService;
 import web.mvc.service.S3ImageService;
 import web.mvc.service.StockService;
@@ -79,14 +76,25 @@ public class StockController {
     }
 
     // 상품 조회 (판매자 재고 보기)
+//    @GetMapping("/stock/{userSeq}")
+//    public ResponseEntity<?> findStocksById(@PathVariable long userSeq) {
+//        log.info("상품 목록 조회");
+//
+//        List<Stock> stockList = stockService.findStocksById(userSeq);
+//        List<StockDTO> stockDTOList = stockList.stream().map(data -> modelMapper.map(data, StockDTO.class)).toList();
+//        System.out.println("stocklist 값" + stockList);
+//        return new ResponseEntity<>(stockDTOList, HttpStatus.OK);
+//    }
+
+    // 상품 조회 (판매자 재고 보기)
     @GetMapping("/stock/{userSeq}")
-    public ResponseEntity<?> findStocksById(@PathVariable long userSeq) {
+    public ResponseEntity<StockInfoDTO> findStocksById(@PathVariable long userSeq) {
         log.info("상품 목록 조회");
 
-        List<Stock> stockList = stockService.findStocksById(userSeq);
-        List<StockDTO> stockDTOList = stockList.stream().map(data -> modelMapper.map(data, StockDTO.class)).toList();
-        System.out.println("stocklist 값" + stockList);
-        return new ResponseEntity<>(stockDTOList, HttpStatus.OK);
+        List<StockInfoDTO> stockInfoDTOList = stockService.findStockInfoById(userSeq);
+        System.out.println("stocklist 값" + stockInfoDTOList);
+        return null;
+        //return new ResponseEntity<>(stockDTOList, HttpStatus.OK);
     }
 
     // 상품 조회 (판매자 재고 보기)
