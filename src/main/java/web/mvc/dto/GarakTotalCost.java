@@ -1,12 +1,12 @@
 package web.mvc.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class GarakTotalCost {
     private String garak_name;
     private int garak_price;

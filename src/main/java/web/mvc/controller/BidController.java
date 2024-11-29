@@ -52,6 +52,12 @@ public class BidController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    @GetMapping("userTempWallet/{userSeq}")
+    public ResponseEntity<?> getUserWallet(@PathVariable Long userSeq) {
+        UserTempWalletDTO result = bidService.checkUserTempWallet(userSeq);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
 
 
 

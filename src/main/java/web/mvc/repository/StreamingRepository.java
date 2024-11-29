@@ -20,6 +20,6 @@ public interface StreamingRepository extends JpaRepository<Streaming, Long> {
     Streaming findByChatRoomId(String chatRoomId);
 
 
-    @Query("select new web.mvc.dto.StreamingDTO(s.streamingSeq,s.token, s.serverAddress,s.chatUrl,s.chatRoomId,s.playbackUrl,s.state,s.farmerUser.userSeq, st.stockSeq )from Streaming s join Stock st on s.farmerUser.userSeq = st.farmerUser.userSeq where s.state=1 and s.farmerUser.userSeq is not null and st.status=1")
+    @Query("select new web.mvc.dto.StreamingDTO(s.streamingSeq,s.token, s.serverAddress,s.chatUrl,s.chatRoomId,s.playbackUrl,s.state,s.farmerUser.userSeq, st.stockSeq, st.product.productName)from Streaming s join Stock st on s.farmerUser.userSeq = st.farmerUser.userSeq where s.state=1 and s.farmerUser.userSeq is not null and st.status=1")
     List<StreamingDTO> streaming();
 }

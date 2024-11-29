@@ -147,6 +147,7 @@ public class BidServiceImpl implements BidService {
         return highestBid;
     }
 
+
     @Override
     public List<BidCompanyListDTO> getComBids(Long auctionSeq) {
         return bidRepository.auctionCompanyBidList(auctionSeq);
