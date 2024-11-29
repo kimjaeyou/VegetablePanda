@@ -11,13 +11,5 @@ import java.util.List;
 @Builder
 
 public class CalculateDTO {
-    private List<CalcPoint> calculateDTO;
-
-    public List<CalcPoint> getCalculateDTO() {
-        return calculateDTO;
-    }
-
-    public void setCalculateDTO(List<CalcPoint> calculateDTO) {
-        this.calculateDTO = calculateDTO;
-    }
+    private List<CalcPoint2> calculateDTO;
 }

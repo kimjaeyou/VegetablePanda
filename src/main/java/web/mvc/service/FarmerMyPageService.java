@@ -22,7 +22,9 @@ public interface FarmerMyPageService {
     // 리뷰조회
     List<ReviewCommentDTO2> reviewList(Long seq);
 
+    // 정산 내역
     List<CalcPoint> calcPoint(Long seq);
 
+    // 정산 신청
     void settle(Long seq, List<CalcPoint> list);
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.FarmerUser;
+import web.mvc.domain.ManagementUser;
 import web.mvc.dto.*;
 import web.mvc.repository.*;
 
@@ -23,6 +24,7 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
     private final PasswordEncoder passwordEncoder;
     private final CalcPointRepository calcPointRepository;
     private final ReviewRepository reviewRepository;
+    private final ManagementRepository managementRepository;
 
     @Override
     public List<UserBuyDTO> saleList(Long seq) {
@@ -77,6 +79,18 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
 
     @Override
     public void settle(Long seq, List<CalcPoint> list) {
-    
+        ManagementUser managementUser = managementRepository.findSeq(seq);
+        for (CalcPoint calcPoint : list) {
+
+            web.mvc.domain.CalcPoint calcPoint1 = new web.mvc.domain.CalcPoint();
+            calcPoint1.setManagementUser(managementUser);
+            calcPoint1.setTotalPoint(calcPoint.getTotalPoint());
+            calcPoint1.setInsertDate(calcPoint.getInsertDate());
+            calcPoint1.setState(calcPoint.getState());
+
+            log.info("정산 신청 성공? ={}",calcPoint1);
+
+            calcPointRepository.save(calcPoint1);
+        }
     }
 }

@@ -104,11 +104,8 @@ public class FarmerMyPageController {
      */
     @PostMapping("/settle/{seq}")
     public void settle(@PathVariable Long seq, @RequestBody CalculateDTO calculateDTO) {
-        // 클라이언트로부터 받은 settlements 데이터
-        List<CalcPoint> list = calculateDTO.getCalculateDTO();
-
-        // settlements를 사용하여 필요한 처리 수행 (예: DB에 저장)
+        List<CalcPoint2> list = calculateDTO.getCalculateDTO();
+        log.info("정산 신청 정보들 = {}", list);
         farmerMyPageService.settle(seq, list);
     }
-
 }
