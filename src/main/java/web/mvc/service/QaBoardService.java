@@ -34,5 +34,4 @@ public interface QaBoardService {
 
     QaBoard increaseReadnum(Long boardNoSeq);
 
-    QaDTO toDto(QaBoard qaBoard, String writerId);
 }

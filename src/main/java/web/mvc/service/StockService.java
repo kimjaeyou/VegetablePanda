@@ -40,4 +40,6 @@ public interface StockService {
     void approveAllPendingStocks();
 
     boolean hasRegisteredToday(long farmerSeq);
+
+    Stock changeQuantity(long stockSeq, int quantity);
 }

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class ReviewComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +30,8 @@ public class ReviewComment {
     @JoinColumn(name = "file_seq")
     private File file;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_seq", nullable = false)
+    @ManyToOne
+    @JoinColumn(name="user_seq" , nullable = false)
     private ManagementUser managementUser;
 
     @CreationTimestamp
