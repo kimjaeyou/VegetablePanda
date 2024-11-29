@@ -8,7 +8,6 @@ import web.mvc.domain.NoticeBoard;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.repository.NoticeBoardRepository;
-import web.mvc.service.NoticeBoardService;
 
 import java.util.List;
 
@@ -82,5 +81,14 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         log.info("공지사항 삭제 성공: ID={}", boardNoSeq);
 
         return "정상적으로 삭제되었습니다.";
+    }
+
+    @Override
+    public NoticeBoard increaseReadnum(Long boardNoSeq) {
+        NoticeBoard ntBoard = noticeBoardRepository.findById(boardNoSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+
+        ntBoard.setReadnum(ntBoard.getReadnum() + 1);
+        return noticeBoardRepository.save(ntBoard);
     }
 }

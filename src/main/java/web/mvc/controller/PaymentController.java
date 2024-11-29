@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController("/order/payment")
+@RestController()
 @Slf4j
 @RequiredArgsConstructor
 public class PaymentController {
@@ -86,9 +86,16 @@ public class PaymentController {
     }
 
     // 포인트 결제 검증
-    @PostMapping("/payment/charge")
-    public ResponseEntity<IamportResponse<Payment>> validatePayment(@RequestBody PaymentReq paymentReq) {
-        IamportResponse<Payment> iamportResponse = paymentService.paymentByCallback(paymentReq);
+    @PostMapping("/payment/validate")
+    public ResponseEntity<IamportResponse<Payment>> validatePayment(@RequestBody PaymentReq paymentReq, int status) {
+        IamportResponse<Payment> iamportResponse = null;
+        if(status == 1) {
+            iamportResponse = paymentService.paymentByChargeCallback(paymentReq);
+        } else {
+            log.info("validatePayment status 2 입니다.");
+            iamportResponse = paymentService.paymentByCallback(paymentReq);
+
+        }
 
         log.info("결제 응답 : {}", iamportResponse.getResponse().toString());
         return new ResponseEntity<>(iamportResponse, HttpStatus.OK);

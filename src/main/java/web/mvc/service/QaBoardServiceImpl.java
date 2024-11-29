@@ -32,9 +32,10 @@ public class QaBoardServiceImpl implements QaBoardService {
 
         qaBoard.setReadnum(0);
         qaBoard.setFile(null);
+        qaBoard.getManagementUser().setId(writerId); // 작성자 설정
 
         QaBoard savedQaBoard = qaBoardRepository.save(qaBoard);
-        return toDto(savedQaBoard, writerId);
+        return QaDTO.fromEntity(savedQaBoard, writerId);
     }
 
 
@@ -43,14 +44,13 @@ public class QaBoardServiceImpl implements QaBoardService {
      * */
     @Override
     public QaDTO qaUpdate(Long boardNoSeq, QaBoard qaBoard) {
-
         QaBoard qa = qaBoardRepository.findById(boardNoSeq)
-                .orElseThrow(()->new DMLException(ErrorCode.NOTFOUND_BOARD));
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
 
         qa.setSubject(qaBoard.getSubject());
         qa.setContent(qaBoard.getContent());
 
-        return toDto(qaBoardRepository.save(qa), getCurrentUserId());
+        return QaDTO.fromEntity(qaBoardRepository.save(qa), qa.getManagementUser().getId()); // 작성자 ID 유지
     }
 
 
@@ -60,10 +60,9 @@ public class QaBoardServiceImpl implements QaBoardService {
     @Override
     @Transactional(readOnly = true)
     public QaDTO qaFindBySeq(Long boardNoSeq) {
-
         QaBoard qaBoard = qaBoardRepository.findById(boardNoSeq)
                 .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
-        return toDto(qaBoard, getCurrentUserId());
+        return QaDTO.fromEntity(qaBoard, qaBoard.getManagementUser().getId()); // 엔티티에서 작성자 ID 가져옴
     }
 
 
@@ -72,10 +71,8 @@ public class QaBoardServiceImpl implements QaBoardService {
      * */
     @Override
     public List<QaDTO> qaFindAll() {
-        String writerId = getCurrentUserId();
-
         return qaBoardRepository.findAll().stream()
-                .map(qaBoard -> toDto(qaBoard, writerId))
+                .map(qaBoard -> QaDTO.fromEntity(qaBoard, qaBoard.getManagementUser().getId())) // 엔티티에서 작성자 ID 가져옴
                 .toList();
     }
 
@@ -102,23 +99,10 @@ public class QaBoardServiceImpl implements QaBoardService {
         return qaBoardRepository.save(qaBoard);
     }
 
-    @Override
-    public QaDTO toDto(QaBoard qaBoard, String writerId) {
-        return QaDTO.builder()
-                .boardNoSeq(qaBoard.getBoardNoSeq())
-                .subject(qaBoard.getSubject())
-                .content(qaBoard.getContent())
-                .readnum(qaBoard.getReadnum())
-                .regDate(qaBoard.getRegDate())
-                .writerId(writerId) // 작성자 추가
-                .build();
-    }
-
     /**
      * 현재 로그인한 사용자 ID 가져오기
      */
     private String getCurrentUserId() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
-
 }

@@ -40,4 +40,13 @@ public class File {
 //    public File(@JsonProperty("fileSeq") Long fileSeq) {
 //        this.fileSeq = fileSeq;
 //    }
+
+    public File(String path) {
+        this.path = path;
+    }
+
+    public File(String path, String name) {
+        this.path = path;
+        this.name = name;
+    }
 }

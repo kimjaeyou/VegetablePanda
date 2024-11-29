@@ -12,7 +12,7 @@ import web.mvc.domain.User;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAllUserDTO {
-    private Long user_seq;
+    private Long userSeq;
     private String id;
     private String pw;
     private String content;
@@ -32,7 +32,8 @@ public class GetAllUserDTO {
 
 
     public GetAllUserDTO(FarmerUser fuser) {
-        this.user_seq=fuser.getUserSeq();
+
+        this.userSeq=fuser.getUserSeq();
         this.id=fuser.getFarmerId();
         this.name= fuser.getName();
         this.pw = fuser.getPw();
@@ -46,7 +47,7 @@ public class GetAllUserDTO {
     }
 
     public GetAllUserDTO(User nuser) {
-        this.user_seq=nuser.getUserSeq();
+        this.userSeq=nuser.getUserSeq();
         this.id=nuser.getId();
         this.name= nuser.getName();
         this.pw = nuser.getPw();
@@ -58,7 +59,7 @@ public class GetAllUserDTO {
     }
 
     public GetAllUserDTO(CompanyUser cuser) {
-        this.user_seq=cuser.getUserSeq();
+        this.userSeq=cuser.getUserSeq();
         this.id=cuser.getCompanyId();
         this.name= cuser.getComName();
         this.ownerName=cuser.getOwnerName();

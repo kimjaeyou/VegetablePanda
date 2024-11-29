@@ -34,6 +34,18 @@ public class UserBuy {
     @Column(name = "total_price")
     private Integer totalPrice;
 
-    @OneToMany(mappedBy = "userBuy")
-    private List<Payment> payments;
+//    @OneToMany(mappedBy = "userBuy")
+//    private List<Payment> payments;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_seq")
+    private Payment payment;
+
+    @OneToMany(mappedBy = "userBuy", cascade = CascadeType.REMOVE)
+    private List<UserBuyDetail> userBuyDetailList;
+
+    @Column(name = "order_uid", unique = true)
+    private String orderUid;
+
+    public UserBuy(long buySeq) {this.buySeq = buySeq;}
 }

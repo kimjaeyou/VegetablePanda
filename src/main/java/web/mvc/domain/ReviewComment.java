@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class ReviewComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +30,9 @@ public class ReviewComment {
     @JoinColumn(name = "file_seq")
     private File file;
 
-    @Column(name="user_seq" , nullable = false)
-    private Long userSeq;
+    @ManyToOne
+    @JoinColumn(name="user_seq" , nullable = false)
+    private ManagementUser managementUser;
 
     @CreationTimestamp
     @Column(name="reg_date" , nullable = false)
@@ -39,4 +41,9 @@ public class ReviewComment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_seq", nullable = false)
     private Review review;
+
+    @OneToOne
+    @JoinColumn(name="user_buy_detail_seq", nullable = false)
+    private UserBuyDetail userBuyDetail;
+
 }

@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class UserBuyDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,5 +31,8 @@ public class UserBuyDetail {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stock_seq", nullable = false)
     private Stock stock;
+
+    @OneToOne(mappedBy = "userBuyDetail")
+    private ReviewComment reviewComment;
 
 }

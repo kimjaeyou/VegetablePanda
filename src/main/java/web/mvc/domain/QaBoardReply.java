@@ -26,9 +26,5 @@ public class QaBoardReply {
     @JsonIgnore
     private QaBoard qaBoard;
 
-    QaBoardReply(QaBoard qaBoard, String comment) {
-
-        this.qaBoard = qaBoard;
-        this.comment = comment;
-    }
 }
+

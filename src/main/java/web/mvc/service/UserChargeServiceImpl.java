@@ -2,6 +2,7 @@ package web.mvc.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import web.mvc.domain.Payment;
@@ -16,8 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+@Service
 @Transactional
-@RestController
 @Slf4j
 @RequiredArgsConstructor
 public class UserChargeServiceImpl implements UserChargeService {

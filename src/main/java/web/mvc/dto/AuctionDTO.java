@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 @AllArgsConstructor
+@ToString
 public class AuctionDTO implements Serializable {
 
     private Long auctionSeq;

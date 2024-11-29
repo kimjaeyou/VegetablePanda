@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Long> {
 
+    List<ReviewComment> findAllByManagementUser_UserSeq(Long userId);
+
 }

@@ -1,18 +1,19 @@
 package web.mvc.controller;
 
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.protocol.HTTP;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Auction;
-import web.mvc.dto.AuctionDTO;
-import web.mvc.dto.HighestBidDTO;
-import web.mvc.service.AuctionService;
-import web.mvc.service.BidService;
+import web.mvc.dto.*;
+import web.mvc.service.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,9 @@ public class AuctionController {
     private final AuctionService auctionService;
     private final ModelMapper modelMapper;
     private final BidService bidService;
+    private final UserBuyService userBuyService;
+
+
     // 경매등록
     @PostMapping("/auction")
     public ResponseEntity<?> register(@RequestBody AuctionDTO auctionDTO, @RequestParam int price) {
@@ -39,7 +43,7 @@ public class AuctionController {
 
     // 경매 취소 : 삭제가 아닌 취소 상태로 바꾼다?
     // 경매 종료 : highestBidDTO를 레디스에서 꺼내서
-    @PostMapping("/auction/{auctionSeq}")
+    @PatchMapping("/auction/{auctionSeq}")
     public ResponseEntity<?> update(@PathVariable Long auctionSeq) {
         log.info("경매 종료~~");
         auctionService.updateAuction(auctionSeq);
@@ -60,6 +64,41 @@ public class AuctionController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
 
     }
+
+
+    @GetMapping("/highestBid/{userSeq}")
+    public ResponseEntity<?> getHighestBid(@PathVariable Long userSeq) {
+        Auction result = auctionService.getAuction(userSeq);
+        System.out.println(result.getAuctionSeq());
+        HighestBidDTO highestBidDTO = bidService.getHighestBid(result.getAuctionSeq());
+        return new ResponseEntity<>(highestBidDTO, HttpStatus.CREATED);
+
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<List<AuctionStatusDTO>> getCurrentAuctions() {
+        return ResponseEntity.ok(auctionService.getCurrentAuctions());
+    }
+
+    @GetMapping("/price/{productName}")
+    public ResponseEntity<List<GarakTotalCost>> testApi(HttpServletRequest req,@PathVariable String productName) {
+        ServletContext app = req.getServletContext();
+        List<GarakTotalCost> dto=(List<GarakTotalCost>)app.getAttribute("garakData");
+        List<GarakTotalCost> saveCost = new ArrayList<>();
+        for(GarakTotalCost garakTotalCost:dto){
+            if(garakTotalCost.getGarak_name().equals(productName)) {
+                saveCost.add(garakTotalCost);
+            }
+        }
+        return new ResponseEntity<>(saveCost, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/buy/{stockSeq}")
+    public ResponseEntity<List<UserBuyListByStockDTO>> buyList(HttpServletRequest req, @PathVariable Long stockSeq) {
+        List<UserBuyListByStockDTO> userBuyListByStockDTOList = userBuyService.geUserBuyListByStockDtos(stockSeq);
+        return new ResponseEntity<>(userBuyListByStockDTOList, HttpStatus.CREATED);
+    }
+
 
 
 }

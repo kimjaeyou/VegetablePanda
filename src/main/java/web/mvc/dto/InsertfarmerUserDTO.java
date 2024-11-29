@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class InsertFammerUserDTO {
+public class InsertfarmerUserDTO {
     private Long user_seq;
     private String farmer_id;
     private String name;
