@@ -1,7 +1,10 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +23,7 @@ public class Streaming {
 
     @Column(name = "server_address")
     private String serverAddress;
-    
+
     //state까지 추가한 부분
     @Column(name = "chat_api_url")
     private String chatUrl;
@@ -32,4 +35,8 @@ public class Streaming {
 
     @Column(name = "state")
     private Integer state;
+
+    @OneToOne(fetch = FetchType.EAGER)  // EAGER로 변경
+    @JoinColumn(name = "user_seq")
+    private FarmerUser farmerUser;
 }

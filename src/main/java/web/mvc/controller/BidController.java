@@ -9,11 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Auction;
 import web.mvc.domain.Bid;
-import web.mvc.dto.AuctionDTO;
-import web.mvc.dto.BidDTO;
-import web.mvc.dto.HighestBidDTO;
-import web.mvc.dto.UserTempWalletDTO;
+import web.mvc.dto.*;
 import web.mvc.service.BidService;
+import web.mvc.service.SendTopService;
 
 import java.util.List;
 
@@ -27,6 +25,7 @@ public class BidController {
     private final ModelMapper modelMapper;
 
     private final BidService bidService;
+    private final SendTopService sendTopService;
 
 
     // 입찰
@@ -36,7 +35,10 @@ public class BidController {
         HighestBidDTO highestBidDTO = bidService.checkHighestBid(newBidder.getAuctionSeq(),newBidder.getUserSeq());
         UserTempWalletDTO userTempWalletDTO = bidService.checkUserTempWallet(newBidder.getUserSeq());
         BidDTO result = modelMapper.map(bidService.bid(newBidder,highestBidDTO,userTempWalletDTO), BidDTO.class);
-
+        if(result!=null){
+            String message = "1";
+            sendTopService.sendTopMessage(message);
+        }
         /*
             redis 등록
          */
@@ -46,7 +48,7 @@ public class BidController {
 
     @GetMapping("/bid/{auctionSeq}")
     public ResponseEntity<?> bidList(@PathVariable Long auctionSeq) {
-        List<Bid> result = bidService.getBids(auctionSeq);
+        List<BidCompanyListDTO> result = bidService.getComBids(auctionSeq);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

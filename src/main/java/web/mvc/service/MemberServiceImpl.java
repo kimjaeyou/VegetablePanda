@@ -44,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
 
             log.info("member = " + m);
             if (user.getContent().equals("farmer")) {
-                fammerIn(m, user);
+                farmerIn(m, user);
                 Review review = new Review(m.getUserSeq(),0,user.getIntro());
                 reviewRepository.save(review);
             } else if (user.getContent().equals("user")) {
@@ -57,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-    public void fammerIn(ManagementUser m, GetAllUserDTO user) {
+    public void farmerIn(ManagementUser m, GetAllUserDTO user) {
         FarmerUser fuser =
                 new FarmerUser(
                         m.getUserSeq(),

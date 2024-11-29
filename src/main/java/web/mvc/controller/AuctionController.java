@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Auction;
 import web.mvc.dto.AuctionDTO;
+import web.mvc.dto.AuctionStatusDTO;
 import web.mvc.dto.HighestBidDTO;
 import web.mvc.service.AuctionService;
 import web.mvc.service.BidService;
@@ -39,7 +40,7 @@ public class AuctionController {
 
     // 경매 취소 : 삭제가 아닌 취소 상태로 바꾼다?
     // 경매 종료 : highestBidDTO를 레디스에서 꺼내서
-    @PostMapping("/auction/{auctionSeq}")
+    @PatchMapping("/auction/{auctionSeq}")
     public ResponseEntity<?> update(@PathVariable Long auctionSeq) {
         log.info("경매 종료~~");
         auctionService.updateAuction(auctionSeq);
@@ -69,6 +70,11 @@ public class AuctionController {
         HighestBidDTO highestBidDTO = bidService.getHighestBid(result.getAuctionSeq());
         return new ResponseEntity<>(highestBidDTO, HttpStatus.CREATED);
 
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<List<AuctionStatusDTO>> getCurrentAuctions() {
+        return ResponseEntity.ok(auctionService.getCurrentAuctions());
     }
 
 
