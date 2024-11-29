@@ -13,4 +13,9 @@ public class ReviewCommentDTO {
     private String content;
     private Integer score;
     private Long reviewSeq;
+
+    public ReviewCommentDTO(Long reviewCommentSeq, String content, Integer score, Long reviewSeq) {
+
+        
+    }
 }

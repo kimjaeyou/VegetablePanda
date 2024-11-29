@@ -8,8 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import web.mvc.domain.QaBoardReply;
-import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.service.ReviewCommentService;

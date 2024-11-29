@@ -30,5 +30,7 @@ public interface NoticeBoardService {
      * 공지사항 삭제
      * */
     public String noticeDelete(Long boardNoSeq);
-    
+
+    /**조회수*/
+    NoticeBoard increaseReadnum(Long boardNoSeq);
 }

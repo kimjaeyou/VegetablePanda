@@ -19,7 +19,7 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
     NOTFOUND_USER(HttpStatus.NOT_FOUND, "Not Found User", "사용자를 찾을 수 없습니다."),
 
 	NOTFOUND_NO(HttpStatus.NOT_FOUND, "Not Found Board SearchById","글번호를 확인하세요."),
-    NOTFOUND_BOARD( HttpStatus.BAD_REQUEST, "Not Found Board All","전체 게시물을 조회 할수 없습니다."),
+    NOTFOUND_BOARD( HttpStatus.BAD_REQUEST, "Not Found Board","게시물을 조회 할수 없습니다."),
 
     UPDATE_FAILED( HttpStatus.BAD_REQUEST, "Update fail","수정할수 없습니다."),
     DELETE_FAILED( HttpStatus.BAD_REQUEST, "Delete fail","삭제할 수 없습니다."),

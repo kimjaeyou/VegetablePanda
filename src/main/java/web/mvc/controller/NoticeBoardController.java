@@ -3,6 +3,7 @@ package web.mvc.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,7 +26,7 @@ public class NoticeBoardController {
     /**
      * 공지사항 등록
      */
-    @PostMapping("")
+    @PostMapping("/")
     public ResponseEntity<?> noticeSave(@RequestBody NoticeBoard noticeBoard) {
         validateAdminRole();
         return ResponseEntity.ok(noticeBoardService.noticeSave(noticeBoard));
@@ -51,7 +52,7 @@ public class NoticeBoardController {
     /**
      * 공지사항 전체 조회
      */
-    @GetMapping("")
+    @GetMapping("/")
     public ResponseEntity<List<NoticeBoard>> noticeFindAll() {
         return ResponseEntity.ok(noticeBoardService.noticeFindAll());
     }
@@ -77,5 +78,13 @@ public class NoticeBoardController {
         if (!admin) {
             throw new SecurityException("관리자 권한이 필요합니다.");
         }
+    }
+
+    /**
+     *  조회수 증가
+     * */
+    @PutMapping("/increaseReadnum/{boardNoSeq}")
+    public ResponseEntity<?> increaseReadnum(@PathVariable Long boardNoSeq) {
+        return new ResponseEntity<>(noticeBoardService.increaseReadnum(boardNoSeq), HttpStatus.OK);
     }
 }
