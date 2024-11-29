@@ -27,7 +27,7 @@ public class QaBoardReplyController {
     /**
      * 댓글 등록
      */
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<QaBoardReplyDTO> saveReply(@RequestBody QaBoardReplyDTO qaBoardReplyDTO) {
         log.info("댓글 등록 요청: {}", qaBoardReplyDTO);
         validateAdminRole();

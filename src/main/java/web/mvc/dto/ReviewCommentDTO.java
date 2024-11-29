@@ -20,6 +20,13 @@ public class ReviewCommentDTO {
     private LocalDateTime date;
     private Long reviewSeq;
 
+    public ReviewCommentDTO(Long reviewCommentSeq, String content, Integer score, Long reviewSeq) {
+        this.reviewCommentSeq = reviewCommentSeq;
+        this.content = content;
+        this.score = score;
+        this.reviewSeq = reviewSeq;
+    }
+
     // 엔티티를 DTO로 변환하는 정적 메서드
     public static ReviewCommentDTO fromEntity(ReviewComment reviewComment) {
         return ReviewCommentDTO.builder()

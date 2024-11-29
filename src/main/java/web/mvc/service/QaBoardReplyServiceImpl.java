@@ -31,6 +31,8 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
     public QaBoardReplyDTO saveReply(QaBoardReplyDTO qaBoardReplyDTO) {
         QaBoard qaBoard = findQaBoardById(qaBoardReplyDTO.getBoardNoSeq());
 
+
+
         QaBoardReply qaBoardReply = QaBoardReply.builder()
                 .comment(qaBoardReplyDTO.getComment())
                 .qaBoard(qaBoard)
