@@ -21,4 +21,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "WHERE s.stock.status = 1 " +
             "ORDER BY s.insertDate DESC")
     List<ShopListDTO> findAllShopItems();
+
+//    @Query("select ")
+    //List<ShopListDTO> findByUserSeq(long seq);
 }

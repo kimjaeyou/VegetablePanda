@@ -47,7 +47,7 @@ public class ApiDataCofig implements ServletContextListener {
         }catch (Exception ex){
             ex.printStackTrace();
         }
-
+        System.out.println(dto);
         app.setAttribute("garakData",dto);
     }
 
@@ -184,7 +184,7 @@ public class ApiDataCofig implements ServletContextListener {
         List<String> gunSet=Arrays.asList(new String[]{"양파","파","무","당근","비트","생강","마늘"});
         List<String> yangSet=Arrays.asList(new String[]{"브로커리","파세리","세러리","기타양채","양상추","양배추","빈스","칼라후라워"});
         List<String> fruitSet=Arrays.asList(new String[]{"대추","감","아보카도","감귤","포도","사과","블루베리",
-                "람부탄","메론","오렌지","배","복숭아","레몬","기타과일","바나나","곶감","용과","유자","키위"});
+                "람부탄","메론","오렌지","배","복숭아","레몬","망고","기타과일","바나나","곶감","용과","유자","키위"});
 
         if(mealSet.contains(name)){
          return 1;
@@ -242,7 +242,6 @@ public class ApiDataCofig implements ServletContextListener {
                 }
             }//inner -for-end
         }//outer -for-end
-        InsertProduct(garakDTOList);
         return InsertProduct(garakDTOList);
     }//calcGarakAvg-end
 
@@ -272,8 +271,8 @@ public class ApiDataCofig implements ServletContextListener {
                         new GarakTotalCost(
                                 dto.getGarak_name(),
                                 (int) (dto.getGarak_price() / dto.getGarak_count()),
-                                dto.getGarak_type(),
-                                dto.getGarak_grade(),
+                                CheckOrganic(dto.getGarak_type()),
+                                CheckGrade(dto.getGarak_grade()),
                                 dto.getGarak_category()
                         )
                 );
@@ -282,13 +281,40 @@ public class ApiDataCofig implements ServletContextListener {
                         new GarakTotalCost(
                                 dto.getGarak_name(),
                                 0,
-                                dto.getGarak_type(),
-                                dto.getGarak_grade(),
+                                CheckOrganic(dto.getGarak_type()),
+                                CheckGrade(dto.getGarak_grade()),
                                 dto.getGarak_category()
                         )
                 );
             }
         }
         return garakTotalList;
+    }
+    
+    public long CheckGrade(String grade){
+        if(grade.equals("특(1등)"))
+            return 1;
+        else if (grade.equals("상(2등)")) {
+            return 2;
+        }
+        else if (grade.equals("중(3등)")){
+            return 3;
+        }
+        else if (grade.equals("4등")){
+            return 4;
+        }
+        else if (grade.equals("5등")){
+            return 5;
+        } else {
+            return 6;
+        }
+    }
+
+    public long CheckOrganic(String organic){
+        if(organic.equals("우수농산물")){
+            return 1;
+        }else{
+            return 2;
+        }
     }
 }

@@ -23,5 +23,5 @@ public interface ShopService {
      * **/
     int shopDelete(Long code);
 
-    List<ShopListDTO> getAllShopItems();
+    List<ShopListDTO> getAllShopItems(long seq);
 }

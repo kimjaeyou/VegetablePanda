@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class GarakTotalCost {
     private String garak_name;
     private int garak_price;
-    private String garak_type;
-    private String garak_grade;
+    private long garak_type;
+    private long garak_grade;
     private long garak_category;
 }
