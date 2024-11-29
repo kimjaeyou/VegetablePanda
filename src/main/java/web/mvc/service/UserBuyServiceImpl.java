@@ -1,12 +1,14 @@
 package web.mvc.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.Payment;
 import web.mvc.domain.UserBuy;
+import web.mvc.dto.UserBuyListByStockDTO;
+import web.mvc.repository.UserBuyRepository;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.UserBuyException;
 import web.mvc.payment.PaymentStatus;
@@ -14,9 +16,7 @@ import web.mvc.repository.PaymentRepository;
 import web.mvc.repository.UserBuyRepository;
 import web.mvc.repository.UserRepository;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -24,8 +24,8 @@ import java.util.Date;
 @RequiredArgsConstructor
 @DynamicUpdate
 public class UserBuyServiceImpl implements UserBuyService {
-
     private final UserBuyRepository userBuyRepository;
+
     private final PaymentRepository paymentRepository;
 
     @Override
@@ -34,6 +34,11 @@ public class UserBuyServiceImpl implements UserBuyService {
 
         */
         return null;
+    }
+
+    @Override
+    public List<UserBuyListByStockDTO> geUserBuyListByStockDtos(Long stockSeq) {
+        return userBuyRepository.findByStockSeq(stockSeq);
     }
 
     @Override

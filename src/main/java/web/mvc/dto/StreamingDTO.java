@@ -31,4 +31,6 @@ public class StreamingDTO {
     private Long farmerSeq;
 
     private Long stockSeq;
+
+    private String productName;
 }
