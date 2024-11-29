@@ -11,6 +11,7 @@ import web.mvc.domain.ManagementUser;
 import web.mvc.dto.*;
 import web.mvc.repository.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Transactional
@@ -78,14 +79,14 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
     }
 
     @Override
-    public void settle(Long seq, List<CalcPoint> list) {
+    public void settle(Long seq, List<CalcPoint2> list) {
         ManagementUser managementUser = managementRepository.findSeq(seq);
-        for (CalcPoint calcPoint : list) {
+        for (CalcPoint2 calcPoint : list) {
 
             web.mvc.domain.CalcPoint calcPoint1 = new web.mvc.domain.CalcPoint();
             calcPoint1.setManagementUser(managementUser);
             calcPoint1.setTotalPoint(calcPoint.getTotalPoint());
-            calcPoint1.setInsertDate(calcPoint.getInsertDate());
+            calcPoint1.setInsertDate(LocalDateTime.parse(calcPoint.getInsertDate()));
             calcPoint1.setState(calcPoint.getState());
 
             log.info("정산 신청 성공? ={}",calcPoint1);

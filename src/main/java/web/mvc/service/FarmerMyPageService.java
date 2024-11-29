@@ -26,5 +26,5 @@ public interface FarmerMyPageService {
     List<CalcPoint> calcPoint(Long seq);
 
     // 정산 신청
-    void settle(Long seq, List<CalcPoint> list);
+    void settle(Long seq, List<CalcPoint2> list);
 }
