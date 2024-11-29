@@ -6,13 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.QaBoard;
 import web.mvc.domain.QaBoardReply;
-import web.mvc.dto.QAReplyDTO;
+import web.mvc.dto.QaBoardReplyDTO;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.repository.QaBoardReplyRepository;
 import web.mvc.repository.QaBoardRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,61 +26,69 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
     /**
      * 댓글 등록
      */
-    @Override
     @Transactional
-    public QaBoardReply qaReplySave(QAReplyDTO qaReplyDTO) {
-        QaBoard qaBoard = qaBoardRepository.findById(qaReplyDTO.getBoardNoSeq())
-                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+    @Override
+    public QaBoardReplyDTO saveReply(QaBoardReplyDTO qaBoardReplyDTO) {
+        QaBoard qaBoard = findQaBoardById(qaBoardReplyDTO.getBoardNoSeq());
 
         QaBoardReply qaBoardReply = QaBoardReply.builder()
-                .comment(qaReplyDTO.getComment())
+                .comment(qaBoardReplyDTO.getComment())
                 .qaBoard(qaBoard)
                 .build();
 
-        return qaBoardReplyRepository.save(qaBoardReply);
+        return QaBoardReplyDTO.fromEntity(qaBoardReplyRepository.save(qaBoardReply));
     }
 
     /**
      * 댓글 수정
      */
-    @Override
     @Transactional
-    public QaBoardReply qaReplyUpdate(Long boardNoSeq, QAReplyDTO qaReplyDTO) {
-        QaBoardReply existingReply = qaBoardReplyRepository.findById(qaReplyDTO.getBoardNoSeq())
-                .orElseThrow(() -> new DMLException(ErrorCode.UPDATE_FAILED));
+    @Override
+    public QaBoardReplyDTO updateReply(Long replySeq, QaBoardReplyDTO qaBoardReplyDTO) {
+        QaBoardReply existingReply = findQaBoardReplyById(replySeq);
 
-        if (!existingReply.getQaBoard().getBoardNoSeq().equals(boardNoSeq)) {
-            throw new DMLException(ErrorCode.NOTFOUND_REPLY);
-        }
+        existingReply.setComment(qaBoardReplyDTO.getComment());
 
-        existingReply.setComment(qaReplyDTO.getComment());
-        return qaBoardReplyRepository.save(existingReply);
+        return QaBoardReplyDTO.fromEntity(qaBoardReplyRepository.save(existingReply));
     }
 
     /**
      * 댓글 조회
      */
-    @Override
     @Transactional(readOnly = true)
-    public List<QaBoardReply> qaFindAllById(Long boardNoSeq) {
-        List<QaBoardReply> replies = qaBoardReplyRepository.findAllByQaBoard_BoardNoSeq(boardNoSeq);
-        if (replies.isEmpty()) {
-            throw new DMLException(ErrorCode.NOTFOUND_BOARD);
-        }
-        return replies;
+    @Override
+    public List<QaBoardReplyDTO> findRepliesByBoardId(Long boardNoSeq) {
+        return qaBoardReplyRepository.findAllByQaBoard_BoardNoSeq(boardNoSeq)
+                .stream()
+                .map(QaBoardReplyDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     /**
      * 댓글 삭제
      */
-    @Override
     @Transactional
-    public String qaReplyDelete(Long replySeq) {
-        QaBoardReply existingReply = qaBoardReplyRepository.findById(replySeq)
-                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+    @Override
+    public String deleteReply(Long replySeq) {
+        QaBoardReply existingReply = findQaBoardReplyById(replySeq);
 
         qaBoardReplyRepository.delete(existingReply);
-        return "삭제 완료";
-    }
+        return "댓글이 성공적으로 삭제되었습니다.";
     }
 
+    /**
+     * 게시판 찾기
+     */
+    private QaBoard findQaBoardById(Long boardNoSeq) {
+        return qaBoardRepository.findById(boardNoSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+    }
+
+    /**
+     * 댓글 찾기
+     */
+    private QaBoardReply findQaBoardReplyById(Long replySeq) {
+        return qaBoardReplyRepository.findById(replySeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_REPLY));
+    }
+}

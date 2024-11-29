@@ -1,20 +1,18 @@
 package web.mvc.service;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.QaBoardReply;
-import web.mvc.dto.QAReplyDTO;
+import web.mvc.dto.QaBoardReplyDTO;
 
 import java.util.List;
 
 public interface QaBoardReplyService {
 
-    QaBoardReply qaReplySave(QAReplyDTO qaReplyDTO);
+    QaBoardReplyDTO saveReply(QaBoardReplyDTO qaBoardReplyDTO);
 
-    QaBoardReply qaReplyUpdate(Long boardNoSeq, QAReplyDTO qaReplyDTO);
+    QaBoardReplyDTO updateReply(Long replySeq, QaBoardReplyDTO qaBoardReplyDTO);
 
-    List<QaBoardReply> qaFindAllById(Long boardNoSeq);
+    List<QaBoardReplyDTO> findRepliesByBoardId(Long boardNoSeq);
 
-    String qaReplyDelete(Long replySeq);
-
-
+    String deleteReply(Long replySeq);
 }
