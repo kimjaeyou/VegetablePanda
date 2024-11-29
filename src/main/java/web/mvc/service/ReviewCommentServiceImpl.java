@@ -8,7 +8,10 @@ import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.repository.ReviewCommentRepository;
+import web.mvc.repository.ReviewRepository;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -16,39 +19,45 @@ import java.util.List;
 public class ReviewCommentServiceImpl implements ReviewCommentService {
 
     private final ReviewCommentRepository reviewCommentRepository;
+    private final ReviewRepository reviewRepository;
 
     /**
      * 리뷰 등록
      */
     @Override
-    public ReviewCommentDTO reviewCommentSave(ReviewComment reviewComment) {
+    public ReviewCommentDTO reviewCommentSave(ReviewCommentDTO reviewCommentDTO) {
+        ReviewComment reviewComment = reviewCommentDTO.toEntity();
+        reviewComment.setReview(reviewRepository.findById(reviewCommentDTO.getReviewSeq())
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_REPLY)));
         ReviewComment savedComment = reviewCommentRepository.save(reviewComment);
-        return convertToDto(savedComment);
+        return ReviewCommentDTO.fromEntity(savedComment);
     }
 
     /**
      * 리뷰 업데이트
      */
     @Override
-    public ReviewCommentDTO reviewCommentUpdate(Long reviewCommentSeq, ReviewComment reviewComment) {
-
-        ReviewComment existingComment = reviewCommentRepository.findById(reviewCommentSeq)
+    public ReviewCommentDTO reviewCommentUpdate(Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO) {
+        ReviewComment comment = reviewCommentRepository.findById(reviewCommentSeq)
                 .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_REPLY));
 
-        existingComment.setContent(reviewComment.getContent());
-        ReviewComment updatedComment = reviewCommentRepository.save(existingComment);
-        return convertToDto(updatedComment);
+        comment.setContent(reviewCommentDTO.getContent());
+        comment.setScore(reviewCommentDTO.getScore());
+
+        ReviewComment updatedComment = reviewCommentRepository.save(comment);
+        return ReviewCommentDTO.fromEntity(updatedComment);
     }
 
     /**
-     * 내가 해당 판매자에게 쓴 리뷰 전체 조회
+     * 내가 쓴 리뷰 전체 조회
      */
     @Override
-    public List<ReviewCommentDTO> reviewCommentFindAllById(Long reviewCommentSeq) {
-        List<ReviewComment> comments = reviewCommentRepository.findAllByReview_ReviewSeq(reviewCommentSeq);
+    public List<ReviewCommentDTO> reviewCommentFindAllById(Long userId) {
+        List<ReviewComment> comments = reviewCommentRepository.findAllByManagementUser_UserSeq(userId);
+
         return comments.stream()
-                .map(this::convertToDto)
-                .toList();
+                .map(ReviewCommentDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -57,18 +66,10 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 
     @Override
     public void reviewCommentDelete(Long reviewCommentSeq) {
-
+        if (!reviewCommentRepository.existsById(reviewCommentSeq)) {
+            throw new DMLException(ErrorCode.NOTFOUND_REPLY);
+        }
         reviewCommentRepository.deleteById(reviewCommentSeq);
-
-    }
-
-    private ReviewCommentDTO convertToDto(ReviewComment reviewComment) {
-        return ReviewCommentDTO.builder()
-                .reviewCommentSeq(reviewComment.getReviewCommentSeq())
-                .content(reviewComment.getContent())
-                .score(reviewComment.getScore())
-                .build();
-
 
     }
 }

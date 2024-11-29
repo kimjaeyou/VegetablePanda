@@ -9,5 +9,7 @@ import web.mvc.domain.ReviewComment;
 import java.util.List;
 
 public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Long> {
-    List<ReviewComment> findAllByReview_ReviewSeq(Long reviewSeq);
+
+    List<ReviewComment> findAllByManagementUser_UserSeq(Long userId);
+
 }
