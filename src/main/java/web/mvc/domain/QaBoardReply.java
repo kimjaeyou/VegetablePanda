@@ -3,6 +3,9 @@ package web.mvc.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "qa_board_reply")
@@ -20,6 +23,10 @@ public class QaBoardReply {
 
     @Column(name = "comment", nullable = false, length = 255)
     private String comment;
+
+    @CreationTimestamp
+    @Column(name = "reg_date", nullable = false)
+    private LocalDateTime createTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_no_seq", nullable = false)
