@@ -2,26 +2,32 @@ package web.mvc.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import web.mvc.domain.Bid;
-import web.mvc.domain.ReviewComment;
-import web.mvc.domain.User;
+import org.springframework.web.multipart.MultipartFile;
+import web.mvc.domain.*;
 import web.mvc.dto.*;
+import web.mvc.repository.FileRepository;
+import web.mvc.repository.ManagementRepository;
 import web.mvc.service.CompanyMyPageService;
+import web.mvc.service.FileService;
+import web.mvc.service.S3ImageService;
 import web.mvc.service.UserMyPageService;
 
 import java.util.List;
+
+import static web.mvc.domain.QManagementUser.managementUser;
 
 @RequiredArgsConstructor
 @RestController
 @Slf4j
 @RequestMapping("/myPage")
 public class UserMyPageController {
-
     private final UserMyPageService userMyPageService;
-
+    private final S3ImageService s3ImageService;
+    private final FileRepository fileRepository;
     /**
      * 주문내역 조회
      */
@@ -45,24 +51,38 @@ public class UserMyPageController {
      */
     @PutMapping("/user/update/{seq}")
     public ResponseEntity<?> update(
+            @RequestPart(value = "image", required = false) MultipartFile image,
             @PathVariable Long seq,
-            @RequestParam String name,
-            @RequestParam String pw,
-            @RequestParam String address,
-            @RequestParam String phone,
-            @RequestParam String email,
-            @RequestParam String gender) {
+            @RequestPart("userData") GetAllUserDTO getAllUserDTO) {
 
-        User user = new User();
-        user.setUserSeq(seq);
-        user.setName(name);
-        user.setPw(pw);
-        user.setAddress(address);
-        user.setPhone(phone);
-        user.setEmail(email);
-        user.setGender(gender);
+        log.info("id = {}", getAllUserDTO.getId());
+        log.info("image = {}", image);
 
-        return new ResponseEntity<>( userMyPageService.update(user, seq), HttpStatus.OK);
+        // 파일 업로드
+        if(image != null) { // 이미지 값이 있는상태로 전송되었다면 경우의수를 추적한다.
+            String path = fileRepository.selectPath(seq);
+            log.info("path = {}", path);
+            if (path == null) { // 만약 DB에 값이 없으면 바로 업로드 시키고
+                String pathUpdate = s3ImageService.upload(image);
+                log.info("pathUpdate = {}", pathUpdate);
+                fileRepository.updatePath(pathUpdate, getAllUserDTO.getId());
+            } else { // DB에 값이 있으면 수정하는거니까 일단 지우고 업로드
+                s3ImageService.deleteImageFromS3(path);
+                String pathUpdate = s3ImageService.upload(image);
+                log.info("pathUpdate = {}", pathUpdate);
+                // String id = managementRepository.findId(seq);
+                fileRepository.updatePath(pathUpdate, getAllUserDTO.getId());
+            }
+        } else if (image == null) { // 근데 이미지값이 없으면 경우의 수 추적
+            String file = fileRepository.selectFile(getAllUserDTO.getName()); // 일단 path가 있는지 검색
+
+            if ( file != null ) { // 있으면 값 지우기
+            String path = fileRepository.selectPath(seq);
+            s3ImageService.deleteImageFromS3(path);
+            fileRepository.deletePath(getAllUserDTO.getId());
+            }
+        }
+        return new ResponseEntity<>( userMyPageService.update(getAllUserDTO, seq), HttpStatus.OK);
     }
 
     /**

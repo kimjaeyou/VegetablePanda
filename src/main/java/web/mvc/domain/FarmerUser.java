@@ -68,10 +68,10 @@ public class FarmerUser {
     private Streaming streaming;
 
 
-    public FarmerUser(Long user_seq,String farmerId, String pw,String name,
+    public FarmerUser(Long userSeq,String farmerId, String pw,String name,
                       String address,String code,String account,String phone,
                       String email,int state,String role) {
-        this.userSeq = user_seq;
+        this.userSeq = userSeq;
         this.farmerId = farmerId;
         this.name = name;
         this.pw = pw;
@@ -85,6 +85,7 @@ public class FarmerUser {
         this.farmerGrade = new FarmerGrade(0L);
         this.regDate = LocalDateTime.now();
     }
+
     public FarmerUser (long farmerSeq){
         this.userSeq = farmerSeq;
     }

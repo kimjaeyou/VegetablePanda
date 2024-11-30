@@ -5,9 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.FarmerUser;
 import web.mvc.dto.*;
+import web.mvc.repository.FileRepository;
 import web.mvc.service.FarmerMyPageService;
+import web.mvc.service.S3ImageService;
 
 import java.util.List;
 
@@ -18,7 +21,8 @@ import java.util.List;
 public class FarmerMyPageController {
 
     private final FarmerMyPageService farmerMyPageService;
-
+    private final S3ImageService s3ImageService;
+    private final FileRepository fileRepository;
     /**
      * 판매내역
      */
@@ -34,20 +38,7 @@ public class FarmerMyPageController {
      */
     @GetMapping("/list/{seq}")
     public ResponseEntity<?> selectUser(@PathVariable Long seq) {
-        FarmerUser farmerUser = farmerMyPageService.selectUser(seq);
-
-        FarmerUserDTO farmerUserDTO = new FarmerUserDTO();
-        farmerUserDTO.setFarmerId(farmerUser.getFarmerId());
-        farmerUserDTO.setName(farmerUser.getName());
-        farmerUserDTO.setCode(farmerUser.getCode());
-        farmerUserDTO.setAddress(farmerUser.getAddress());
-        farmerUserDTO.setPw(farmerUser.getPw());
-        farmerUserDTO.setPhone(farmerUser.getFarmerId());
-        farmerUserDTO.setEmail(farmerUser.getEmail());
-        farmerUserDTO.setGrade(String.valueOf(farmerUser.getFarmerGrade()));
-        farmerUserDTO.setRegDate(String.valueOf(farmerUser.getRegDate()));
-
-        return new ResponseEntity<>(farmerUserDTO, HttpStatus.OK);
+        return new ResponseEntity<>(farmerMyPageService.selectUser(seq), HttpStatus.OK);
     }
 
     /**
@@ -56,23 +47,34 @@ public class FarmerMyPageController {
     @PutMapping("/update/{seq}")
     public ResponseEntity<?> update(
             @PathVariable Long seq,
-            @RequestParam String name,
-            @RequestParam String pw,
-            @RequestParam String address,
-            @RequestParam String phone,
-            @RequestParam String email,
-            @RequestParam String code) {
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart("farmerData") GetAllUserDTO getAllUserDTO) {
 
-        FarmerUser farmerUser = new FarmerUser();
-        farmerUser.setUserSeq(seq);
-        farmerUser.setName(name);
-        farmerUser.setPw(pw);
-        farmerUser.setAddress(address);
-        farmerUser.setPhone(phone);
-        farmerUser.setEmail(email);
-        farmerUser.setCode(code);
+        // 파일 업로드
+        if(image != null) { // 이미지 값이 있는상태로 전송되었다면 경우의수를 추적한다.
+            String path = fileRepository.selectPath(seq);
+            log.info("path = {}", path);
+            if (path == null) { // 만약 DB에 값이 없으면 바로 업로드 시키고
+                String pathUpdate = s3ImageService.upload(image);
+                log.info("pathUpdate = {}", pathUpdate);
+                fileRepository.updatePath(pathUpdate, getAllUserDTO.getId());
+            } else { // DB에 값이 있으면 수정하는거니까 일단 지우고 업로드
+                s3ImageService.deleteImageFromS3(path);
+                String pathUpdate = s3ImageService.upload(image);
+                log.info("pathUpdate = {}", pathUpdate);
+                // String id = managementRepository.findId(seq);
+                fileRepository.updatePath(pathUpdate, getAllUserDTO.getId());
+            }
+        } else if (image == null) { // 근데 이미지값이 없으면 경우의 수 추적
+            String file = fileRepository.selectFile(getAllUserDTO.getId()); // 일단 path가 있는지 검색
 
-        return new ResponseEntity<>( farmerMyPageService.update(farmerUser, seq), HttpStatus.OK);
+            if ( file != null ) { // 있으면 값 지우기
+                String path = fileRepository.selectPath(seq);
+                s3ImageService.deleteImageFromS3(path);
+                fileRepository.deletePath(getAllUserDTO.getId());
+            }
+        }
+        return new ResponseEntity<>( farmerMyPageService.update(getAllUserDTO, seq), HttpStatus.OK);
     }
 
     /**
@@ -102,7 +104,7 @@ public class FarmerMyPageController {
     /**
      * 정산 신청하기
      */
-    @PostMapping("/settle/{seq}")
+    @PostMapping("/calculate/{seq}")
     public void settle(@PathVariable Long seq, @RequestBody CalculateDTO calculateDTO) {
         List<CalcPoint2> list = calculateDTO.getCalculateDTO();
         log.info("정산 신청 정보들 = {}", list);

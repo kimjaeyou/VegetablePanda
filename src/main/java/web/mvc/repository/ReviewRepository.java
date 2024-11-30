@@ -37,7 +37,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      */
     @Query("select new web.mvc.dto.ReviewCommentDTO2(r.content, " +
             "COALESCE(r.file.path, 'defaultPath'), " + // file.path가 null이면 'defaultPath'를 반환
-            "r.score, r.date, r.userSeq) " +
+            "r.score, r.date, r.managementUser.userSeq) " +
             "from ReviewComment r " +
             "left join Review v on r.review.reviewSeq = v.reviewSeq " +
             "left join File f on r.file.fileSeq = f.fileSeq " + // 파일 관련 LEFT JOIN 추가

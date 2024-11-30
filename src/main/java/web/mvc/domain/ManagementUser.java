@@ -57,7 +57,15 @@ public class ManagementUser {
         this.content = content;
     }
 
+    public ManagementUser(String id, String content, File file) {
+        this.id = id;
+        this.content = content;
+        this.file = file;
+    }
+
+
     public ManagementUser(Long userSeq) {
         this.userSeq = userSeq;
     };
+
 }

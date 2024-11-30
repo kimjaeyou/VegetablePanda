@@ -11,10 +11,10 @@ public interface FarmerMyPageService {
     List<UserBuyDTO> saleList(Long seq);
 
     // 회원정보 출력
-    FarmerUser selectUser(Long seq);
+    FarmerUserDTO2 selectUser(Long seq);
 
     // 회원정보 수정
-    FarmerUser update (FarmerUser farmerUser, Long seq);
+    FarmerUser update (GetAllUserDTO getAllUserDTO, Long seq);
 
     // 회원정보 탈퇴
     int delete (Long reviewSeq);

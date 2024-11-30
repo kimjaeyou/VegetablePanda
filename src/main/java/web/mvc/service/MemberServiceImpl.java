@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.*;
 import web.mvc.dto.GetAllUserDTO;
 import web.mvc.exception.ErrorCode;
@@ -22,6 +23,9 @@ public class MemberServiceImpl implements MemberService {
     private final ManagementRepository managementRepository;
     private final WalletRepository walletRepository;
     private final ReviewRepository reviewRepository;
+    private final FileRepository fileRepository;
+    private final FileService fileService;
+    private final S3ImageService s3ImageService;
 
     @Transactional(readOnly = true)
     @Override
@@ -31,16 +35,28 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void signUp(GetAllUserDTO user) {
+    public void signUp(GetAllUserDTO user, MultipartFile image) {
         log.info("user={}", user);
+
         if (managementRepository.existsById(user.getId()) > 0) {
             throw new MemberAuthenticationException(ErrorCode.DUPLICATED);
         } else {
+
             ManagementUser managementUser = new ManagementUser(user.getId(), user.getContent());
+            if(image != null) {
+                String Image = s3ImageService.upload(image);
+                log.info("file생성 - Image : {}", Image);
+
+                // File 객체 생성 및 저장
+                File file = new File(Image, user.getId());
+                File file2 = fileRepository.save(file);
+                managementUser.setFile(file2);
+            }
             ManagementUser m = managementRepository.save(managementUser);
 
             UserWallet userWallet = new UserWallet(0,m.getUserSeq());
             walletRepository.save(userWallet);
+
 
             log.info("member = " + m);
             if (user.getContent().equals("farmer")) {

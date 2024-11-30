@@ -41,8 +41,8 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 회원정보 가져오기
      */
     @Override
-    public User selectUser(Long seq) {
-        User user = userMyPageRepository.selectUser(seq);
+    public UserDTO selectUser(Long seq) {
+        UserDTO user = userMyPageRepository.selectUser(seq);
         return user;
     }
 
@@ -51,12 +51,15 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Modifying
     @Override
-    public User update(User user, Long seq) {
-        String pw = passwordEncoder.encode(user.getPw());
-        userMyPageRepository.updateUser(pw, user.getName(),user.getEmail(),user.getPhone(), user.getAddress(),user.getGender(), seq);
-        User user1 = userRepository.findByUserSeq(seq);
-
-        return user1;
+    public User update(GetAllUserDTO getAllUserDTO, Long seq) {
+        String name= getAllUserDTO.getName();
+        String pw = passwordEncoder.encode(getAllUserDTO.getPw());
+        String address = getAllUserDTO.getAddress();
+        String phone = getAllUserDTO.getPhone();
+        String email = getAllUserDTO.getEmail();
+        String gender = getAllUserDTO.getGender();
+        userMyPageRepository.updateUser(pw, name,email,phone, address,gender, seq);
+        return userRepository.findByUserSeq(seq);
     }
 
     /**

@@ -45,6 +45,13 @@ public class File {
         this.path = path;
     }
 
+    public File (Long fileSeq,String name ,String path){
+        this.fileSeq = fileSeq;
+        this.name = name;
+        this.path = path;
+    }
+
+
     public File(String path, String name) {
         this.path = path;
         this.name = name;

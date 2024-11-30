@@ -29,6 +29,7 @@ public class GetAllUserDTO {
     private String regName;
     private String image;
     private String intro;
+    private String path;
 
 
     public GetAllUserDTO(FarmerUser fuser) {

@@ -5,14 +5,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
 public class CalcPoint2 {
-    private int state;
     private int totalPoint;
-    private String insertDate;
-    private Long userSeq; // JSON의 "user_seq"와 매핑
-
+    private LocalDateTime insertDate;
 }

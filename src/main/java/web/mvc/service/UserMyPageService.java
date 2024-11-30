@@ -13,10 +13,10 @@ public interface UserMyPageService {
     List<UserBuyDTO> buyList(Long seq);
 
     // 회원정보 출력
-    User selectUser(Long seq);
+    UserDTO selectUser(Long seq);
 
     // 회원정보 수정
-    User update (User user, Long seq);
+    User update (GetAllUserDTO getAllUserDTO, Long seq);
 
     // 회원정보 탈퇴
     int delete (Long seq);

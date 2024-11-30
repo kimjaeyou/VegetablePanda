@@ -26,6 +26,8 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
     private final CalcPointRepository calcPointRepository;
     private final ReviewRepository reviewRepository;
     private final ManagementRepository managementRepository;
+    private final S3ImageService s3ImageService;
+    private final FileRepository fileRepository;
 
     @Override
     public List<UserBuyDTO> saleList(Long seq) {
@@ -37,9 +39,8 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
      * 회원정보 가져오기
      */
     @Override
-    public FarmerUser selectUser(Long seq) {
-        FarmerUser farmerUser = farmerMyPageRepository.selectUser(seq);
-        return farmerUser;
+    public FarmerUserDTO2 selectUser(Long seq) {
+        return farmerMyPageRepository.selectUser(seq);
     }
 
     /**
@@ -47,13 +48,17 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
      */
     @Modifying
     @Override
-    public FarmerUser update(FarmerUser farmerUser, Long seq) {
-        log.info(farmerUser.toString());
-        String pw = passwordEncoder.encode(farmerUser.getPw());
-        int no = farmerUserRepository.updateUser(pw, farmerUser.getAddress(), farmerUser.getPhone(), farmerUser.getEmail(), seq);
+    public FarmerUser update(GetAllUserDTO getAllUserDTO, Long seq) {
+        String pw = passwordEncoder.encode(getAllUserDTO.getPw());
+        String name = getAllUserDTO.getName();
+        String email = getAllUserDTO.getEmail();
+        String code = getAllUserDTO.getCode();
+        String address = getAllUserDTO.getAddress();
+        String phone = getAllUserDTO.getPhone();
 
-        FarmerUser farmerUser1 = farmerMyPageRepository.selectUser(seq);
-        return farmerUser1;
+        farmerUserRepository.updateUser( pw, name, email, code, address, phone, seq);
+
+        return farmerUserRepository.findByUserSeq(seq);
     }
 
     /**
@@ -81,17 +86,18 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
     @Override
     public void settle(Long seq, List<CalcPoint2> list) {
         ManagementUser managementUser = managementRepository.findSeq(seq);
+        LocalDateTime now = LocalDateTime.now();
         for (CalcPoint2 calcPoint : list) {
 
             web.mvc.domain.CalcPoint calcPoint1 = new web.mvc.domain.CalcPoint();
             calcPoint1.setManagementUser(managementUser);
             calcPoint1.setTotalPoint(calcPoint.getTotalPoint());
-            calcPoint1.setInsertDate(LocalDateTime.parse(calcPoint.getInsertDate()));
-            calcPoint1.setState(calcPoint.getState());
-
-            log.info("정산 신청 성공? ={}",calcPoint1);
-
-            calcPointRepository.save(calcPoint1);
+            calcPoint1.setInsertDate(now);
+            calcPoint1.setState(1);
+            int i = calcPointRepository.select(seq);
+                if (i == 0) {
+                    calcPointRepository.save(calcPoint1);
+                }
+            }
         }
     }
-}

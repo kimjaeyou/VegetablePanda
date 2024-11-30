@@ -11,6 +11,7 @@ import web.mvc.domain.CompanyUser;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
 import web.mvc.dto.CompanyDTO;
+import web.mvc.dto.GetAllUserDTO;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.UserBuyDTO;
 import web.mvc.repository.*;
@@ -30,9 +31,8 @@ public class CompanyMyPageServiceImpl implements CompanyMyPageService {
      * 회원정보 가져오기
      */
     @Override
-    public CompanyUser selectUser(Long seq) {
-        CompanyUser companyUser = companyMyPageRepository.selectUser(seq);
-        return companyUser;
+    public CompanyDTO selectUser(Long seq) {
+        return companyMyPageRepository.selectUser(seq);
     }
 
     /**
@@ -40,29 +40,35 @@ public class CompanyMyPageServiceImpl implements CompanyMyPageService {
      */
     @Modifying
     @Override
-    public CompanyUser update(CompanyUser companyUser, Long seq) {
-        String pw = passwordEncoder.encode(companyUser.getPw());
-        int no = companyUserRepository.updateUser(
-                companyUser.getComName(),
-                companyUser.getOwnerName(),
-                companyUser.getRegName(),
-                companyUser.getEmail(),
-                companyUser.getCode(),
-                companyUser.getAddress(),
-                companyUser.getPhone(),
+    public CompanyUser update(GetAllUserDTO getAllUserDTO, Long seq) {
+        String pw = passwordEncoder.encode(getAllUserDTO.getPw());
+        String comName = getAllUserDTO.getComName();
+        String ownerName = getAllUserDTO.getOwnerName();
+        String regName = getAllUserDTO.getRegName();
+        String email = getAllUserDTO.getEmail();
+        String code = getAllUserDTO.getCode();
+        String address = getAllUserDTO.getAddress();
+        String phone = getAllUserDTO.getPhone();
+
+        companyUserRepository.updateUser(
+                comName,
+                ownerName,
+                regName,
+                email,
+                code,
+                address,
+                phone,
                 pw,
-                seq);
-        log.info("성공?={}",no);
+                seq
+        );
 
-        CompanyUser companyUser1 = companyUserRepository.findByUserSeq(seq);
-        log.info("유저정보={}",companyUser1);
-
-        return companyUser1;
+        return companyUserRepository.findByUserSeq(seq);
     }
+
     @Override
     public int delete(Long seq) {
         int i = companyUserRepository.delete(seq);
-        log.info("i = {}",i);
+        log.info("i = {}", i);
         return i;
     }
 }
