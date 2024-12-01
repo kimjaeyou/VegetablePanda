@@ -52,6 +52,7 @@ public class StockController {
             stock.setStockGrade(new StockGrade(stockDTO.getStockGradeSeq()));
             stock.setStockOrganic(new StockOrganic(stockDTO.getStockOrganicSeq()));
             stock.setFarmerUser(new FarmerUser(farmerSeq));
+            stock.setFile(null);
 
             // 파일 업로드
             if(image != null) {

@@ -20,10 +20,12 @@ public class ShopListDTO {
     private String stockOrganic;
     private String file;
     private String productCategoryContent;
+    private String farmerName;
 
     public ShopListDTO(Long shopSeq, Long stockSeq, String content, Integer price,
                        Integer count, String insertDate, String productName,
-                       String stockGrade, String stockOrganic, String file, String productCategoryContent) {
+                       String stockGrade, String stockOrganic, String file, String productCategoryContent,
+                       String farmerName) {
         this.shopSeq = shopSeq;
         this.stockSeq = stockSeq;
         this.content = content;
@@ -35,6 +37,7 @@ public class ShopListDTO {
         this.stockOrganic = stockOrganic;
         this.file = file;
         this.productCategoryContent = productCategoryContent;
+        this.farmerName = farmerName;
     }
 
 }

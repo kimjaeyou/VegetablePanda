@@ -17,7 +17,7 @@ import java.util.List;
 public class UserBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "buy_seq")
+    @Column(name = "user_buy_seq")
     private Long buySeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
