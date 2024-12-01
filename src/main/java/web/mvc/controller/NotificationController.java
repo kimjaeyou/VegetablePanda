@@ -6,7 +6,6 @@ import web.mvc.dto.MessageReq;
 import web.mvc.service.NotificationService;
 
 @RestController
-@RequestMapping("/notifications") // 공통 URL 경로 설정
 public class NotificationController {
 
     private final NotificationService notificationService;
@@ -26,6 +25,7 @@ public class NotificationController {
     // /all topic으로 메시지 전송
     @PostMapping("/sendBidAll")
     public String sendAllMessage(@RequestBody MessageReq messageRequest) {
+        System.out.println("anchor!!!!!!");
         notificationService.sendMessageToTopic("/all/notifications", messageRequest.getMessage());
         return "Message sent to /all/notifications: " + messageRequest.getMessage();
     }
@@ -40,6 +40,7 @@ public class NotificationController {
     // 특정 사용자에게 메시지 전송
     @PostMapping("/sendToUser")
     public String sendToUser(@RequestBody MessageReq messageRequest) {
+        System.out.println("anchor!!!!!!");
         notificationService.sendMessageToUser(messageRequest.getUserId(), messageRequest.getMessage());
         return "Message sent to user: " + messageRequest.getUserId();
     }

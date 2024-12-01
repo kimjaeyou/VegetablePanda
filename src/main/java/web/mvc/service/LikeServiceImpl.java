@@ -6,12 +6,16 @@ import org.springframework.transaction.annotation.Transactional;
 import web.mvc.controller.NotificationController;
 import web.mvc.domain.FarmerUser;
 import web.mvc.domain.Likes;
+import web.mvc.domain.Stock;
 import web.mvc.dto.LikeDTO;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
+import web.mvc.repository.FarmerUserRepository;
 import web.mvc.repository.LikeRepository;
+import web.mvc.repository.StockRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +23,8 @@ import java.util.List;
 public class LikeServiceImpl implements LikeService {
     private final LikeRepository likeRepository;
     private final NotificationService notificationService;
+    private final StockRepository stockRepository;
+    private final FarmerUserRepository farmerUserRepository;
 
     @Override
     public Likes like(LikeDTO likeDTO) {
@@ -41,10 +47,16 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public List<Long> getLikeUserSeq(Long aucSeq,Long userSeq) {
+    public List<Long> getLikeUserSeq(Long aucSeq,Long stockSeq) {
+        Optional<Stock> stockOpt = stockRepository.findById(stockSeq);
+        Stock stock=stockOpt.get();
+        Long userSeq=stock.getFarmerUser().getUserSeq();
+
         List<Long> userList=likeRepository.findUserSeq(userSeq);
-        FarmerUser farmerUser= likeRepository.findFarmerUserByFarmerSeq(userSeq);
-        System.out.println("durl!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("::::::::::::"+userList.stream().toList());
+        Optional<FarmerUser> farmerUserOpt= farmerUserRepository.findById(userSeq);
+        FarmerUser farmerUser=farmerUserOpt.get();
+
         for(Long user:userList){
             notificationService.sendMessageToUser(user.toString(),
                     "관심 설정한"+farmerUser.getName()+"님의 방송이 시작합니다."+

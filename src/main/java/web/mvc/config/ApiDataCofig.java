@@ -290,7 +290,7 @@ public class ApiDataCofig implements ServletContextListener {
         }
         return garakTotalList;
     }
-    
+
     public long CheckGrade(String grade){
         if(grade.equals("특(1등)"))
             return 1;

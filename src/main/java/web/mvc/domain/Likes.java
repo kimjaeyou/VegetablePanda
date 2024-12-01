@@ -31,6 +31,6 @@ public class Likes {
     public Likes(Long userSeq, Long farmerSeq) {
         this.managementUser = new ManagementUser(userSeq);
         this.farmerUser = new FarmerUser(farmerSeq);
-        this.state = false;
+        this.state = true;
     }
 }

@@ -13,7 +13,7 @@ public interface LikeRepository extends JpaRepository<Likes, Long> {
     @Query("SELECT l FROM Likes l WHERE l.managementUser.userSeq = :userSeq AND l.farmerUser.userSeq = :farmerSeq")
     Likes findByUserSeqAndFarmerSeq(@Param("userSeq") Long userSeq, @Param("farmerSeq") Long farmerSeq);
 
-    @Query("SELECT l.managementUser.userSeq FROM Likes l WHERE l.farmerUser.userSeq = :farmerSeq")
+    @Query("SELECT l.managementUser.userSeq FROM Likes l WHERE l.farmerUser.userSeq = :farmerSeq and l.state=true")
     List<Long> findUserSeq(@Param("farmerSeq") Long farmerSeq);
 
     @Query("SELECT f FROM Likes l JOIN l.farmerUser f WHERE l.farmerUser.userSeq = :farmerSeq")
