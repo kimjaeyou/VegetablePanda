@@ -3,6 +3,7 @@ package web.mvc.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.exception.DMLException;
@@ -21,25 +22,42 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     private final ReviewCommentRepository reviewCommentRepository;
     private final ReviewRepository reviewRepository;
 
+    private Review findReviewById(Long reviewSeq) {
+        return reviewRepository.findById(reviewSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+    }
+
+    private ReviewComment findCommentById(Long reviewCommentSeq) {
+        return reviewCommentRepository.findById(reviewCommentSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_REPLY));
+    }
+
     /**
-     * 리뷰 등록
+     * 댓글 등록
      */
     @Override
-    public ReviewCommentDTO reviewCommentSave(ReviewCommentDTO reviewCommentDTO) {
+    public ReviewCommentDTO reviewCommentSave(Long reviewSeq, ReviewCommentDTO reviewCommentDTO) {
+        if (reviewCommentDTO == null) {
+            throw new IllegalArgumentException("ReviewCommentDTO cannot be null");
+        }
+
         ReviewComment reviewComment = reviewCommentDTO.toEntity();
-        reviewComment.setReview(reviewRepository.findById(reviewCommentDTO.getReviewSeq())
-                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_REPLY)));
+        reviewComment.setReview(findReviewById(reviewSeq));
+
         ReviewComment savedComment = reviewCommentRepository.save(reviewComment);
         return ReviewCommentDTO.fromEntity(savedComment);
     }
 
     /**
-     * 리뷰 업데이트
+     * 댓글 수정
      */
     @Override
-    public ReviewCommentDTO reviewCommentUpdate(Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO) {
-        ReviewComment comment = reviewCommentRepository.findById(reviewCommentSeq)
-                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_REPLY));
+    public ReviewCommentDTO reviewCommentUpdate(Long reviewSeq, Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO) {
+        if (reviewCommentDTO == null) {
+            throw new IllegalArgumentException("ReviewCommentDTO cannot be null");
+        }
+
+        ReviewComment comment = findCommentById(reviewCommentSeq);
 
         comment.setContent(reviewCommentDTO.getContent());
         comment.setScore(reviewCommentDTO.getScore());
@@ -49,27 +67,35 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     }
 
     /**
-     * 내가 쓴 리뷰 전체 조회
+     * 특정 사용자가 작성한 댓글 조회
      */
     @Override
-    public List<ReviewCommentDTO> reviewCommentFindAllById(Long userId) {
+    @Transactional(readOnly = true)
+    public List<ReviewCommentDTO> reviewCommentFindAllByUserId(Long userId) {
         List<ReviewComment> comments = reviewCommentRepository.findAllByManagementUser_UserSeq(userId);
-
         return comments.stream()
                 .map(ReviewCommentDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
     /**
-     * 리뷰 삭제
+     * 특정 게시글에 대한 댓글 조회
      */
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReviewCommentDTO> reviewCommentFindAllByReviewId(Long reviewSeq) {
+        List<ReviewComment> comments = reviewCommentRepository.findAllByReview_ReviewSeq(reviewSeq);
+        return comments.stream()
+                .map(ReviewCommentDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
 
+    /**
+     * 댓글 삭제
+     */
     @Override
     public void reviewCommentDelete(Long reviewCommentSeq) {
-        if (!reviewCommentRepository.existsById(reviewCommentSeq)) {
-            throw new DMLException(ErrorCode.NOTFOUND_REPLY);
-        }
-        reviewCommentRepository.deleteById(reviewCommentSeq);
-
+        ReviewComment comment = findCommentById(reviewCommentSeq);
+        reviewCommentRepository.deleteById(comment.getReviewCommentSeq());
     }
 }
