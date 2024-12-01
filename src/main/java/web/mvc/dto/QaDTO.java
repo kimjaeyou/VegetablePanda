@@ -1,6 +1,7 @@
 package web.mvc.dto;
 
 import lombok.*;
+import web.mvc.domain.File;
 import web.mvc.domain.QaBoard;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ public class QaDTO {
     private String content;    // 내용
     private Integer readnum;   // 조회수
     private LocalDateTime regDate; // 등록일
+    private File file;
     private String writerId;   // 작성자
 
     /**
@@ -32,6 +34,17 @@ public class QaDTO {
                 .readnum(qaBoard.getReadnum())
                 .regDate(qaBoard.getRegDate())
                 .writerId(qaBoard.getManagementUser().getId())
+                .build();
+    }
+
+    public QaBoard toEntity() {
+        return QaBoard.builder()
+                .boardNoSeq(this.boardNoSeq)
+                .subject(this.subject)
+                .content(this.content)
+                .readnum(this.readnum)
+                .regDate(this.regDate)
+                .file(this.file)
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package web.mvc.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.QaBoard;
 import web.mvc.dto.QaDTO;
 
@@ -10,21 +11,21 @@ public interface QaBoardService {
     /**
      * QA 등록
      * */
-    public QaDTO qaSave(QaBoard qaBoard);
+    public QaDTO qaSave(QaDTO qaDTO, MultipartFile image);
 
     /**
      * QA 수정
-     * */
-    public QaDTO qaUpdate(Long boardNoSeq, QaBoard qaBoard);
+     */
+    public QaDTO qaUpdate(Long boardNoSeq, QaDTO qaDTO, MultipartFile image, boolean deleteFile);
 
     /**
      * QA 조회
-     * */
+     */
     public QaDTO qaFindBySeq(Long boardNoSeq);
 
     /**
      * 전체 조회
-     * */
+     */
     public List<QaDTO> qaFindAll();
 
     /**

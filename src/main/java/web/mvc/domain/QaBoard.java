@@ -3,6 +3,7 @@ package web.mvc.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import web.mvc.dto.QaDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Builder
-public class QaBoard {
+public class QaBoard extends QaDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_no_seq")

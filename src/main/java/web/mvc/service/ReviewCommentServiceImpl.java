@@ -1,8 +1,11 @@
 package web.mvc.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import web.mvc.domain.File;
 import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
 import web.mvc.dto.ReviewCommentDTO;
@@ -17,10 +20,12 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ReviewCommentServiceImpl implements ReviewCommentService {
 
     private final ReviewCommentRepository reviewCommentRepository;
     private final ReviewRepository reviewRepository;
+    private final S3ImageService s3ImageService;
 
     private Review findReviewById(Long reviewSeq) {
         return reviewRepository.findById(reviewSeq)
@@ -36,13 +41,18 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
      * 댓글 등록
      */
     @Override
-    public ReviewCommentDTO reviewCommentSave(Long reviewSeq, ReviewCommentDTO reviewCommentDTO) {
+    public ReviewCommentDTO reviewCommentSave(Long reviewSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile image) {
         if (reviewCommentDTO == null) {
             throw new IllegalArgumentException("ReviewCommentDTO cannot be null");
         }
 
         ReviewComment reviewComment = reviewCommentDTO.toEntity();
         reviewComment.setReview(findReviewById(reviewSeq));
+
+        // 파일 업로드 처리
+        if (image != null && !image.isEmpty()) {
+            reviewComment.setFile(uploadFileToS3(image));
+        }
 
         ReviewComment savedComment = reviewCommentRepository.save(reviewComment);
         return ReviewCommentDTO.fromEntity(savedComment);
@@ -52,13 +62,28 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
      * 댓글 수정
      */
     @Override
-    public ReviewCommentDTO reviewCommentUpdate(Long reviewSeq, Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO) {
+    public ReviewCommentDTO reviewCommentUpdate(Long reviewSeq, Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile image, boolean deleteFile) {
         if (reviewCommentDTO == null) {
             throw new IllegalArgumentException("ReviewCommentDTO cannot be null");
         }
 
         ReviewComment comment = findCommentById(reviewCommentSeq);
 
+        // 파일 삭제 처리
+        if (deleteFile && comment.getFile() != null) {
+            deleteFileFromS3(comment.getFile());
+            comment.setFile(null);
+        }
+
+        // 파일 업로드 처리
+        if (image != null && !image.isEmpty()) {
+            if (comment.getFile() != null) {
+                deleteFileFromS3(comment.getFile());
+            }
+            comment.setFile(uploadFileToS3(image));
+        }
+
+        // 댓글 내용 수정
         comment.setContent(reviewCommentDTO.getContent());
         comment.setScore(reviewCommentDTO.getScore());
 
@@ -96,6 +121,29 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     @Override
     public void reviewCommentDelete(Long reviewCommentSeq) {
         ReviewComment comment = findCommentById(reviewCommentSeq);
+
+        // 파일 삭제 처리
+        if (comment.getFile() != null) {
+            deleteFileFromS3(comment.getFile());
+        }
+
         reviewCommentRepository.deleteById(comment.getReviewCommentSeq());
+    }
+
+    /**
+     * 파일 업로드 처리
+     */
+    private File uploadFileToS3(MultipartFile image) {
+        String uploadedPath = s3ImageService.upload(image);
+        log.info("File uploaded successfully: {}", uploadedPath);
+        return new File(uploadedPath, image.getOriginalFilename());
+    }
+
+    /**
+     * S3에서 파일 삭제
+     */
+    private void deleteFileFromS3(File file) {
+        s3ImageService.deleteImageFromS3(file.getPath());
+        log.info("File deleted successfully: {}", file.getPath());
     }
 }

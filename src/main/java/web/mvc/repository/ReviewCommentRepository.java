@@ -16,4 +16,5 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
     // 특정 리뷰에 대한 댓글 조회
     List<ReviewComment> findAllByReview_ReviewSeq(Long reviewSeq);
 
+
 }
