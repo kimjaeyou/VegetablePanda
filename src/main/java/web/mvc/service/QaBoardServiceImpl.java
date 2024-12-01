@@ -42,7 +42,7 @@ public class QaBoardServiceImpl implements QaBoardService {
         }
 
         QaBoard savedQaBoard = qaBoardRepository.save(qaBoard);
-        return QaDTO.fromEntity(savedQaBoard, writerId);
+        return QaDTO.fromEntity(savedQaBoard);
     }
 
     /**
@@ -70,7 +70,7 @@ public class QaBoardServiceImpl implements QaBoardService {
         existingQa.setContent(qaDTO.getContent());
 
         QaBoard updatedQaBoard = qaBoardRepository.save(existingQa);
-        return QaDTO.fromEntity(updatedQaBoard, updatedQaBoard.getManagementUser().getId());
+        return QaDTO.fromEntity(updatedQaBoard);
     }
 
     /**
@@ -81,7 +81,7 @@ public class QaBoardServiceImpl implements QaBoardService {
     public QaDTO qaFindBySeq(Long boardNoSeq) {
         QaBoard qaBoard = qaBoardRepository.findById(boardNoSeq)
                 .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
-        return QaDTO.fromEntity(qaBoard, qaBoard.getManagementUser().getId());
+        return QaDTO.fromEntity(qaBoard);
     }
 
     /**
@@ -91,7 +91,7 @@ public class QaBoardServiceImpl implements QaBoardService {
     @Transactional(readOnly = true)
     public List<QaDTO> qaFindAll() {
         return qaBoardRepository.findAll().stream()
-                .map(qaBoard -> QaDTO.fromEntity(qaBoard, qaBoard.getManagementUser().getId()))
+                .map(QaDTO::fromEntity)
                 .toList();
     }
 

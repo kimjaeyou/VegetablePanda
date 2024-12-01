@@ -10,7 +10,6 @@ public class NoticeDTO {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    @Builder
     public class NoticeBoardDTO {
 
         private Long boardNoSeq;

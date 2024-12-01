@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(builderMethodName = "qaDTOBuilder") // 빌더 메서드 이름 변경
 public class QaDTO {
 
     private Long boardNoSeq;   // 게시글 번호
@@ -26,19 +26,23 @@ public class QaDTO {
     /**
      * 엔티티를 DTO로 변환하는 정적 메서드
      */
-    public static QaDTO fromEntity(QaBoard qaBoard, String writerId) {
-        return QaDTO.builder()
+    public static QaDTO fromEntity(QaBoard qaBoard) {
+        return QaDTO.qaDTOBuilder()
                 .boardNoSeq(qaBoard.getBoardNoSeq())
                 .subject(qaBoard.getSubject())
                 .content(qaBoard.getContent())
                 .readnum(qaBoard.getReadnum())
                 .regDate(qaBoard.getRegDate())
                 .writerId(qaBoard.getManagementUser().getId())
+                .file(qaBoard.getFile())
                 .build();
     }
 
+    /**
+     * DTO를 엔티티로 변환하는 메서드
+     */
     public QaBoard toEntity() {
-        return QaBoard.builder()
+        return QaBoard.builder() // 기존 Entity의 빌더 호출
                 .boardNoSeq(this.boardNoSeq)
                 .subject(this.subject)
                 .content(this.content)
