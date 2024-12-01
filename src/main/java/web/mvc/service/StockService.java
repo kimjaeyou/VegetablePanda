@@ -42,4 +42,6 @@ public interface StockService {
     boolean hasRegisteredToday(long farmerSeq);
 
     Stock changeQuantity(long stockSeq, int quantity);
+
+    List<Stock> findStocksByFarmerSeq(Long farmerSeq);
 }

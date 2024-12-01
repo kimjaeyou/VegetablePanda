@@ -124,4 +124,9 @@ public class StockServiceImpl implements StockService {
         stock.setCount(stock.getCount()-quantity);
         return stock;
     }
+
+    @Override
+    public List<Stock> findStocksByFarmerSeq(Long farmerSeq) {
+        return stockRepository.findByFarmerUserSeq(farmerSeq);
+    }
 }
