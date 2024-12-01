@@ -23,5 +23,7 @@ public interface ManagementRepository extends JpaRepository<ManagementUser, Long
     @Query("update ManagementUser m set m.file.fileSeq = ?1 where m.userSeq = ?1 ")
     void update (Long seq);
 
-   // @Query("select m.file.fileSeq from ManagementUser m where m.")
+    @Query("select m from ManagementUser m where m.id=?1") //JPQL문법
+    ManagementUser duplicateCheck(String id);
+
 }

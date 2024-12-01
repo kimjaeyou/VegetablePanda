@@ -26,16 +26,8 @@ public class MemberController {
     private final FileService fileService;
     private final S3ImageService s3ImageService;
 
-
-    @GetMapping("/test")
-    public String test() {
-        log.info("test 요청");
-        return "test";
-    }
-
     @GetMapping("/members/{id}")
     public String duplicateIdCheck(@PathVariable String id) {
-        log.info("id={}",id);
         return memberService.duplicateCheck(id);
     }
 

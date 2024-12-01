@@ -30,7 +30,14 @@ public class MemberServiceImpl implements MemberService {
     @Transactional(readOnly = true)
     @Override
     public String duplicateCheck(String id) {
-        return "";
+        ManagementUser member = managementRepository.duplicateCheck(id);
+        if(member == null) {
+            log.info("사용가능한 아이디 입니다.");
+            return "사용가능한 아이디 입니다.";
+        } else{
+            log.info("중복입니다");
+            return "아이디가 존재합니다.";
+        }
     }
 
     @Override
