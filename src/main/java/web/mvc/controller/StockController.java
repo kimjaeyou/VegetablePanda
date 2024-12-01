@@ -88,13 +88,13 @@ public class StockController {
 
     // 상품 조회 (판매자 재고 보기)
     @GetMapping("/stock/{userSeq}")
-    public ResponseEntity<StockInfoDTO> findStocksById(@PathVariable long userSeq) {
+    public ResponseEntity<?> findStocksById(@PathVariable long userSeq) {
         log.info("상품 목록 조회");
 
         List<StockInfoDTO> stockInfoDTOList = stockService.findStockInfoById(userSeq);
         System.out.println("stocklist 값" + stockInfoDTOList);
-        return null;
-        //return new ResponseEntity<>(stockDTOList, HttpStatus.OK);
+
+        return new ResponseEntity<>(stockInfoDTOList, HttpStatus.OK);
     }
 
     // 상품 조회 (판매자 재고 보기)

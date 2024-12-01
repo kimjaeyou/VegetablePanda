@@ -17,8 +17,10 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "s.stock.product.productName, " +
             "s.stock.stockGrade.grade, " +
             "s.stock.stockOrganic.organicStatus, " +
-            "s.stock.file.path)" +
+            "s.stock.file.path," +
+            "s.stock.product.productCategory.content)" +
             "FROM Shop s " +
+            "LEFT JOIN s.stock.file " + // file이 없는 경우에도 데이터 포함
             "WHERE s.stock.status = 1 " +
             "ORDER BY s.insertDate DESC")
     List<ShopListDTO> findAllShopItems();

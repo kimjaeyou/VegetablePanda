@@ -128,6 +128,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public List<StockInfoDTO> findStockInfoById(long id) {
+
         return stockRepository.findStockInfoById(id);
     }
 }
