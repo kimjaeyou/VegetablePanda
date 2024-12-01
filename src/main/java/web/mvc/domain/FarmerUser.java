@@ -68,13 +68,21 @@ public class FarmerUser {
     private Streaming streaming;
 
 
-    public FarmerUser(Long userSeq,String farmerId, String pw,String name,
-                      String address,String code,String account,String phone,
-                      String email,int state,String role) {
+    public FarmerUser(Long userSeq,
+                      String farmerId,
+                      String pw,
+                      String name,
+                      String address,
+                      String code,
+                      String account,
+                      String phone,
+                      String email,
+                      int state,
+                      String role) {
         this.userSeq = userSeq;
         this.farmerId = farmerId;
-        this.name = name;
         this.pw = pw;
+        this.name = name;
         this.address = address;
         this.code = code;
         this.account = account;

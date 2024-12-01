@@ -56,7 +56,7 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
         String address = getAllUserDTO.getAddress();
         String phone = getAllUserDTO.getPhone();
 
-        farmerUserRepository.updateUser( pw, name, email, code, address, phone, seq);
+        farmerUserRepository.updateUser( name, email, code, address, phone, pw, seq);
 
         return farmerUserRepository.findByUserSeq(seq);
     }

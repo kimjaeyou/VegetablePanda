@@ -44,7 +44,6 @@ public class GetAllUserDTO {
         this.email=fuser.getEmail();
         this.phone=fuser.getPhone();
         this.role=fuser.getRole();
-
     }
 
     public GetAllUserDTO(User nuser) {

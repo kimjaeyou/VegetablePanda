@@ -51,6 +51,11 @@ public class MemberServiceImpl implements MemberService {
                 File file = new File(Image, user.getId());
                 File file2 = fileRepository.save(file);
                 managementUser.setFile(file2);
+            } else if (image == null) {
+                // File 객체 생성 및 저장
+                File file = new File(null, user.getId());
+                File file2 = fileRepository.save(file);
+                managementUser.setFile(file2);
             }
             ManagementUser m = managementRepository.save(managementUser);
 

@@ -7,20 +7,21 @@ import org.springframework.data.repository.query.Param;
 import web.mvc.domain.FarmerUser;
 
 public interface FarmerUserRepository extends JpaRepository<FarmerUser, Long> {
+
+   @Query("select f from FarmerUser f where f.userSeq = ?1")
    FarmerUser findByUserSeq(Long userSeq);
 
     @Modifying
-    @Query("update FarmerUser u set u.pw = :pw, u.name = :name, u.email = :email, u.phone = :phone, u.code = :code, u.address = :address where u.userSeq = :seq")
-    int updateUser(
-            @Param("pw") String pw,
+    @Query("update FarmerUser u set u.name = :name,  u.email = :email, u.code = :code,u.address = :address ,  u.phone = :phone , u.pw = :pw  where u.userSeq = :seq")
+    void updateUser(
             @Param("name") String name,
             @Param("email") String email,
-            @Param("phone") String phone,
             @Param("code") String code,
             @Param("address") String address,
-            @Param("seq") Long seq
+            @Param("phone") String phone,
+            @Param("pw") String pw,
+            Long seq
     );
-
 
     //회원 탈퇴(그냥 상태값 바꾸는거임.)
     @Modifying

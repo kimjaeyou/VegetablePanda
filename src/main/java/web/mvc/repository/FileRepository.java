@@ -9,15 +9,12 @@ import web.mvc.domain.File;
 public interface FileRepository extends JpaRepository<File, Long> {
 
     @Query("select f.path from File f left JOIN ManagementUser m on f.fileSeq = m.file.fileSeq where m.file.name = ?1")
-    String selectFile(String name);
-
-    @Query("select f.path from File f left JOIN ManagementUser m on f.fileSeq = m.file.fileSeq where m.userSeq = ?1 ")
-    String selectPath(Long seq);
+    String selectFile(String id);
 
     @Transactional
     @Modifying
     @Query("update File f set f.path = ?1 WHERE f.name = ?2")
-    void updatePath(String updatePath, String id);
+    void updatePath(String updatePath, String name);
 
     @Transactional
     @Modifying

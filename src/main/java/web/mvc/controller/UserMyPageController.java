@@ -60,7 +60,7 @@ public class UserMyPageController {
 
         // 파일 업로드
         if(image != null) { // 이미지 값이 있는상태로 전송되었다면 경우의수를 추적한다.
-            String path = fileRepository.selectPath(seq);
+            String path = fileRepository.selectFile(getAllUserDTO.getId());
             log.info("path = {}", path);
             if (path == null) { // 만약 DB에 값이 없으면 바로 업로드 시키고
                 String pathUpdate = s3ImageService.upload(image);
@@ -74,10 +74,10 @@ public class UserMyPageController {
                 fileRepository.updatePath(pathUpdate, getAllUserDTO.getId());
             }
         } else if (image == null) { // 근데 이미지값이 없으면 경우의 수 추적
-            String file = fileRepository.selectFile(getAllUserDTO.getName()); // 일단 path가 있는지 검색
+            String file = fileRepository.selectFile(getAllUserDTO.getId()); // 일단 path가 있는지 검색
 
             if ( file != null ) { // 있으면 값 지우기
-            String path = fileRepository.selectPath(seq);
+            String path = fileRepository.selectFile(getAllUserDTO.getId());
             s3ImageService.deleteImageFromS3(path);
             fileRepository.deletePath(getAllUserDTO.getId());
             }
