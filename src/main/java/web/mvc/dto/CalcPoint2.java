@@ -14,5 +14,5 @@ import java.time.LocalDateTime;
 @ToString
 public class CalcPoint2 {
     private int totalPoint;
-    private LocalDateTime insertDate;
+    private Long userBuySeq;
 }

@@ -110,5 +110,6 @@ public class FarmerMyPageController {
         List<CalcPoint2> list = calculateDTO.getCalculateDTO();
         log.info("정산 신청 정보들 = {}", list);
         farmerMyPageService.settle(seq, list);
+        // 실패하면 error 반환, 성공하면 ok 반환
     }
 }

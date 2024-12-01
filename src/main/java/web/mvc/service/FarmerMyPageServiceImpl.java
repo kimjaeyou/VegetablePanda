@@ -31,8 +31,7 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
 
     @Override
     public List<UserBuyDTO> saleList(Long seq) {
-        Integer state = 3; // 판매내역 조회
-        return buyMyPageRepository.selectAll(seq, state);
+        return buyMyPageRepository.selectAll(seq);
     }
 
     /**
@@ -87,17 +86,20 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
     public void settle(Long seq, List<CalcPoint2> list) {
         ManagementUser managementUser = managementRepository.findSeq(seq);
         LocalDateTime now = LocalDateTime.now();
-        for (CalcPoint2 calcPoint : list) {
+        for (CalcPoint2 calcPoint : list) {// 반복문 계속돌기
 
+            // 반복문 돌면서 정산신청 차례로 ㄱㄱㅆ
             web.mvc.domain.CalcPoint calcPoint1 = new web.mvc.domain.CalcPoint();
             calcPoint1.setManagementUser(managementUser);
             calcPoint1.setTotalPoint(calcPoint.getTotalPoint());
             calcPoint1.setInsertDate(now);
             calcPoint1.setState(1);
-            int i = calcPointRepository.select(seq);
-                if (i == 0) {
-                    calcPointRepository.save(calcPoint1);
-                }
+            Long buySeq = calcPoint.getUserBuySeq(); // 일단 해당 번호 가져와서
+            log.info("buySeq = {}",buySeq); // 이게 나오긴 하나..?
+            int i = buyMyPageRepository.update(2, seq, buySeq); // 상태값 바꿔서 아예 체크도 없애기
+            if (i == 1) { // true면?
+                calcPointRepository.save(calcPoint1); // 바꾸는걸 성공하면 바로 저장
+            }
             }
         }
     }
