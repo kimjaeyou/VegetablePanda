@@ -11,11 +11,11 @@ import java.util.List;
 @Repository
 public interface StreamingRepository extends JpaRepository<Streaming, Long> {
 
-    // 상태값이 0인 첫 번째 스트리밍을 찾는 쿼리 메서드
-    Streaming findFirstByState(Integer state);
-
-    @Query("select s from Streaming s where s.state=?1")
+    // 상태값으로 스트리밍 검색
     List<Streaming> findByState(Integer state);
+
+    // 상태값이 0인 첫 번째 스트리밍 찾기
+    Streaming findFirstByState(Integer state);
 
     Streaming findByChatRoomId(String chatRoomId);
 
