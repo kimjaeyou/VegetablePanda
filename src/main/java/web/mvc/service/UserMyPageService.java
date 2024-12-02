@@ -2,10 +2,8 @@ package web.mvc.service;
 
 import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
-import web.mvc.dto.ReviewCommentDTO;
-import web.mvc.dto.UserBuyDTO;
-import web.mvc.dto.UserDTO;
-import web.mvc.dto.UserUpdateDTO;
+import web.mvc.domain.User;
+import web.mvc.dto.*;
 
 import java.util.List;
 
@@ -18,10 +16,10 @@ public interface UserMyPageService {
     UserDTO selectUser(Long seq);
 
     // 회원정보 수정
-    void update(UserUpdateDTO userUpdateDTO, Long seq);
+    User update (GetAllUserDTO getAllUserDTO, Long seq);
 
     // 회원정보 탈퇴
-    void delete (Long seq);
+    int delete (Long seq);
 
     // 포인트 조회
     int point(Long seq);
@@ -33,6 +31,17 @@ public interface UserMyPageService {
     void deleteReview(Long ReviewSeq,Long userSeq);
 
     // 경매 내역 조회
-    List<Bid> auctionList(Long seq);
+    List<BidAuctionDTO> auctionList(Long seq);
 
+    // 좋아요 목록
+    List<LikeDTO> likeList(Long seq);
+
+    // 좋아요 취소
+    String likeDelete(Long seq,Long likeSeq);
+
+    // 구독 목록
+    List<UserLikeDTO> userLikeList(Long seq);
+
+    // 구독취소
+    String userLikeDelete(Long seq, Long userLikeSeq);
 }

@@ -2,14 +2,15 @@ package web.mvc.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import web.mvc.domain.CompanyUser;
+import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.FarmerUser;
-import web.mvc.dto.CalcPoint;
-import web.mvc.dto.UserBuyDTO;
+import web.mvc.dto.*;
+import web.mvc.repository.FileRepository;
 import web.mvc.service.FarmerMyPageService;
+import web.mvc.service.S3ImageService;
 
 import java.util.List;
 
@@ -20,66 +21,92 @@ import java.util.List;
 public class FarmerMyPageController {
 
     private final FarmerMyPageService farmerMyPageService;
-
-    @GetMapping("")
-    public String test() {
-        log.info("판매자 마이페이지 test");
-        return "판매자 마이페이지";
-    }
+    private final S3ImageService s3ImageService;
+    private final FileRepository fileRepository;
     /**
      * 판매내역
      */
     @GetMapping("/saleList/{seq}")
-    public String buyList(@PathVariable Long seq, Model model) {
-        log.info("판매내역 조회시작");
-
-        List<UserBuyDTO> list = farmerMyPageService.buyList(seq);
-        model.addAttribute("list", list);
-        log.info("list = {}", list);
-        return "redirect:/,saleList/" + seq;
+    public ResponseEntity<List<UserBuyDTO>> saleList(@PathVariable Long seq) {
+        List<UserBuyDTO> list = farmerMyPageService.saleList(seq);
+        return ResponseEntity.ok(list);
     }
 
     /**
      * 회원의 정보 조회
-     * 일단 값은 들고와야하니까..
      */
     @GetMapping("/list/{seq}")
-    public String selectUser(@PathVariable Long seq, Model model) {
-        FarmerUser farmerUser = farmerMyPageService.selectUser(seq);
-        log.info("farmerUser = {}", farmerUser);
-        model.addAttribute("farmerUser", farmerUser);
-        return "redirect:/list/" + seq;
+    public ResponseEntity<?> selectUser(@PathVariable Long seq) {
+        return new ResponseEntity<>(farmerMyPageService.selectUser(seq), HttpStatus.OK);
     }
 
     /**
      * 회원정보 수정
      */
-    @PostMapping("/update/{seq}")
-    public String update(@RequestBody FarmerUser farmerUser, @PathVariable Long seq) {
-        farmerMyPageService.update(farmerUser, seq);
-        return "redirect:/update";
+    @PutMapping("/update/{seq}")
+    public ResponseEntity<?> update(
+            @PathVariable Long seq,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart("farmerData") GetAllUserDTO getAllUserDTO) {
+
+        log.info("image = {}", image);
+        log.info("getAllUserDTO = {}", getAllUserDTO.getId());
+        // 파일 업로드
+        if(image != null) { // 이미지 값이 있는상태로 전송되었다면 경우의수를 추적한다.
+            String path = fileRepository.selectFile(getAllUserDTO.getId());
+            log.info("path = {}", path);
+            if (path == null) { // 만약 DB에 값이 없으면 바로 업로드 시키고
+                String pathUpdate = s3ImageService.upload(image);
+                log.info("pathUpdate = {}", pathUpdate);
+                fileRepository.updatePath(pathUpdate, getAllUserDTO.getId());
+            } else { // DB에 값이 있으면 수정하는거니까 일단 지우고 업로드
+                s3ImageService.deleteImageFromS3(path);
+                String pathUpdate = s3ImageService.upload(image);
+                log.info("pathUpdate = {}", pathUpdate);
+                fileRepository.updatePath(pathUpdate, getAllUserDTO.getId());
+            }
+        } else if (image == null) { // 근데 이미지값이 없으면 경우의 수 추적
+            String file = fileRepository.selectFile(getAllUserDTO.getId()); // 일단 path가 있는지 검색
+
+            if ( file != null ) { // 있으면 값 지우기
+                String path = fileRepository.selectFile(getAllUserDTO.getId());
+                s3ImageService.deleteImageFromS3(path);
+                fileRepository.deletePath(getAllUserDTO.getId());
+            }
+        }
+        return new ResponseEntity<>(farmerMyPageService.update(getAllUserDTO, seq), HttpStatus.OK);
     }
 
     /**
      * 탈퇴
-     * 사실상 말이 탈퇴지
-     * 그냥 계정 정지임. 그럼 상태값을 바꿔주기만 하면될듯.
-     * 근데 이거 Post로 해도 되나...?
      */
     @PostMapping("/delete/{seq}")
-    public String delete(@PathVariable Long seq) {
-        farmerMyPageService.delete(seq);
-        return "redirect:/main"; // 이건 아직 안넣었음, 왜냐면 이거 탈퇴하면 메인페이지로 갈라고, 메인페이지 url몰라...그래서 일단 main이라고만 적어두자
+    public int delete(@PathVariable Long seq) {
+        return farmerMyPageService.delete(seq);
     }
 
     /**
-     * 정산 신청
-     * 이건 뭐 어떻게 해줘야할까...
-     * 그냥 신청서처럼 해줘야하나...
+     * 정산 내역
      */
-    @PostMapping("/calcPoint/{seq}")
-    public String calcPoint(@PathVariable Long seq, @RequestBody UserBuyDTO userBuyDTO) {
-        farmerMyPageService.calcPoint(seq, userBuyDTO);
-        return "/calcPoint/" + seq;
+    @GetMapping("/point/calc/{seq}")
+    public ResponseEntity<?> calcPoint(@PathVariable Long seq) {
+        return new ResponseEntity<>(farmerMyPageService.calcPoint(seq), HttpStatus.OK);
+    }
+
+    /**
+     * 나한테 쓴 리뷰 조회하기
+     */
+    @GetMapping("/review/List/{seq}")
+    public ResponseEntity<?> reviewList(@PathVariable Long seq) {
+        return new ResponseEntity<>(farmerMyPageService.reviewList(seq), HttpStatus.OK);
+    }
+
+    /**
+     * 정산 신청하기
+     */
+    @PostMapping("/calculate/{seq}")
+    public void settle(@PathVariable Long seq, @RequestBody CalculateDTO calculateDTO) {
+        List<CalcPoint2> list = calculateDTO.getCalculateDTO();
+        farmerMyPageService.settle(seq, list);
     }
 }

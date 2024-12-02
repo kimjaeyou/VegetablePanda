@@ -16,7 +16,7 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fileSeq;
 
-    @Column(name = "path", length = 300)
+    @Column(name = "path", length = 300 , nullable = true)
     private String path;
 
     @Column(name = "name", length = 80)
@@ -42,6 +42,13 @@ public class File {
     public File(String path) {
         this.path = path;
     }
+
+    public File (Long fileSeq,String name ,String path){
+        this.fileSeq = fileSeq;
+        this.name = name;
+        this.path = path;
+    }
+
 
     public File(String path, String name) {
         this.path = path;

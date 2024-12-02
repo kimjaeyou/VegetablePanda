@@ -15,14 +15,12 @@ public class StockDTO {
     private String content;
     private int count;
     private String color;
-
     private Long productSeq;
     private Long stockGradeSeq;
     private Long stockOrganicSeq;
     private Long userSeq;
     private Long farmerUserSeq;
     private LocalDateTime regDate;
-
     private FileDTO file;
 
 //    ProductDTO productDTO;

@@ -36,7 +36,7 @@ public class ApiDataCofig implements ServletContextListener {
 
 
     private List<row> dataList = new ArrayList<>();
-
+    private long num;
 
     @Override
     public void contextInitialized(ServletContextEvent e) {
@@ -54,7 +54,7 @@ public class ApiDataCofig implements ServletContextListener {
 
     public GarakStructList Test(String start, String end) throws IOException {
 
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate yesterday = LocalDate.now().minusDays(num);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String strYesterdayDate = yesterday.format(formatter);
 
@@ -144,6 +144,10 @@ public class ApiDataCofig implements ServletContextListener {
     public GarakAvgPrice calcGarak() throws Exception{
 
         GarakStructList dto= Test("1", "1000");
+        if(dto==null){
+            num+=1;
+            dto= Test("1", "1000");
+        }
         List<row> rList= new ArrayList<>();
 
         Set<String>nameList= dto.getGarakNameList();
