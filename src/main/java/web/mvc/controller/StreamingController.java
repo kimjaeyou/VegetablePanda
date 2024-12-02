@@ -8,6 +8,7 @@ import web.mvc.domain.FarmerUser;
 import web.mvc.domain.Stock;
 import web.mvc.domain.Streaming;
 import web.mvc.dto.StreamingDTO;
+import web.mvc.service.NotificationService;
 import web.mvc.service.StockServiceImpl;
 import web.mvc.service.StreamingServiceImpl;
 
@@ -22,6 +23,9 @@ public class StreamingController {
 
     @Autowired
     private StockServiceImpl stockService;
+
+    @Autowired
+    NotificationService notificationService;
 
     // 상태값이 0인 스트리밍 조회 (StreamingDTO로 반환)
     @GetMapping("/available")
@@ -50,7 +54,10 @@ public class StreamingController {
 
             streaming.getFarmerUser().setUserSeq(farmerSeq);
             streaming.setState(2);
-            streamingService.save(streaming);
+            Streaming returnStreaming= streamingService.save(streaming);
+            if(returnStreaming!=null){
+                notificationService.sendMessageToUser(farmerSeq.toString(),"방송 신청이 완료되었습니다.");
+            }
             return ResponseEntity.ok("방송 신청이 완료되었습니다. 승인 대기 중입니다.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("스트리밍을 찾을 수 없습니다.");
@@ -79,8 +86,12 @@ public class StreamingController {
         Streaming streaming = streamingService.findById(id);
         if (streaming != null) {
             streaming.setState(1); // 상태를 사용 중으로 변경
-            streamingService.save(streaming);
+            Streaming returnStream= streamingService.save(streaming);
             stockService.approveAllPendingStocks(); // 상품 상태도 승인 처리
+            if(returnStream!=null){
+                notificationService.sendMessageToUser(returnStream.getFarmerUser().getUserSeq().toString(),
+                        "신청하신 방송 1건이 승인완료되었습니다.");
+            }
             return ResponseEntity.ok("방송이 승인되었으며, 관련 상품도 승인되었습니다.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("스트리밍을 찾을 수 없습니다.");

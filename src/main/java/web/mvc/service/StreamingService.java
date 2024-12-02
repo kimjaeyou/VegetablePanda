@@ -14,7 +14,7 @@ public interface     StreamingService {
     Streaming findById(Long id);
 
     // 상태값을 변경하여 스트리밍을 저장하는 메서드
-    void save(Streaming streaming);
+    Streaming save(Streaming streaming);
 
     List<Streaming> findByState(Integer state);
 
