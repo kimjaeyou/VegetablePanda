@@ -20,7 +20,10 @@ public class QaBoardReplyDTO {
         return QaBoardReplyDTO.builder()
                 .replySeq(qaBoardReply.getReplySeq())
                 .comment(qaBoardReply.getComment())
-                .boardNoSeq(qaBoardReply.getQaBoard() != null ? qaBoardReply.getQaBoard().getBoardNoSeq() : null)
+                .boardNoSeq(
+                        qaBoardReply.getQaBoard() != null ?
+                                qaBoardReply.getQaBoard().getBoardNoSeq() : null
+                )
                 .build();
     }
 

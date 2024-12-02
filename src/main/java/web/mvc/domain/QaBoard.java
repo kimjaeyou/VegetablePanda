@@ -40,6 +40,7 @@ public class QaBoard {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)
+    @ToString.Exclude
     private ManagementUser managementUser;
 
 }
