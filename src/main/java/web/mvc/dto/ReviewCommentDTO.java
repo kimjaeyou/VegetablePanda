@@ -43,6 +43,13 @@ public class ReviewCommentDTO {
                 .build();
     }
 
+    public ReviewCommentDTO (Long reviewCommentSeq, String content, Integer score , Long reviewSeq) {
+        this.reviewCommentSeq = reviewCommentSeq;
+        this.content = content;
+        this.score = score;
+        this.reviewSeq = reviewSeq;
+    }
+
     // DTO를 엔티티로 변환하는 메서드
     public ReviewComment toEntity() {
         return ReviewComment.builder()
