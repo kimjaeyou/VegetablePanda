@@ -31,6 +31,12 @@ public class StreamingServiceImpl implements StreamingService {
         return streamingRepository.save(streaming);
     }
 
+    public StreamingDTO findByFarmerSeq(long farmerSeq) {
+        StreamingDTO streamingDTO=streamingRepository.findByUserSeq(farmerSeq);
+        return streamingDTO;
+    }
+
+
     @Override
     public List<Streaming> findByState(Integer state) {
         return streamingRepository.findByState(state);
