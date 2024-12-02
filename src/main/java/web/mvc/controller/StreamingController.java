@@ -130,6 +130,12 @@ public class StreamingController {
                 productName
         );
     }
+    @PostMapping("/streamingData/{seq}")
+    private StreamingDTO getStreamingData(@PathVariable long seq) {
+        System.out.println("Request received: /streamingData/" + seq);
+        StreamingDTO activeStreamings = streamingService.findByFarmerSeq(seq);
+        return activeStreamings;
+    }
 
     // 채팅방 나가기 엔드포인트
     @PostMapping("/exit/{id}")

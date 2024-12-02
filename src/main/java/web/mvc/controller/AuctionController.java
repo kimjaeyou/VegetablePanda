@@ -39,7 +39,7 @@ public class AuctionController {
             redis 등록
          */
         if(result!=null){
-            likeService.getLikeUserSeq(auctionDTO.getAuctionSeq(),auctionDTO.getStockSeq());
+            likeService.getLikeUserSeq(auctionDTO.getStockSeq());
         }
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

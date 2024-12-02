@@ -5,16 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.Shop;
 import web.mvc.domain.Stock;
+import web.mvc.dto.SalesStatisticsDTO;
 import web.mvc.dto.ShopListDTO;
 import web.mvc.dto.StockDTO;
 import web.mvc.repository.ShopRepository;
 import web.mvc.repository.UserBuyDetailRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -60,5 +60,62 @@ public class ShopServiceImpl implements ShopService {
         }
 
         return items;
+    }
+
+    private SalesStatisticsDTO convertToDTO(Object[] result) {
+        return new SalesStatisticsDTO(
+                (String) result[0],           // period (yyyy-MM-dd)
+                (String) result[1],           // productName
+                ((Number) result[2]).longValue(),    // totalSales
+                ((Number) result[3]).longValue(),    // totalQuantity
+                ((Number) result[4]).longValue(),    // totalAmount
+                (String) result[5]            // periodType
+        );
+    }
+
+    @Override
+    public List<SalesStatisticsDTO> getDailySalesStatistics(LocalDateTime startDate, LocalDateTime endDate) {
+        return shopRepository.findDailySalesStatistics(startDate, endDate)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<SalesStatisticsDTO> getWeeklySalesStatistics(LocalDateTime startDate, LocalDateTime endDate) {
+        return shopRepository.findWeeklySalesStatistics(startDate, endDate)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<SalesStatisticsDTO> getMonthlySalesStatistics(LocalDateTime startDate, LocalDateTime endDate) {
+        return shopRepository.findMonthlySalesStatistics(startDate, endDate)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public Map<String, List<SalesStatisticsDTO>> getAllSalesStatistics(
+            LocalDateTime startDate, LocalDateTime endDate) {
+        Map<String, List<SalesStatisticsDTO>> statistics = new HashMap<>();
+
+        statistics.put("daily", getDailySalesStatistics(startDate, endDate));
+        statistics.put("weekly", getWeeklySalesStatistics(startDate, endDate));
+        statistics.put("monthly", getMonthlySalesStatistics(startDate, endDate));
+
+        return statistics;
+    }
+
+    @Override
+    public Map<String, Integer> getPriceStatistics() {
+        Map<String, Integer> priceStats = new HashMap<>();
+
+        Integer yesterdayMax = shopRepository.findYesterdayMaxPrice();
+        Integer weeklyAvg = shopRepository.findWeeklyAveragePrice();
+
+        priceStats.put("yesterdayMaxPrice", yesterdayMax != null ? yesterdayMax : 0);
+        priceStats.put("weeklyAveragePrice", weeklyAvg != null ? weeklyAvg : 0);
+
+        return priceStats;
     }
 }

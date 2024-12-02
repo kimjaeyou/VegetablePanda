@@ -59,10 +59,7 @@ public class BidServiceImpl implements BidService {
 
         bid = bidRepository.save(bid);
         BidDTO newBidderDTO = modelMapper.map(bid, BidDTO.class);
-        if(newBidderTempWallet.getPoint()<newBidderDTO.getPrice()){
-            //오류
-            throw new BidException(ErrorCode.LOW_BID);
-        }
+
         redisTemplate.execute(new SessionCallback<List<Object>>() {
             @Override
             public List<Object> execute(RedisOperations operations) throws DataAccessException {
@@ -102,7 +99,7 @@ public class BidServiceImpl implements BidService {
                     // 변경된 데이터를 Redis 트랜잭션 내에서 저장
                     redisUtils.saveData("userTempWallet:"+newBidderTempWallet.getUserSeq(), newBidderTempWallet);
                     redisUtils.saveData("highestBid:" + highestBid.getAuctionSeq(), highestBid);
-
+                    System.out.println(newBidderTempWallet.getPoint());
                     // 트랜잭션 커밋
                     return operations.exec();
                 } catch (Exception exception) {
@@ -162,7 +159,6 @@ public class BidServiceImpl implements BidService {
 
     // 1.redis에 유저 지갑 임시지갑 존재하는지? ->없으면 userWallet 정보를 userTempWallet에 담아서 redis에 저장
     public UserTempWalletDTO checkUserTempWallet(Long userSeq) {
-        redisUtils.deleteData("userTempWallet:"+userSeq);
         UserTempWalletDTO userTempWallet = redisUtils.getData("userTempWallet:"+userSeq,UserTempWalletDTO.class).orElseGet(()-> {
             System.out.println("유저 가상 정보가 없어요~");
             UserWallet userWallet = walletRepository.findByUserSeq(userSeq);
