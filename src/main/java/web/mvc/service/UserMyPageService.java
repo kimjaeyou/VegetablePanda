@@ -33,4 +33,15 @@ public interface UserMyPageService {
     // 경매 내역 조회
     List<BidAuctionDTO> auctionList(Long seq);
 
+    // 좋아요 목록
+    List<LikeDTO> likeList(Long seq);
+
+    // 좋아요 취소
+    String likeDelete(Long seq,Long likeSeq);
+
+    // 구독 목록
+    List<UserLikeDTO> userLikeList(Long seq);
+
+    // 구독취소
+    String userLikeDelete(Long seq, Long userLikeSeq);
 }

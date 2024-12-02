@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.FarmerUser;
 import web.mvc.domain.ManagementUser;
+import web.mvc.domain.Stock;
 import web.mvc.dto.*;
 import web.mvc.repository.*;
 
@@ -28,6 +29,7 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
     private final ManagementRepository managementRepository;
     private final S3ImageService s3ImageService;
     private final FileRepository fileRepository;
+    private final StockRepository stockRepository;
 
     @Override
     public List<UserBuyDTO> saleList(Long seq) {
@@ -102,4 +104,9 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
             }
             }
         }
+
+    @Override
+    public List<Stock> productList(Long seq) {
+        return stockRepository.selectProductList(seq);
     }
+}

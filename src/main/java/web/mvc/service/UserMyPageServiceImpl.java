@@ -22,11 +22,11 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final BuyMyPageRepository buyMyPageRepository;
     private final UserMyPageRepository userMyPageRepository;
     private final UserRepository userRepository;
-    private final ManagementRepository managementRepository;
     private final ReviewRepository reviewRepository;
     private final BidRepository bidRepository;
     private final WalletRepository walletRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LikeRepository likeRepository;
 
     /**
      * 주문내역
@@ -52,13 +52,13 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     @Modifying
     @Override
     public User update(GetAllUserDTO getAllUserDTO, Long seq) {
-        String name= getAllUserDTO.getName();
+        String name = getAllUserDTO.getName();
         String pw = passwordEncoder.encode(getAllUserDTO.getPw());
         String address = getAllUserDTO.getAddress();
         String phone = getAllUserDTO.getPhone();
         String email = getAllUserDTO.getEmail();
         String gender = getAllUserDTO.getGender();
-        userMyPageRepository.updateUser(pw, name,email,phone, address,gender, seq);
+        userMyPageRepository.updateUser(pw, name, email, phone, address, gender, seq);
         return userRepository.findByUserSeq(seq);
     }
 
@@ -99,8 +99,52 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public List<BidAuctionDTO> auctionList(Long seq) {
-        List<BidAuctionDTO> list = bidRepository.auctionList(seq);
-        log.info("BidAuctionDTO={}", list);
-        return list;
+        return bidRepository.auctionList(seq);
+    }
+
+
+    /**
+     * 좋아요 상품 목록
+     */
+    @Override
+    public List<LikeDTO> likeList(Long seq) {
+//        return likeRepository.likeList(seq);
+        return null;
+    }
+
+    /**
+     * 좋아요 취소
+     */
+    @Override
+    public String likeDelete(Long seq, Long likeSeq) {
+        int i = likeRepository.likeDelete(seq, likeSeq);
+
+        if (i > 0) {
+            return "ok";
+        } else {
+            return "no";
+        }
+    }
+
+    /**
+     * 구독 목록
+     */
+    @Override
+    public List<UserLikeDTO> userLikeList(Long seq) {
+        return null;
+    }
+
+    /**
+     * 구독취소
+     */
+    @Override
+    public String userLikeDelete(Long seq, Long userLikeSeq) {
+        int i = 0;
+
+        if (i > 0) {
+            return "ok";
+        } else {
+            return "no";
+        }
     }
 }

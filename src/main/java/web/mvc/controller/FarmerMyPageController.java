@@ -29,7 +29,6 @@ public class FarmerMyPageController {
     @GetMapping("/saleList/{seq}")
     public ResponseEntity<List<UserBuyDTO>> saleList(@PathVariable Long seq) {
         List<UserBuyDTO> list = farmerMyPageService.saleList(seq);
-        log.info("UserBuyDTO = {}", list);
         return ResponseEntity.ok(list);
     }
 
@@ -108,8 +107,15 @@ public class FarmerMyPageController {
     @PostMapping("/calculate/{seq}")
     public void settle(@PathVariable Long seq, @RequestBody CalculateDTO calculateDTO) {
         List<CalcPoint2> list = calculateDTO.getCalculateDTO();
-        log.info("정산 신청 정보들 = {}", list);
         farmerMyPageService.settle(seq, list);
-        // 실패하면 error 반환, 성공하면 ok 반환
+    }
+
+    /**
+     * 내 상품 목록 보기
+     */
+
+    @GetMapping("/productList/{seq}")
+    public ResponseEntity<?> productList(@PathVariable Long seq) {
+        return new ResponseEntity<>(farmerMyPageService.productList(seq), HttpStatus.OK);
     }
 }

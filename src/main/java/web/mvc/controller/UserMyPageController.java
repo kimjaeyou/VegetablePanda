@@ -130,4 +130,38 @@ public class UserMyPageController {
     public ResponseEntity<List<BidAuctionDTO>> auctionList(@PathVariable Long seq) {
         return new ResponseEntity<> (userMyPageService.auctionList(seq), HttpStatus.OK);
     }
+
+    /**
+     * 상품 좋아요 목록
+     */
+    @GetMapping("/like/{seq}")
+    public ResponseEntity<List<LikeDTO>> likeList(@PathVariable Long seq) {
+        return new ResponseEntity<>( userMyPageService.likeList(seq), HttpStatus.OK);
+    }
+
+    /**
+     * 좋아요 취소
+     */
+    @DeleteMapping("/like/delete/{seq}")
+    public String likeDelete(@PathVariable Long seq, @PathVariable Long likeSeq) {
+
+        return userMyPageService.likeDelete(seq, likeSeq);
+    }
+
+    /**
+     * 판매자 구독 목록
+     */
+    @GetMapping("/userLike/{seq}")
+    public ResponseEntity<?> userLikeList(@PathVariable Long seq) {
+        return new ResponseEntity<>(userMyPageService.userLikeList(seq), HttpStatus.OK);
+
+    }
+    /**
+     * 판매자 구독 취소
+     */
+    @DeleteMapping("/userLike/delete/{seq}")
+    public String userLikeDelete(@PathVariable Long seq, @PathVariable Long userLikeSeq) {
+        return userMyPageService.userLikeDelete(seq, userLikeSeq);
+    }
+
 }

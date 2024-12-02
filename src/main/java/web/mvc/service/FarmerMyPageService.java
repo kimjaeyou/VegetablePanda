@@ -1,6 +1,7 @@
 package web.mvc.service;
 
 import web.mvc.domain.FarmerUser;
+import web.mvc.domain.Stock;
 import web.mvc.dto.*;
 
 import java.util.List;
@@ -27,4 +28,7 @@ public interface FarmerMyPageService {
 
     // 정산 신청
     void settle(Long seq, List<CalcPoint2> list);
+
+    // 내 상품 목록
+    List<Stock> productList (Long seq);
 }
