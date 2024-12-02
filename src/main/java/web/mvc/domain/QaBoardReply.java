@@ -28,7 +28,7 @@ public class QaBoardReply {
     @Column(name = "reg_date", nullable = false)
     private LocalDateTime createTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "board_no_seq", nullable = false)
     @JsonIgnore
     private QaBoard qaBoard;

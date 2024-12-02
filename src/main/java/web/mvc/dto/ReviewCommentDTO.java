@@ -36,7 +36,6 @@ public class ReviewCommentDTO {
                 .score(reviewComment.getScore())
                 .file(reviewComment.getFile())
                 .userId(reviewComment.getManagementUser().getUserSeq())
-                .userId(reviewComment.getManagementUser().getUserSeq())
                 .regDate(reviewComment.getDate())
                 .reviewSeq(reviewComment.getReview().getReviewSeq())
                 .build();

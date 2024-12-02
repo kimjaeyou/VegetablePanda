@@ -11,12 +11,12 @@ public interface QaBoardService {
     /**
      * QA 등록
      * */
-    public QaDTO qaSave(QaDTO qaDTO, MultipartFile image);
+    public QaDTO saveQaBoard(QaBoard qaBoard, MultipartFile file);
 
     /**
      * QA 수정
      */
-    public QaDTO qaUpdate(Long boardNoSeq, QaDTO qaDTO, MultipartFile image, boolean deleteFile);
+    public QaDTO qaUpdate(Long boardNoSeq, QaDTO qaDTO, MultipartFile file, boolean deleteFile);
 
     /**
      * QA 조회

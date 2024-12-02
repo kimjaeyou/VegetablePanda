@@ -3,6 +3,7 @@ package web.mvc.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,29 +27,30 @@ public class QaBoardController {
      * QA 등록
      */
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PostMapping(value = "/", consumes = "multipart/form-data")
+    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> qaSave(
-            @RequestPart("qaBoard") QaDTO qaDTO,
-            @RequestPart(value = "image", required = false) MultipartFile image) {
-        log.info("QA 등록 요청: {}", qaDTO);
+            @RequestPart("qaBoard") QaBoard qaBoard,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+        log.info("QA 등록 요청: {}", qaBoard);
 
-        QaDTO savedQaBoard = qaBoardService.qaSave(qaDTO, image);
+        // 파일 업로드 및 저장 처리
+        QaDTO savedQaBoard = qaBoardService.saveQaBoard(qaBoard, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedQaBoard);
     }
 
     /**
      * QA 수정
      */
-    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping(value = "/{boardNoSeq}", consumes = "multipart/form-data")
     public ResponseEntity<?> qaUpdate(
             @PathVariable Long boardNoSeq,
             @RequestPart("qaBoard") QaDTO qaDTO,
-            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart(value = "file", required = false) MultipartFile file,
             @RequestParam(value = "deleteFile", required = false, defaultValue = "false") boolean deleteFile) {
         log.info("QA 수정 요청: ID={}, 데이터={}", boardNoSeq, qaDTO);
 
-        QaDTO updatedQaBoard = qaBoardService.qaUpdate(boardNoSeq, qaDTO, image, deleteFile);
+        // 파일 업로드 및 수정 처리
+        QaDTO updatedQaBoard = qaBoardService.qaUpdate(boardNoSeq, qaDTO, file, deleteFile);
         return ResponseEntity.ok(updatedQaBoard);
     }
 

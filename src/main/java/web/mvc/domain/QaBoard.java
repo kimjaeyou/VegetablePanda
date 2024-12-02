@@ -25,7 +25,7 @@ public class QaBoard extends QaDTO {
     @Column(name = "subject", nullable = false, length = 45)
     private String subject;
 
-    @Column(name = "content", nullable = false, length = 500)
+    @Column(name = "content", nullable = false, length = 500, columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "readnum", nullable = false, length = 45)
@@ -36,10 +36,10 @@ public class QaBoard extends QaDTO {
     private LocalDateTime regDate;
 
     @OneToOne
-    @JoinColumn(name = "file_seq", nullable = true)
+    @JoinColumn(name = "file_seq")
     private File file;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinColumn(name = "user_seq", nullable = false)
     @ToString.Exclude
     private ManagementUser managementUser;
