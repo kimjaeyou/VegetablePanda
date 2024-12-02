@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Likes, Long> {
     //@Query("SELECT new web.mvc.dto.LikeDTO(l.likeSeq )from Likes l")
-//List<LikeDTO> likeList(Long seq);
+    //List<LikeDTO> likeList(Long seq);
 
     @Modifying
     @Query("DELETE from Likes l where l.likeSeq = ?1 ")
