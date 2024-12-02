@@ -105,8 +105,5 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
             }
         }
 
-    @Override
-    public List<Stock> productList(Long seq) {
-        return stockRepository.selectProductList(seq);
-    }
+
 }

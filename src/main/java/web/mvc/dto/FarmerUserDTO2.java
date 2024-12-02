@@ -21,6 +21,7 @@ public class FarmerUserDTO2 {
     private LocalDateTime regDate;
     private String account;
     private String path;
+    private String intro;
 
     public FarmerUserDTO2(Long userSeq,
                           String farmerId,
@@ -32,6 +33,7 @@ public class FarmerUserDTO2 {
                           String grade,
                           LocalDateTime regDate,
                           String account,
+                          String intro,
                           String path) {
         this.userSeq = userSeq;
         this.farmerId = farmerId;
@@ -43,6 +45,7 @@ public class FarmerUserDTO2 {
         this.grade = grade;
         this.regDate = regDate;
         this.account = account;
+        this.intro = intro;
         this.path = path;
     }
 }

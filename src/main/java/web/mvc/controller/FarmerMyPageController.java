@@ -109,13 +109,4 @@ public class FarmerMyPageController {
         List<CalcPoint2> list = calculateDTO.getCalculateDTO();
         farmerMyPageService.settle(seq, list);
     }
-
-    /**
-     * 내 상품 목록 보기
-     */
-
-    @GetMapping("/productList/{seq}")
-    public ResponseEntity<?> productList(@PathVariable Long seq) {
-        return new ResponseEntity<>(farmerMyPageService.productList(seq), HttpStatus.OK);
-    }
 }

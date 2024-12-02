@@ -14,8 +14,10 @@ public interface FarmerMyPageRepository extends JpaRepository<FarmerUser, Long> 
 
     // 수정할 회원정보 조회 값 출력
     @Query("select new web.mvc.dto.FarmerUserDTO2(" +
-            "u.userSeq, u.farmerId, u.name, u.email,u.code, u.address, u.phone, u.farmerGrade.gradeContent, u.regDate,   u.account, f.path) " +
-            "from FarmerUser u LEFT JOIN File f ON u.farmerId = f.name where u.userSeq = ?1")
+            "u.userSeq, u.farmerId, u.name, u.email,u.code, u.address, u.phone, u.farmerGrade.gradeContent, u.regDate, u.account, r.intro, f.path) " +
+            "from FarmerUser u JOIN File f ON u.farmerId = f.name " +
+            "JOIN Review r on r.managementUser.userSeq = u.userSeq " +
+            "where u.userSeq = ?1")
     FarmerUserDTO2 selectUser(Long seq);
 
     //회원 탈퇴
