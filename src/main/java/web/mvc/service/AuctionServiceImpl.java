@@ -58,6 +58,8 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     public Auction insertAuction(AuctionDTO auction,int price) {
         log.info("insert auction ServiceImpl");
+
+
         Auction saveAc = Auction.builder()
                 .stock(stockRepository.findById(auction.getStockSeq()).orElse(null))
                 .closeTime(LocalDateTime.   parse(auction.getCloseTime(), FORMATTER))

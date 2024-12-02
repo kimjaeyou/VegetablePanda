@@ -26,6 +26,7 @@ public class AuctionController {
     private final ModelMapper modelMapper;
     private final BidService bidService;
     private final UserBuyService userBuyService;
+    private final LikeService likeService;
 
 
     // 경매등록
@@ -37,7 +38,9 @@ public class AuctionController {
         /*
             redis 등록
          */
-
+        if(result!=null){
+            likeService.getLikeUserSeq(auctionDTO.getAuctionSeq(),auctionDTO.getStockSeq());
+        }
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

@@ -69,9 +69,4 @@ public class RedisConfig {
         return container;
     }
 
-    @Bean
-    public MessageListenerAdapter messageListener() {
-        System.out.println("여기야 redis");
-        return new MessageListenerAdapter(new RedisSubscriber());
-    }
 }
