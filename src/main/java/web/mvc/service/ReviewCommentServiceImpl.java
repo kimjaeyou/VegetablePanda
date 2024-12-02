@@ -27,33 +27,25 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     private final ReviewRepository reviewRepository;
     private final S3ImageService s3ImageService;
 
-    private Review findReviewById(Long reviewSeq) {
-        return reviewRepository.findById(reviewSeq)
-                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
-    }
-
-    private ReviewComment findCommentById(Long reviewCommentSeq) {
-        return reviewCommentRepository.findById(reviewCommentSeq)
-                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_REPLY));
-    }
-
     /**
      * 댓글 등록
      */
     @Override
     public ReviewCommentDTO reviewCommentSave(Long reviewSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile image) {
-        if (reviewCommentDTO == null) {
-            throw new IllegalArgumentException("ReviewCommentDTO cannot be null");
-        }
 
+        // 리뷰 정보 가져오기
+        Review review = findReviewById(reviewSeq);
+
+        // DTO -> 엔티티 변환
         ReviewComment reviewComment = reviewCommentDTO.toEntity();
-        reviewComment.setReview(findReviewById(reviewSeq));
+        reviewComment.setReview(review);
 
         // 파일 업로드 처리
         if (image != null && !image.isEmpty()) {
             reviewComment.setFile(uploadFileToS3(image));
         }
 
+        // 댓글 저장
         ReviewComment savedComment = reviewCommentRepository.save(reviewComment);
         return ReviewCommentDTO.fromEntity(savedComment);
     }
@@ -63,31 +55,31 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
      */
     @Override
     public ReviewCommentDTO reviewCommentUpdate(Long reviewSeq, Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile image, boolean deleteFile) {
-        if (reviewCommentDTO == null) {
-            throw new IllegalArgumentException("ReviewCommentDTO cannot be null");
+
+        // 기존 댓글 및 리뷰 정보 가져오기
+        ReviewComment existingComment = findCommentById(reviewCommentSeq);
+        Review review = findReviewById(reviewSeq);
+
+        // 파일 삭제 요청 처리
+        if (deleteFile && existingComment.getFile() != null) {
+            deleteFileFromS3(existingComment.getFile());
+            existingComment.setFile(null);
         }
 
-        ReviewComment comment = findCommentById(reviewCommentSeq);
-
-        // 파일 삭제 처리
-        if (deleteFile && comment.getFile() != null) {
-            deleteFileFromS3(comment.getFile());
-            comment.setFile(null);
-        }
-
-        // 파일 업로드 처리
+        // 새로운 파일 업로드 처리
         if (image != null && !image.isEmpty()) {
-            if (comment.getFile() != null) {
-                deleteFileFromS3(comment.getFile());
+            if (existingComment.getFile() != null) {
+                deleteFileFromS3(existingComment.getFile());
             }
-            comment.setFile(uploadFileToS3(image));
+            existingComment.setFile(uploadFileToS3(image));
         }
 
-        // 댓글 내용 수정
-        comment.setContent(reviewCommentDTO.getContent());
-        comment.setScore(reviewCommentDTO.getScore());
+        // 댓글 내용 및 평점 수정
+        existingComment.setContent(reviewCommentDTO.getContent());
+        existingComment.setScore(reviewCommentDTO.getScore());
+        existingComment.setReview(review);
 
-        ReviewComment updatedComment = reviewCommentRepository.save(comment);
+        ReviewComment updatedComment = reviewCommentRepository.save(existingComment);
         return ReviewCommentDTO.fromEntity(updatedComment);
     }
 
@@ -127,7 +119,23 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
             deleteFileFromS3(comment.getFile());
         }
 
-        reviewCommentRepository.deleteById(comment.getReviewCommentSeq());
+        reviewCommentRepository.deleteById(reviewCommentSeq);
+    }
+
+    /**
+     * 리뷰 ID로 조회
+     */
+    private Review findReviewById(Long reviewSeq) {
+        return reviewRepository.findById(reviewSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+    }
+
+    /**
+     * 댓글 ID로 조회
+     */
+    private ReviewComment findCommentById(Long reviewCommentSeq) {
+        return reviewCommentRepository.findById(reviewCommentSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_REPLY));
     }
 
     /**
@@ -143,7 +151,11 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
      * S3에서 파일 삭제
      */
     private void deleteFileFromS3(File file) {
-        s3ImageService.deleteImageFromS3(file.getPath());
-        log.info("File deleted successfully: {}", file.getPath());
+        try {
+            s3ImageService.deleteImageFromS3(file.getPath());
+            log.info("File deleted successfully: {}", file.getPath());
+        } catch (Exception e) {
+            log.error("File deletion failed: {}", e.getMessage());
+        }
     }
 }
