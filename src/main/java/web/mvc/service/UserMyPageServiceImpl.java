@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import web.mvc.domain.Bid;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
-import web.mvc.dto.ReviewCommentDTO;
-import web.mvc.dto.UserBuyDTO;
-import web.mvc.dto.UserDTO;
-import web.mvc.dto.UserUpdateDTO;
+import web.mvc.dto.*;
 import web.mvc.repository.*;
 
 import java.util.List;
@@ -25,24 +22,19 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final BuyMyPageRepository buyMyPageRepository;
     private final UserMyPageRepository userMyPageRepository;
     private final UserRepository userRepository;
-    private final ManagementRepository managementRepository;
     private final ReviewRepository reviewRepository;
     private final BidRepository bidRepository;
     private final WalletRepository walletRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LikeRepository likeRepository;
 
     /**
      * 주문내역
      */
     @Override
     public List<UserBuyDTO> buyList(Long seq) {
-        /**
-         * 일단 user_buy 테이블에서 유저시퀀스가 맞는 데이터를 찾는다.
-         * 근데 여기서 user_buy랑 user_buy_detail이랑 조인해서 해당되는 값들을 List에 담아서 가져가자
-         * 아마 보여줄것들이
-         * 시퀀스값이랑, 가격, 상품명, 구매날짜,,, 이정도,,,?
-         */
-        return buyMyPageRepository.selectAll(seq);
+        Integer state = 1;
+        return buyMyPageRepository.select(seq, state);
     }
 
     /**
@@ -50,48 +42,33 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public UserDTO selectUser(Long seq) {
-        User user = userMyPageRepository.selectUser(seq);
-
-        // 기존 UserDTO 사용
-        UserDTO userDTO = UserDTO.builder()
-                .userSeq(user.getUserSeq())
-                .id(user.getId())
-                .name(user.getName())
-                .address(user.getAddress())
-                .phone(user.getPhone())
-                .email(user.getEmail())
-                .build();
-
-        return userDTO;
+        UserDTO user = userMyPageRepository.selectUser(seq);
+        return user;
     }
 
     /**
      * 회원정보 수정
      */
+    @Modifying
     @Override
-    @Transactional
-    public void update(UserUpdateDTO userUpdateDTO, Long seq) {
-        User user = userRepository.findById(seq)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        if (userUpdateDTO.getPassword() != null && !userUpdateDTO.getPassword().isEmpty()) {
-            user.setPw(passwordEncoder.encode(userUpdateDTO.getPassword()));
-        }
-        user.setName(userUpdateDTO.getName());
-        user.setAddress(userUpdateDTO.getAddress());
-        user.setPhone(userUpdateDTO.getPhone());
-        user.setEmail(userUpdateDTO.getEmail());
-
-        userRepository.save(user);
+    public User update(GetAllUserDTO getAllUserDTO, Long seq) {
+        String name = getAllUserDTO.getName();
+        String pw = passwordEncoder.encode(getAllUserDTO.getPw());
+        String address = getAllUserDTO.getAddress();
+        String phone = getAllUserDTO.getPhone();
+        String email = getAllUserDTO.getEmail();
+        String gender = getAllUserDTO.getGender();
+        userMyPageRepository.updateUser(pw, name, email, phone, address, gender, seq);
+        return userRepository.findByUserSeq(seq);
     }
 
     /**
-     * 회원정보 탈퇴..? 정지라고 하자
+     * 탈퇴
      */
     @Override
-    public void delete(Long seq) {
+    public int delete(Long seq) {
         int i = userMyPageRepository.delete(seq);
-        log.info("i = {}",i);
+        return i;
     }
 
     // 포인트 조회
@@ -105,10 +82,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public List<ReviewCommentDTO> review(Long seq) {
-        // 처음에 유저 시퀀스에 해당하는 review 시퀀스를 가져오자
         Long reviewSeq = reviewRepository.selectSeq(seq);
-
-        // 그럼 그 리뷰 시퀀스에 해당하는 리뷰들을 가져오자
         return reviewRepository.review(reviewSeq);
     }
 
@@ -118,16 +92,59 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     @Override
     public void deleteReview(Long reviewSeq, Long userSeq) {
         int no = reviewRepository.deleteReview(reviewSeq, userSeq);
-        log.info("no = {}",no);
     }
 
     /**
      * 경매 참여한 내역을 조회
-     * 그러면 일단 먼저 시퀀스로 값을 찾아서 목록 가져오기?
      */
     @Override
-    public List<Bid> auctionList(Long seq) {
-        List <Bid> list = bidRepository.auctionList(seq);
-        return list;
+    public List<BidAuctionDTO> auctionList(Long seq) {
+        return bidRepository.auctionList(seq);
+    }
+
+
+    /**
+     * 좋아요 상품 목록
+     */
+    @Override
+    public List<LikeDTO> likeList(Long seq) {
+//        return likeRepository.likeList(seq);
+        return null;
+    }
+
+    /**
+     * 좋아요 취소
+     */
+    @Override
+    public String likeDelete(Long seq, Long likeSeq) {
+        int i = likeRepository.likeDelete(seq, likeSeq);
+
+        if (i > 0) {
+            return "ok";
+        } else {
+            return "no";
+        }
+    }
+
+    /**
+     * 구독 목록
+     */
+    @Override
+    public List<UserLikeDTO> userLikeList(Long seq) {
+        return null;
+    }
+
+    /**
+     * 구독취소
+     */
+    @Override
+    public String userLikeDelete(Long seq, Long userLikeSeq) {
+        int i = 0;
+
+        if (i > 0) {
+            return "ok";
+        } else {
+            return "no";
+        }
     }
 }

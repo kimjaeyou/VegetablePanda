@@ -6,9 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import web.mvc.domain.File;
 import web.mvc.dto.GetAllUserDTO;
 import web.mvc.security.CustomMemberDetails;
+import web.mvc.service.FileService;
 import web.mvc.service.MemberService;
+import web.mvc.service.S3ImageService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,23 +23,19 @@ import java.util.Map;
 @Tag(name = "MemberController API", description = "Security Swagger 테스트용  API")
 public class MemberController {
     private final MemberService memberService;
-
-    @GetMapping("/test")
-    public String test() {
-        log.info("test 요청");
-        return "test";
-    }
+    private final FileService fileService;
+    private final S3ImageService s3ImageService;
 
     @GetMapping("/members/{id}")
     public String duplicateIdCheck(@PathVariable String id) {
-        log.info("id={}",id);
         return memberService.duplicateCheck(id);
     }
 
     @PostMapping("/members")
-    public String signUp(@RequestBody GetAllUserDTO user) {
+    public String signUp( @RequestPart("userData") GetAllUserDTO user, @RequestPart(value = "image", required = false) MultipartFile image) {
         log.info("user={}",user);
-        memberService.signUp(user);
+
+        memberService.signUp(user, image);
         return "ok";
     }
     //추가한 부분

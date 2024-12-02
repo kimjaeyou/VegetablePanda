@@ -16,8 +16,17 @@ public interface CompanyUserRepository extends JpaRepository<CompanyUser, Long> 
     CompanyUser find(Long seq);
 
     @Modifying
-    @Query("update CompanyUser u set u.email=:email , u.pw=:pw , u.address=:addr, u.phone=:phone where u.userSeq = :seq")
-    int updateUser(@Param("pw") String pw , @Param("addr")  String addr, @Param("phone") String phone, @Param("email")  String email, Long seq);
+    @Query("update CompanyUser u set u.comName=:comName , u.ownerName=:ownerName , u.regName=:regName, u.email=:email, u.code = :code, u.address=:address, u.phone=:phone, u.pw=:pw where u.userSeq = :seq")
+    int updateUser(
+            @Param("comName") String comName,
+            @Param("ownerName") String ownerName,
+            @Param("regName") String regName,
+            @Param("email") String email,
+            @Param("code") String code,
+            @Param("address") String address,
+            @Param("phone") String phone,
+            @Param("pw") String pw ,
+            Long seq);
 
     //회원 탈퇴(그냥 상태값 바꾸는거임.)
     @Modifying

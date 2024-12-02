@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "farmer_user")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -61,17 +62,27 @@ public class FarmerUser {
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
     private List<Likes> likes;
 
+
     @JsonIgnore  // streaming 관계에만 JsonIgnore 추가
     @OneToOne(mappedBy = "farmerUser")
     private Streaming streaming;
 
-    public FarmerUser(Long user_seq,String farmerId, String pw,String name,
-                      String address,String code,String account,String phone,
-                      String email,int state,String role) {
-        this.userSeq = user_seq;
+
+    public FarmerUser(Long userSeq,
+                      String farmerId,
+                      String pw,
+                      String name,
+                      String address,
+                      String code,
+                      String account,
+                      String phone,
+                      String email,
+                      int state,
+                      String role) {
+        this.userSeq = userSeq;
         this.farmerId = farmerId;
-        this.name = name;
         this.pw = pw;
+        this.name = name;
         this.address = address;
         this.code = code;
         this.account = account;
@@ -82,6 +93,7 @@ public class FarmerUser {
         this.farmerGrade = new FarmerGrade(0L);
         this.regDate = LocalDateTime.now();
     }
+
     public FarmerUser (long farmerSeq){
         this.userSeq = farmerSeq;
     }

@@ -5,6 +5,7 @@ import web.mvc.domain.CompanyUser;
 import web.mvc.domain.ReviewComment;
 import web.mvc.domain.User;
 import web.mvc.dto.CompanyDTO;
+import web.mvc.dto.GetAllUserDTO;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.UserBuyDTO;
 
@@ -12,29 +13,13 @@ import java.util.List;
 
 public interface CompanyMyPageService {
 
-    // 주문내역 조회
-    List<UserBuyDTO> buyList(Long seq);
-
     // 회원정보 출력
-    CompanyUser selectUser(Long seq);
+    CompanyDTO selectUser(Long seq);
 
     // 회원정보 수정
-    void update (CompanyUser companyUser, Long seq);
+    CompanyUser update (GetAllUserDTO getAllUserDTO, Long seq);
 
     // 회원정보 탈퇴
-    void delete (Long seq);
+    int delete (Long seq);
 
-    // 포인트 조회
-    int point(Long seq);
-
-    // 리뷰 조회
-    List<ReviewCommentDTO> review(Long seq);
-
-    // 리뷰 삭제
-    void deleteReview(Long ReviewSeq,Long userSeq);
-
-    // 경매 내역 조회
-    List<Bid> auctionList(Long seq);
-
-    CompanyDTO selectCompany(Long seq);
 }

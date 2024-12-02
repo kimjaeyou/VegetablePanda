@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -31,5 +32,9 @@ public class FarmerGrade {
 
     public FarmerGrade(Long farmerGrade) {
         this.farmerGradeSeq =farmerGrade;
+    }
+    @Override
+    public String toString() {
+        return gradeContent;
     }
 }

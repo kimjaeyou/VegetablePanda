@@ -2,7 +2,6 @@ package web.mvc.dto;
 
 import lombok.*;
 import web.mvc.domain.ReviewComment;
-
 import java.time.LocalDateTime;
 
 @Data
@@ -15,8 +14,8 @@ public class ReviewCommentDTO {
     private Long reviewCommentSeq;
     private String content;
     private Integer score;
-    private String file; // File 경로 정보만 포함
-    private Long userId; //유저의 ID만 포함
+    private String file;
+    private Long userId;
     private LocalDateTime date;
     private Long reviewSeq;
 
