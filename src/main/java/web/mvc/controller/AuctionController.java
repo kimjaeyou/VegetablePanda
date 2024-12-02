@@ -10,13 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.Auction;
-import web.mvc.dto.AuctionDTO;
-import web.mvc.dto.AuctionStatusDTO;
-import web.mvc.dto.GarakTotalCost;
-import web.mvc.dto.HighestBidDTO;
-import web.mvc.service.AuctionService;
-import web.mvc.service.BidService;
+import web.mvc.dto.*;
+import web.mvc.service.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,6 +25,10 @@ public class AuctionController {
     private final AuctionService auctionService;
     private final ModelMapper modelMapper;
     private final BidService bidService;
+    private final UserBuyService userBuyService;
+    private final LikeService likeService;
+
+
     // 경매등록
     @PostMapping("/auction")
     public ResponseEntity<?> register(@RequestBody AuctionDTO auctionDTO, @RequestParam int price) {
@@ -37,7 +38,9 @@ public class AuctionController {
         /*
             redis 등록
          */
-
+        if(result!=null){
+            likeService.getLikeUserSeq(auctionDTO.getAuctionSeq(),auctionDTO.getStockSeq());
+        }
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -80,12 +83,25 @@ public class AuctionController {
         return ResponseEntity.ok(auctionService.getCurrentAuctions());
     }
 
-    @GetMapping("/testApi")
-    public void testApi(HttpServletRequest req) {
+    @GetMapping("/price/{productName}")
+    public ResponseEntity<List<GarakTotalCost>> testApi(HttpServletRequest req,@PathVariable String productName) {
         ServletContext app = req.getServletContext();
         List<GarakTotalCost> dto=(List<GarakTotalCost>)app.getAttribute("garakData");
-        System.out.println(dto);
+        List<GarakTotalCost> saveCost = new ArrayList<>();
+        for(GarakTotalCost garakTotalCost:dto){
+            if(garakTotalCost.getGarak_name().equals(productName)) {
+                saveCost.add(garakTotalCost);
+            }
+        }
+        return new ResponseEntity<>(saveCost, HttpStatus.CREATED);
     }
+
+    @GetMapping("/buy/{stockSeq}")
+    public ResponseEntity<List<UserBuyListByStockDTO>> buyList(HttpServletRequest req, @PathVariable Long stockSeq) {
+        List<UserBuyListByStockDTO> userBuyListByStockDTOList = userBuyService.geUserBuyListByStockDtos(stockSeq);
+        return new ResponseEntity<>(userBuyListByStockDTOList, HttpStatus.CREATED);
+    }
+
 
 
 }

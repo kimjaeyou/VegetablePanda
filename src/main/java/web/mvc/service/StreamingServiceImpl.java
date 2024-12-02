@@ -27,8 +27,8 @@ public class StreamingServiceImpl implements StreamingService {
     }
 
     @Override
-    public void save(Streaming streaming) {
-        streamingRepository.save(streaming);
+    public Streaming save(Streaming streaming) {
+        return streamingRepository.save(streaming);
     }
 
     @Override

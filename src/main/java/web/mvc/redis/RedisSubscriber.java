@@ -1,11 +1,21 @@
 package web.mvc.redis;
 
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RedisSubscriber {
 
-    public void handleMessage(String message) {
-        System.out.println("Received message: " + message);
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    public RedisSubscriber(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
+    public void sendMessage(String channel, String message) {
+        messagingTemplate.convertAndSend(channel, message);
     }
 }

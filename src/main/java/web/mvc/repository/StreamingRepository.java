@@ -11,15 +11,15 @@ import java.util.List;
 @Repository
 public interface StreamingRepository extends JpaRepository<Streaming, Long> {
 
-    // 상태값이 0인 첫 번째 스트리밍을 찾는 쿼리 메서드
-    Streaming findFirstByState(Integer state);
-
-    @Query("select s from Streaming s where s.state=?1")
+    // 상태값으로 스트리밍 검색
     List<Streaming> findByState(Integer state);
+
+    // 상태값이 0인 첫 번째 스트리밍 찾기
+    Streaming findFirstByState(Integer state);
 
     Streaming findByChatRoomId(String chatRoomId);
 
 
-    @Query("select new web.mvc.dto.StreamingDTO(s.streamingSeq,s.token, s.serverAddress,s.chatUrl,s.chatRoomId,s.playbackUrl,s.state,s.farmerUser.userSeq, st.stockSeq )from Streaming s join Stock st on s.farmerUser.userSeq = st.farmerUser.userSeq where s.state=1 and s.farmerUser.userSeq is not null and st.status=1")
+    @Query("select new web.mvc.dto.StreamingDTO(s.streamingSeq,s.token, s.serverAddress,s.chatUrl,s.chatRoomId,s.playbackUrl,s.state,s.farmerUser.userSeq, st.stockSeq, st.product.productName)from Streaming s join Stock st on s.farmerUser.userSeq = st.farmerUser.userSeq where s.state=1 and s.farmerUser.userSeq is not null and st.status=1")
     List<StreamingDTO> streaming();
 }

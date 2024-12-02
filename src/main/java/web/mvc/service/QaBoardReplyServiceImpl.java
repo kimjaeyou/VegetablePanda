@@ -28,17 +28,14 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
      */
     @Transactional
     @Override
-    public QaBoardReplyDTO saveReply(QaBoardReplyDTO qaBoardReplyDTO) {
-        QaBoard qaBoard = findQaBoardById(qaBoardReplyDTO.getBoardNoSeq());
+    public QaBoardReplyDTO saveReply(Long boardNoSeq, QaBoardReplyDTO qaBoardReplyDTO) {
+        log.info("댓글 등록 요청: boardNoSeq={}, comment={}", boardNoSeq, qaBoardReplyDTO.getComment());
 
-
-
-        QaBoardReply qaBoardReply = QaBoardReply.builder()
-                .comment(qaBoardReplyDTO.getComment())
-                .qaBoard(qaBoard)
-                .build();
-
-        return QaBoardReplyDTO.fromEntity(qaBoardReplyRepository.save(qaBoardReply));
+        QaBoard qaBoard = findQaBoardById(boardNoSeq);
+        QaBoardReply qaBoardReply = qaBoardReplyDTO.toEntity();
+        qaBoardReply.setQaBoard(qaBoard);
+        QaBoardReply savedReply = qaBoardReplyRepository.save(qaBoardReply);
+        return QaBoardReplyDTO.fromEntity(savedReply);
     }
 
     /**
@@ -46,12 +43,15 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
      */
     @Transactional
     @Override
-    public QaBoardReplyDTO updateReply(Long replySeq, QaBoardReplyDTO qaBoardReplyDTO) {
+    public QaBoardReplyDTO updateReply(Long boardNoSeq, Long replySeq, QaBoardReplyDTO qaBoardReplyDTO) {
+        log.info("댓글 수정 요청: boardNoSeq={}, replySeq={}, comment={}", boardNoSeq, replySeq, qaBoardReplyDTO.getComment());
+
         QaBoardReply existingReply = findQaBoardReplyById(replySeq);
 
         existingReply.setComment(qaBoardReplyDTO.getComment());
 
-        return QaBoardReplyDTO.fromEntity(qaBoardReplyRepository.save(existingReply));
+        QaBoardReply updatedReply = qaBoardReplyRepository.save(existingReply);
+        return QaBoardReplyDTO.fromEntity(updatedReply);
     }
 
     /**
@@ -60,6 +60,8 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
     @Transactional(readOnly = true)
     @Override
     public List<QaBoardReplyDTO> findRepliesByBoardId(Long boardNoSeq) {
+        log.info("댓글 조회 요청: boardNoSeq={}", boardNoSeq);
+
         return qaBoardReplyRepository.findAllByQaBoard_BoardNoSeq(boardNoSeq)
                 .stream()
                 .map(QaBoardReplyDTO::fromEntity)
@@ -72,8 +74,9 @@ public class QaBoardReplyServiceImpl implements QaBoardReplyService {
     @Transactional
     @Override
     public String deleteReply(Long replySeq) {
-        QaBoardReply existingReply = findQaBoardReplyById(replySeq);
+        log.info("댓글 삭제 요청: replySeq={}", replySeq);
 
+        QaBoardReply existingReply = findQaBoardReplyById(replySeq);
         qaBoardReplyRepository.delete(existingReply);
         return "댓글이 성공적으로 삭제되었습니다.";
     }

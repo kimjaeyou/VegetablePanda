@@ -2,6 +2,7 @@ package web.mvc.jwt;
 
 import com.google.gson.Gson;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +16,7 @@ import web.mvc.dto.GetAllUserDTO;
 import web.mvc.security.CustomMemberDetails;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 받는 컨트롤러 역할의 필터
@@ -59,7 +57,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         log.info("로그인 성공 ......");
         //UserDetailsS
         CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
-
+        ServletContext app = request.getServletContext();
 
         /*
         하나의 유저가 여러개의 권한을 가질수 있기 때문에 collection으로 반환됨
@@ -87,7 +85,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         map.put("role", user.getRole());
         map.put("phone", user.getPhone());
         map.put("address", user.getAddress());
-
+        Map<Long, Set<Long>> notiUserMap =(Map<Long,Set<Long>>)app.getAttribute("notiUserMap");
+        if(role.equals("ROLE_FARMER")){
+            if(!notiUserMap.containsKey(user.getUserSeq())) {
+                notiUserMap.put(user.getUserSeq(), new HashSet<Long>());
+            }
+        }
         Gson gson= new Gson();
         String arr = gson.toJson(map);
         response.getWriter().print(arr);

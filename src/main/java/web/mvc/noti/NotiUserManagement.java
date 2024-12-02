@@ -6,15 +6,12 @@ import jakarta.servlet.annotation.WebFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @WebFilter
 @Configuration
 public class NotiUserManagement implements ServletContextListener {
-    private final Map<Long,String> notiUserMap = new HashMap<>();
+    private final Map<Long, Set<Long>> notiUserMap = new HashMap<>();
 
     @Override
     public void contextInitialized(ServletContextEvent e) {

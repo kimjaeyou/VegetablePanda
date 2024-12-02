@@ -2,6 +2,7 @@ package web.mvc.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "likes")
@@ -24,10 +25,12 @@ public class Likes {
     private FarmerUser farmerUser;
 
     @Column(name = "state")
+    @ColumnDefault("false")
     private Boolean state;
 
     public Likes(Long userSeq, Long farmerSeq) {
         this.managementUser = new ManagementUser(userSeq);
         this.farmerUser = new FarmerUser(farmerSeq);
+        this.state = true;
     }
 }

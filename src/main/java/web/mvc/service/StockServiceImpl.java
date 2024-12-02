@@ -127,6 +127,11 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    public List<Stock> findStocksByFarmerSeq(Long farmerSeq) {
+        return stockRepository.findByFarmerUserSeq(farmerSeq);
+    }
+
+    @Override
     public List<StockInfoDTO> findStockInfoById(long id) {
 
         return stockRepository.findStockInfoById(id);
