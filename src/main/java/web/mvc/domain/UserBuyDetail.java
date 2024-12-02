@@ -35,4 +35,12 @@ public class UserBuyDetail {
     @OneToOne(mappedBy = "userBuyDetail")
     private ReviewComment reviewComment;
 
+
+    public UserBuyDetail (Long buySeq, int price, int count, Long stockSeq) {
+        this.userBuy = new UserBuy(buySeq);
+        this.price = price;
+        this.count = count;
+        this.stock = new Stock(stockSeq);
+    }
+
 }
