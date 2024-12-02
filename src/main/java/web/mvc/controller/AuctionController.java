@@ -27,6 +27,7 @@ public class AuctionController {
     private final BidService bidService;
     private final UserBuyService userBuyService;
     private final LikeService likeService;
+    private final NotificationService notificationService;
 
 
     // 경매등록
@@ -49,7 +50,11 @@ public class AuctionController {
     @PatchMapping("/auction/{auctionSeq}")
     public ResponseEntity<?> update(@PathVariable Long auctionSeq) {
         log.info("경매 종료~~");
-        auctionService.updateAuction(auctionSeq);
+        int n=auctionService.updateAuction(auctionSeq);
+        if(n==1){
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+            notificationService.sendMessageToTopic("/top/notifications","1");
+        }
         return new ResponseEntity<>("1", HttpStatus.OK);
 
     }
