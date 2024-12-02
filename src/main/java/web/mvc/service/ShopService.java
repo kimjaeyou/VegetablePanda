@@ -2,10 +2,13 @@ package web.mvc.service;
 
 import web.mvc.domain.Shop;
 import web.mvc.domain.Stock;
+import web.mvc.dto.SalesStatisticsDTO;
 import web.mvc.dto.ShopListDTO;
 import web.mvc.dto.StockDTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 
 public interface ShopService {
@@ -24,4 +27,15 @@ public interface ShopService {
     int shopDelete(Long code);
 
     List<ShopListDTO> getAllShopItems(long seq);
+
+    List<SalesStatisticsDTO> getDailySalesStatistics(LocalDateTime startDate, LocalDateTime endDate);
+
+    List<SalesStatisticsDTO> getWeeklySalesStatistics(LocalDateTime startDate, LocalDateTime endDate);
+
+    List<SalesStatisticsDTO> getMonthlySalesStatistics(LocalDateTime startDate, LocalDateTime endDate);
+
+    Map<String, List<SalesStatisticsDTO>> getAllSalesStatistics(
+            LocalDateTime startDate, LocalDateTime endDate);
+
+    Map<String, Integer> getPriceStatistics();
 }
