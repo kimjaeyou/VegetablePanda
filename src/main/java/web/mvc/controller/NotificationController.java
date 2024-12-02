@@ -1,69 +1,45 @@
 package web.mvc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import web.mvc.dto.MessageReq;
-import web.mvc.redis.RedisPublisher;
+import web.mvc.service.NotificationService;
 
-//뺏길떄
-//선호알림
-//시간 알림
 @RestController
-//@CrossOrigin(origins = "http://localhost:5173")
 public class NotificationController {
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private final NotificationService notificationService;
 
     @Autowired
-    private final RedisPublisher redisPublisher;
-
-    public NotificationController(SimpMessagingTemplate messagingTemplate,RedisPublisher redisPublisher) {
-        this.messagingTemplate = messagingTemplate;
-        this.redisPublisher = redisPublisher;
+    public NotificationController(NotificationService notificationService) {
+        this.notificationService = notificationService;
     }
 
+    // /bid topic으로 메시지 전송
     @PostMapping("/send")
     public String sendBidMessage(@RequestBody MessageReq messageRequest) {
-
-        // Publish message to Redis channel
-        redisPublisher.publish("notifications", messageRequest.getMessage());
-
-
-        System.out.println(messageRequest.getMessage());
-        messagingTemplate.convertAndSend("/bid/notifications", messageRequest.getMessage());
-        return "ok";
+        notificationService.sendMessageToTopic("/bid/notifications", messageRequest.getMessage());
+        return "Message sent to /bid/notifications: " + messageRequest.getMessage();
     }
 
-    @PostMapping("/sendNormal")
-    public String sendNormalMessage(@RequestBody MessageReq messageRequest) {
-
-        // Publish message to Redis channel
-        redisPublisher.publish("notifications", messageRequest.getMessage());
-
-        // 메시지를 특정 topic으로 전송
-        System.out.println(messageRequest.getMessage());
-        messagingTemplate.convertAndSend("/topic/notifications", messageRequest.getMessage());
-        return "ok";
+    // /all topic으로 메시지 전송
+    @PostMapping("/sendBidAll")
+    public String sendAllMessage(@RequestBody MessageReq messageRequest) {
+        notificationService.sendMessageToTopic("/all/notifications", messageRequest.getMessage());
+        return "Message sent to /all/notifications: " + messageRequest.getMessage();
     }
 
-
+    // /top topic으로 메시지 전송
     @PostMapping("/sendTop")
     public String sendTopMessage(@RequestBody MessageReq messageRequest) {
-
-        // Publish message to Redis channel
-        redisPublisher.publish("notifications", messageRequest.getMessage());
-
-        // 메시지를 특정 top으로 전송
-        System.out.println(messageRequest.getMessage());
-        messagingTemplate.convertAndSend("/top/notifications", messageRequest.getMessage());
-        return "ok";
+        notificationService.sendMessageToTopic("/top/notifications", messageRequest.getMessage());
+        return "Message sent to /top/notifications: " + messageRequest.getMessage();
     }
 
+    // 특정 사용자에게 메시지 전송
+    @PostMapping("/sendToUser")
+    public String sendToUser(@RequestBody MessageReq messageRequest) {
+        notificationService.sendMessageToUser(messageRequest.getUserId(), messageRequest.getMessage());
+        return "Message sent to user: " + messageRequest.getUserId();
+    }
 }
