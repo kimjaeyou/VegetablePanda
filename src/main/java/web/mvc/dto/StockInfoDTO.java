@@ -14,6 +14,7 @@ public class StockInfoDTO {
     private int count;
     private int color;
 
+    private String productCategoryContent;
     private Long productSeq;
     private String productName;
     private String stockGrade;
@@ -22,17 +23,23 @@ public class StockInfoDTO {
     private Long farmerUserSeq;
     private LocalDateTime regDate;
 
-    private FileDTO fileDTO;
+    private Long fileSeq;
+    private String filePath;
+    private String fileName;
+
+//    private FileDTO fileDTO;
+//    private File file;
 
 //    ProductDTO productDTO;
 //    FarmerUserDTO farmerUserDTO;
 
-    public StockInfoDTO (Long stockSeq, String content, Integer count, Integer color, Long productSeq, String productName, String stockGrade, String stockOrganic,
-                         Long userSeq, Long farmerUserSeq, LocalDateTime regDate, File file) {
+    public StockInfoDTO (Long stockSeq, String content, Integer count, Integer color, String productCategoryContent, Long productSeq, String productName, String stockGrade, String stockOrganic,
+                         Long userSeq, Long farmerUserSeq, LocalDateTime regDate, Long fileSeq, String fileName, String filePath) {
         this.stockSeq = stockSeq;
         this.content = content;
         this.count = count;
         this.color = color;
+        this.productCategoryContent = productCategoryContent;
         this.productSeq = productSeq;
         this.productName = productName;
         this.stockGrade = stockGrade;
@@ -40,6 +47,8 @@ public class StockInfoDTO {
         this.userSeq = userSeq;
         this.farmerUserSeq = farmerUserSeq;
         this.regDate = regDate;
-        this.fileDTO = new FileDTO(file);
+        this.fileSeq = fileSeq;
+        this.fileName = fileName;
+        this.filePath = filePath;
     }
 }
