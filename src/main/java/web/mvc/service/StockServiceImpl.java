@@ -61,6 +61,7 @@ public class StockServiceImpl implements StockService {
     //public Stock updateStock(long farmerUserSeq, int id, Stock stock) {
     public Stock updateStock(long id, Stock stock) {
         log.info("updateStock call... / stock.getStockSeq()={}", stock.getStockSeq());
+        log.info("stock.getStockGrade = {}", stock.getStockGrade().getStockGradeSeq());
 
         // 예외처리 필요
         Stock dbStock = stockRepository.findById(id).orElseThrow(()-> new StockException(ErrorCode.STOCK_UPDATE_FAILED));
@@ -70,12 +71,18 @@ public class StockServiceImpl implements StockService {
         // ProductCategory 넣기
         dbStock.getProduct().setProductCategory(stock.getProduct().getProductCategory());
 
+        // Grade, Organic 변경
+        dbStock.setStockGrade(stock.getStockGrade());
+        dbStock.setStockOrganic(stock.getStockOrganic());
+
+        // File 변경
+        dbStock.getFile().setFileSeq(stock.getFile().getFileSeq());
+
         dbStock.setCount(stock.getCount());
         dbStock.setContent(stock.getContent());
         dbStock.setColor(stock.getColor());
 
-       // stockRepository.save(dbStock);
-        return dbStock;
+        return stockRepository.save(dbStock);
     }
 
     @Override

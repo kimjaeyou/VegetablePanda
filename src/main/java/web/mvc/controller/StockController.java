@@ -87,8 +87,8 @@ public class StockController {
 //        return new ResponseEntity<>(stockDTOList, HttpStatus.OK);
 //    }
 
-    // 상품 조회 (판매자 재고 보기)
-    @GetMapping("/stock/{userSeq}")
+    // 상품 목록 조회 (판매자 재고 보기)
+    @GetMapping("/stock/farmer/{userSeq}")
     public ResponseEntity<?> findStocksById(@PathVariable long userSeq) {
         log.info("상품 목록 조회");
 
@@ -108,12 +108,22 @@ public class StockController {
         return new ResponseEntity<>(stockDTO, HttpStatus.OK);
     }
 
+    // 상품 조회 (stock id에 해당하는 재고)
+    @GetMapping("/stock/{id}")
+    public ResponseEntity<?> findStockById(@PathVariable long id) {
+        log.info("상품 조회");
+        Stock stock = stockService.findStockById(id);
+        StockDTO stockDTO = modelMapper.map(stock, StockDTO.class);
+
+        return new ResponseEntity<>(stockDTO, HttpStatus.OK);
+    }
+
 
 
     // 상품 수정 -> userId와 StockDTO 에 정보를 담아 가져간다
     @PutMapping(value = "/stock", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     //public ResponseEntity<?> updateForm(Integer productCategorySeq, Integer productSeq, Integer stockGradeSeq, Integer stockOrganicSeq, Long farmerUserSeq, @RequestBody StockDTO stockDTO) {
-    public ResponseEntity<?> update(@RequestBody StockDTO stockDTO, @RequestPart(value = "image", required = false) MultipartFile image) {
+    public ResponseEntity<?> update(@RequestPart StockDTO stockDTO, @RequestPart(value = "image", required = false) MultipartFile image) {
         // 값 확인용
         System.out.println(stockDTO.getProductSeq());
         System.out.println(stockDTO.getStockGradeSeq());
@@ -125,6 +135,12 @@ public class StockController {
         Stock dbStock = stockService.findStockById(id);
 //        stockDTO.se
         Stock stock = modelMapper.map(stockDTO, Stock.class);
+
+        stock.setProduct(new Product(stockDTO.getProductSeq()));
+        stock.setStockGrade(new StockGrade(stockDTO.getStockGradeSeq()));
+        stock.setStockOrganic(new StockOrganic(stockDTO.getStockOrganicSeq()));
+        stock.setFarmerUser(new FarmerUser(stockDTO.getUserSeq()));
+        stock.setFile(modelMapper.map(stockDTO.getFile(), File.class));
 
         // 파일 업로드
         if(image != null) {

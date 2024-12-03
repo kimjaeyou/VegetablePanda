@@ -24,6 +24,7 @@ import java.util.Map;
 @RestController()
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/api/payment")
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -76,7 +77,7 @@ public class PaymentController {
     }
 
     // 주문내역에서 결제정보 찾아와 넘겨주기
-    @GetMapping("/payment/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> paymentPage(@PathVariable("id") String orderUid, int status) {
         // 결제정보 불러오기
         log.info("paymentPage");
@@ -86,7 +87,7 @@ public class PaymentController {
     }
 
     // 포인트 결제 검증
-    @PostMapping("/payment/validate")
+    @PostMapping("/validate")
     public ResponseEntity<IamportResponse<Payment>> validatePayment(@RequestBody PaymentReq paymentReq, int status) {
         IamportResponse<Payment> iamportResponse = null;
         if(status == 1) {
