@@ -34,49 +34,53 @@ public class ShopController {
     @GetMapping("/daily")
     public ResponseEntity<List<SalesStatisticsDTO>> getDailySalesStatistics(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+            @RequestParam Long stockSeq) {
 
-        LocalDateTime startDateTime = startDate.atStartOfDay();  // 시작일 00:00:00
-        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);  // 종료일 23:59:59
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
-        return ResponseEntity.ok(shopService.getDailySalesStatistics(startDateTime, endDateTime));
+        return ResponseEntity.ok(shopService.getDailySalesStatistics(startDateTime, endDateTime, stockSeq));
     }
 
     @GetMapping("/weekly")
     public ResponseEntity<List<SalesStatisticsDTO>> getWeeklySalesStatistics(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+            @RequestParam Long stockSeq) {
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
-        return ResponseEntity.ok(shopService.getWeeklySalesStatistics(startDateTime, endDateTime));
+        return ResponseEntity.ok(shopService.getWeeklySalesStatistics(startDateTime, endDateTime, stockSeq));
     }
 
     @GetMapping("/monthly")
     public ResponseEntity<List<SalesStatisticsDTO>> getMonthlySalesStatistics(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+            @RequestParam Long stockSeq) {
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
-        return ResponseEntity.ok(shopService.getMonthlySalesStatistics(startDateTime, endDateTime));
+        return ResponseEntity.ok(shopService.getMonthlySalesStatistics(startDateTime, endDateTime, stockSeq));
     }
 
     @GetMapping("/all")
     public ResponseEntity<Map<String, List<SalesStatisticsDTO>>> getAllSalesStatistics(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+            @RequestParam Long stockSeq) {
 
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
-        return ResponseEntity.ok(shopService.getAllSalesStatistics(startDateTime, endDateTime));
+        return ResponseEntity.ok(shopService.getAllSalesStatistics(startDateTime, endDateTime, stockSeq));
     }
 
     @GetMapping("/price/statistics")
-    public ResponseEntity<Map<String, Integer>> getPriceStatistics() {
-        return ResponseEntity.ok(shopService.getPriceStatistics());
+    public ResponseEntity<Map<String, Integer>> getPriceStatistics(@RequestParam Long stockSeq) {
+        return ResponseEntity.ok(shopService.getPriceStatistics(stockSeq));
     }
 }

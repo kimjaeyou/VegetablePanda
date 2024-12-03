@@ -74,44 +74,47 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<SalesStatisticsDTO> getDailySalesStatistics(LocalDateTime startDate, LocalDateTime endDate) {
-        return shopRepository.findDailySalesStatistics(startDate, endDate)
+    public List<SalesStatisticsDTO> getDailySalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq) {
+        return shopRepository.findDailySalesStatistics(startDate, endDate, stockSeq)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
     @Override
-    public List<SalesStatisticsDTO> getWeeklySalesStatistics(LocalDateTime startDate, LocalDateTime endDate) {
-        return shopRepository.findWeeklySalesStatistics(startDate, endDate)
+    public List<SalesStatisticsDTO> getWeeklySalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq) {
+        return shopRepository.findWeeklySalesStatistics(startDate, endDate, stockSeq)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
     @Override
-    public List<SalesStatisticsDTO> getMonthlySalesStatistics(LocalDateTime startDate, LocalDateTime endDate) {
-        return shopRepository.findMonthlySalesStatistics(startDate, endDate)
+    public List<SalesStatisticsDTO> getMonthlySalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq) {
+        return shopRepository.findMonthlySalesStatistics(startDate, endDate, stockSeq)
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
+
     @Override
     public Map<String, List<SalesStatisticsDTO>> getAllSalesStatistics(
-            LocalDateTime startDate, LocalDateTime endDate) {
+            LocalDateTime startDate, LocalDateTime endDate, Long stockSeq) {
         Map<String, List<SalesStatisticsDTO>> statistics = new HashMap<>();
 
-        statistics.put("daily", getDailySalesStatistics(startDate, endDate));
-        statistics.put("weekly", getWeeklySalesStatistics(startDate, endDate));
-        statistics.put("monthly", getMonthlySalesStatistics(startDate, endDate));
+        statistics.put("daily", getDailySalesStatistics(startDate, endDate, stockSeq));
+        statistics.put("weekly", getWeeklySalesStatistics(startDate, endDate, stockSeq));
+        statistics.put("monthly", getMonthlySalesStatistics(startDate, endDate, stockSeq));
 
         return statistics;
     }
 
     @Override
-    public Map<String, Integer> getPriceStatistics() {
+    public Map<String, Integer> getPriceStatistics(Long stockSeq) {
         Map<String, Integer> priceStats = new HashMap<>();
 
-        Integer yesterdayMax = shopRepository.findYesterdayMaxPrice();
-        Integer weeklyAvg = shopRepository.findWeeklyAveragePrice();
+        Integer yesterdayMax = shopRepository.findYesterdayMaxPrice(stockSeq);
+        Integer weeklyAvg = shopRepository.findWeeklyAveragePrice(stockSeq);
 
         priceStats.put("yesterdayMaxPrice", yesterdayMax != null ? yesterdayMax : 0);
         priceStats.put("weeklyAveragePrice", weeklyAvg != null ? weeklyAvg : 0);

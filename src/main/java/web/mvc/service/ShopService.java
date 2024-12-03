@@ -28,14 +28,10 @@ public interface ShopService {
 
     List<ShopListDTO> getAllShopItems(long seq);
 
-    List<SalesStatisticsDTO> getDailySalesStatistics(LocalDateTime startDate, LocalDateTime endDate);
-
-    List<SalesStatisticsDTO> getWeeklySalesStatistics(LocalDateTime startDate, LocalDateTime endDate);
-
-    List<SalesStatisticsDTO> getMonthlySalesStatistics(LocalDateTime startDate, LocalDateTime endDate);
-
-    Map<String, List<SalesStatisticsDTO>> getAllSalesStatistics(
-            LocalDateTime startDate, LocalDateTime endDate);
-
-    Map<String, Integer> getPriceStatistics();
+    List<SalesStatisticsDTO> getDailySalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq);
+    List<SalesStatisticsDTO> getWeeklySalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq);
+    List<SalesStatisticsDTO> getMonthlySalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq);
+    Map<String, List<SalesStatisticsDTO>> getAllSalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq);
+    Map<String, Integer> getPriceStatistics(Long stockSeq);
 }
+
