@@ -3,6 +3,7 @@ package web.mvc.service;
 import web.mvc.domain.Shop;
 import web.mvc.domain.Stock;
 import web.mvc.dto.SalesStatisticsDTO;
+import web.mvc.dto.ShopLikeDTO;
 import web.mvc.dto.ShopListDTO;
 import web.mvc.dto.StockDTO;
 
@@ -25,6 +26,9 @@ public interface ShopService {
      * 상품 삭제
      * **/
     int shopDelete(Long code);
+
+    void insertShopLike(ShopLikeDTO shopLike);
+
 
     List<ShopListDTO> getAllShopItems(long seq);
 
