@@ -38,6 +38,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
             @Param("endDate") LocalDateTime endDate
     );
 
-    @Query("select new web.mvc.dto.StockInfoDTO(s.stockSeq, s.content, s.count, s.color, s.product.productSeq, s.product.productName, s.stockGrade.grade, s.stockOrganic.organicStatus, s.farmerUser.userSeq, s.farmerUser.userSeq, s.regDate, s.file) from Stock s where s.farmerUser.userSeq = ?1")
+    @Query("select new web.mvc.dto.StockInfoDTO(s.stockSeq, s.content, s.count, s.color, s.product.productCategory.content, s.product.productSeq, s.product.productName, s.stockGrade.grade, s.stockOrganic.organicStatus, s.farmerUser.userSeq, s.farmerUser.userSeq, s.regDate, s.file) from Stock s where s.farmerUser.userSeq = ?1")
     List<StockInfoDTO> findStockInfoById(long id);
 }

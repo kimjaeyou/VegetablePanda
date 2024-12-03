@@ -44,6 +44,12 @@ public class StockServiceImpl implements StockService {
         return stock;    }
 
     @Override
+    public Stock findStockById(long id) {
+        Stock stock = stockRepository.findById(id).orElseThrow(() -> new StockException(ErrorCode.STOCK_NOTFOUND));
+        return stock;
+    }
+
+    @Override
     public List<Stock> findStocksById(long farmerSeq) {
         List<Stock> stockList = stockRepository.findStocksById(farmerSeq);
         log.info("재고 유저 아이디 조회 : {}", stockList.get(0).getFarmerUser().getUserSeq());
