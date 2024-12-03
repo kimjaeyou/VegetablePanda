@@ -11,6 +11,7 @@ import web.mvc.dto.ShopListDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, Long> {
@@ -22,7 +23,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "s.stock.stockOrganic.organicStatus, " +
             "s.stock.file.path)" +
             "FROM Shop s " +
-            "WHERE s.stock.status = 1 " +
+            "WHERE s.stock.status = 3 " +
             "ORDER BY s.insertDate DESC")
     List<ShopListDTO> findAllShopItems();
 
@@ -120,6 +121,6 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
 
 
 
-//    @Query("select ")
-    //List<ShopListDTO> findByUserSeq(long seq);
+    @Query("SELECT s FROM Shop s WHERE s.stock.stockSeq = :stockSeq")
+    Optional<Shop> findByStockSeq(@Param("stockSeq") Long stockSeq);
 }
