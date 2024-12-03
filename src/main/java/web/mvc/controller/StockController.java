@@ -108,6 +108,8 @@ public class StockController {
         return new ResponseEntity<>(stockDTO, HttpStatus.OK);
     }
 
+
+
     // 상품 수정 -> userId와 StockDTO 에 정보를 담아 가져간다
     @PutMapping(value = "/stock", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     //public ResponseEntity<?> updateForm(Integer productCategorySeq, Integer productSeq, Integer stockGradeSeq, Integer stockOrganicSeq, Long farmerUserSeq, @RequestBody StockDTO stockDTO) {
@@ -118,15 +120,17 @@ public class StockController {
         System.out.println(stockDTO.getStockOrganicSeq());
 
         long id = stockDTO.getStockSeq();
-        long fileSeq = stockDTO.getFile().getFileSeq();
+//        long fileSeq = stockDTO.getFile().getFileSeq();
 
+        Stock dbStock = stockService.findStockById(id);
+//        stockDTO.se
         Stock stock = modelMapper.map(stockDTO, Stock.class);
 
         // 파일 업로드
         if(image != null) {
             // 기존 파일 삭제
-            //File dbFile = fileService.findById(fileSeq);
-            File dbFile = stock.getFile();
+            File dbFile = fileService.findById(dbStock.getFile().getFileSeq());
+            dbFile = stock.getFile();
             s3ImageService.deleteImageFromS3(dbFile.getPath());
 
             // 새 파일 업로드
@@ -150,7 +154,6 @@ public class StockController {
         log.info("Stock update : {}", stock);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 
     // 상품 삭제 : 상태값 바꾸기
     @DeleteMapping("/stock/{id}")
@@ -176,7 +179,7 @@ public class StockController {
         return new ResponseEntity<>(modelMapper.map(approvedStock, StockDTO.class), HttpStatus.OK);
     }
 
-    // 재고 개수 수정
+    // 재고 개수 조정
     @PutMapping("/stock/quantity")
     public ResponseEntity<?> changeQuantity(@RequestBody StockQuantityDTO request) {
         log.info("stockSeq : {}", request.getStockSeq());
