@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.dto.SalesStatisticsDTO;
+import web.mvc.dto.ShopLikeDTO;
 import web.mvc.dto.ShopListDTO;
 import web.mvc.service.ShopService;
 
@@ -79,6 +80,11 @@ public class ShopController {
         return ResponseEntity.ok(shopService.getAllSalesStatistics(startDateTime, endDateTime, stockSeq));
     }
 
+    @PostMapping("/api/InsertShopLike")
+    public ResponseEntity<Integer> getShopItemsUser(@RequestBody ShopLikeDTO shopLike) {
+        shopService.insertShopLike(shopLike);
+        return ResponseEntity.ok(0);
+    }
     @GetMapping("/price/statistics")
     public ResponseEntity<Map<String, Integer>> getPriceStatistics(@RequestParam Long stockSeq) {
         return ResponseEntity.ok(shopService.getPriceStatistics(stockSeq));
