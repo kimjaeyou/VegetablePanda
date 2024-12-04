@@ -29,6 +29,11 @@ public class ShopServiceImpl implements ShopService {
     private final UserBuyDetailRepository userBuyDetailRepository;
     private final ShopLikeRepository shopLikeRepository;
 
+    @Override
+    public List<SalesStatisticsDTO> getDailySalesStatistics(LocalDateTime startDate, LocalDateTime endDate) {
+        return List.of();
+    }
+
     @Transactional
     @Override
     public ShopLike getByUserSeqAndStockSeq(Long userSeq, Long shopSeq) {
