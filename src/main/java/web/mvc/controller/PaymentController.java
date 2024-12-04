@@ -85,14 +85,9 @@ public class PaymentController {
     // 주문내역에서 결제정보 찾아와 넘겨주기
     @GetMapping("/{id}")
     public ResponseEntity<?> paymentPage(@PathVariable("id") String orderUid, int status) {
-        log.info("재고 수량 확인");
-        UserBuy userBuy = userBuyService.findByOrderUid(orderUid);
-        List<UserBuyDetail> detailList = userBuy.getUserBuyDetailList();
-        for(UserBuyDetail detail : detailList){
-            int stockCount = detail.getStock().getCount();
-            if(stockCount < detail.getCount()){
-                throw new UserBuyException(ErrorCode.ORDER_FAILED);
-            }
+        // 재고수량 체크
+        if(status == 2) {
+            this.checkStockCount(orderUid);
         }
 
         // 결제정보 불러오기
@@ -117,6 +112,20 @@ public class PaymentController {
         log.info("결제 응답 : {}", iamportResponse.getResponse().toString());
         return new ResponseEntity<>(iamportResponse, HttpStatus.OK);
         // 유저 wallet 정보 or 결제정보 반환
+    }
+
+    // 일반상품 구매 재고수량 확인
+    public void checkStockCount (String orderUid) {
+        log.info("일반상품 구매의 경우 재고 수량 확인");
+        UserBuy userBuy = userBuyService.findByOrderUid(orderUid);
+
+        List<UserBuyDetail> detailList = userBuy.getUserBuyDetailList();
+        for(UserBuyDetail detail : detailList){
+            int stockCount = detail.getStock().getCount();
+            if(stockCount < detail.getCount()){
+                throw new UserBuyException(ErrorCode.ORDER_FAILED);
+            }
+        }
     }
 
 }

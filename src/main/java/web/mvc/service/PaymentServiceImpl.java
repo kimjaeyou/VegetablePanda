@@ -102,6 +102,7 @@ public class PaymentServiceImpl implements PaymentService {
 //                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
 //                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
                         List<String> items = userBuyDetailRepository.findContentByBuySeq(userBuy.get(0).getBuySeq());
+                        log.info("List<String> items : {}", items);
                         requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
                                 .itemName(items.get(0)).paymentPrice((long) (userBuy.get(0).getTotalPrice())).orderUid(orderUid).build();
 
