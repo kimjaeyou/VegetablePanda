@@ -2,6 +2,7 @@ package web.mvc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.FarmerUser;
@@ -64,7 +65,6 @@ public class StreamingController {
         }
     }
 
-
     // 승인 대기 중인 스트리밍 조회 (StreamingDTO로 반환)
     @GetMapping("/pending")
     public ResponseEntity<List<StreamingDTO>> getPendingStreamings() {
@@ -105,6 +105,7 @@ public class StreamingController {
         if (activeStreamings.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+        System.out.println("반환되기 직전");
         return ResponseEntity.ok(activeStreamings);
     }
 
@@ -158,5 +159,9 @@ public class StreamingController {
         }
     }
 
-
+    // 활성 스트리밍 조회 (seq에 맞는 스트리밍 조회) - 윤성
+    @GetMapping("/active-rooms/{seq}")
+    public ResponseEntity<?> streamingRooms(@PathVariable Long seq) {
+        return new ResponseEntity<>(  streamingService.streamingRooms(seq) ,HttpStatus.OK);
+    }
 }

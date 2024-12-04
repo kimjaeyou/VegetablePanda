@@ -48,4 +48,11 @@ public class FarmerUserDTO2 {
         this.intro = intro;
         this.path = path;
     }
+
+    public FarmerUserDTO2 (Long userSeq, String name, String path , String intro) {
+        this.userSeq = userSeq;
+        this.name = name;
+        this.path = path;
+        this.intro = intro;
+    }
 }

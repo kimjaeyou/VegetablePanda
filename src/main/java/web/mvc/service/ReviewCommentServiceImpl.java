@@ -34,15 +34,15 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
      * 댓글 저장
      */
     @Override
-    public ReviewCommentDTO reviewCommentSave(Long reviewSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file) {
+    public ReviewCommentDTO reviewCommentSave(Long reviewSeq, Long userBuyDetailSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
         ManagementUser managementUser = managementRepository.findByUserId(userId);
         if (managementUser == null) throw new DMLException(ErrorCode.NOTFOUND_USER);
 
-        List<UserBuyDetail> userBuyDetails = userBuyDetailRepository.findByUserSeq(managementUser.getUserSeq());
-        if (userBuyDetails.isEmpty()) throw new DMLException(ErrorCode.ORDER_NOTFOUND);
+        UserBuyDetail userBuyDetail = userBuyDetailRepository.findById(userBuyDetailSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.ORDER_NOTFOUND));
 
-        UserBuyDetail userBuyDetail = userBuyDetails.get(0);
         Review review = findReviewById(reviewSeq);
 
         ReviewComment reviewComment = reviewCommentDTO.toEntity();
@@ -50,13 +50,14 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
         reviewComment.setManagementUser(managementUser);
         reviewComment.setUserBuyDetail(userBuyDetail);
 
+        // 파일 처리
         if (file != null && !file.isEmpty()) {
             reviewComment.setFile(uploadFileToS3(file));
         }
 
         return ReviewCommentDTO.fromEntity(reviewCommentRepository.save(reviewComment));
     }
-
+    //댓글 업뎃
     @Override
     public ReviewCommentDTO reviewCommentUpdate(Long reviewSeq, Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file, boolean deleteFile) {
 
@@ -93,7 +94,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 
         return ReviewCommentDTO.fromEntity(reviewCommentRepository.save(existingComment));
     }
-
+    //댓글 사용자 ID로 조회
     @Override
     @Transactional(readOnly = true)
     public List<ReviewCommentDTO> reviewCommentFindAllByUserId(Long userId) {

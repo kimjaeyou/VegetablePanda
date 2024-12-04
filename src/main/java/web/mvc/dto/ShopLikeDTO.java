@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShopLikeDTO {
-
-    private Long shopSeq;
     private Long userSeq;
-    private Boolean liked;
-
+    private Long shopSeq;
 
 }

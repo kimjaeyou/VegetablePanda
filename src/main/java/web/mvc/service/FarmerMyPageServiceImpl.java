@@ -36,7 +36,7 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
         return buyMyPageRepository.selectAll(seq);
     }
 
-    /**
+    /**=2
      * 회원정보 가져오기
      */
     @Override

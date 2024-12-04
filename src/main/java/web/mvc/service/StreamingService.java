@@ -22,4 +22,7 @@ public interface     StreamingService {
 
     List<StreamingDTO> streaming();
 
+    // 윤성
+    List<StreamingDTO> streamingRooms(Long seq);
+
 }
