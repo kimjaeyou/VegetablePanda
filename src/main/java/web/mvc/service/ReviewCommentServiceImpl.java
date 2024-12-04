@@ -2,17 +2,18 @@ package web.mvc.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import web.mvc.domain.File;
-import web.mvc.domain.Review;
-import web.mvc.domain.ReviewComment;
+import web.mvc.domain.*;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
+import web.mvc.repository.ManagementRepository;
 import web.mvc.repository.ReviewCommentRepository;
 import web.mvc.repository.ReviewRepository;
+import web.mvc.repository.UserBuyDetailRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,82 +27,98 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     private final ReviewCommentRepository reviewCommentRepository;
     private final ReviewRepository reviewRepository;
     private final S3ImageService s3ImageService;
+    private final ManagementRepository managementRepository;
+    private final UserBuyDetailRepository userBuyDetailRepository;
 
     /**
-     * 댓글 등록
+     * 댓글 저장
      */
     @Override
-    public ReviewCommentDTO reviewCommentSave(Long reviewSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile image) {
+    public ReviewCommentDTO reviewCommentSave(Long reviewSeq, Long userBuyDetailSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // 리뷰 정보 가져오기
+        ManagementUser managementUser = managementRepository.findByUserId(userId);
+        if (managementUser == null) throw new DMLException(ErrorCode.NOTFOUND_USER);
+
+        UserBuyDetail userBuyDetail = userBuyDetailRepository.findById(userBuyDetailSeq)
+                .orElseThrow(() -> new DMLException(ErrorCode.ORDER_NOTFOUND));
+
         Review review = findReviewById(reviewSeq);
 
-        // DTO -> 엔티티 변환
         ReviewComment reviewComment = reviewCommentDTO.toEntity();
         reviewComment.setReview(review);
+        reviewComment.setManagementUser(managementUser);
+        reviewComment.setUserBuyDetail(userBuyDetail);
 
-        // 파일 업로드 처리
-        if (image != null && !image.isEmpty()) {
-            reviewComment.setFile(uploadFileToS3(image));
+        // 파일 처리
+        if (file != null && !file.isEmpty()) {
+            reviewComment.setFile(uploadFileToS3(file));
         }
 
-        // 댓글 저장
-        ReviewComment savedComment = reviewCommentRepository.save(reviewComment);
-        return ReviewCommentDTO.fromEntity(savedComment);
+        return ReviewCommentDTO.fromEntity(reviewCommentRepository.save(reviewComment));
     }
-
-    /**
-     * 댓글 수정
-     */
+    //댓글 업뎃
     @Override
-    public ReviewCommentDTO reviewCommentUpdate(Long reviewSeq, Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile image, boolean deleteFile) {
+    public ReviewCommentDTO reviewCommentUpdate(Long reviewSeq, Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file, boolean deleteFile) {
 
-        // 기존 댓글 및 리뷰 정보 가져오기
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        ManagementUser managementUser = managementRepository.findByUserId(userId);
+        if (managementUser == null) throw new DMLException(ErrorCode.NOTFOUND_USER);
+
         ReviewComment existingComment = findCommentById(reviewCommentSeq);
         Review review = findReviewById(reviewSeq);
 
-        // 파일 삭제 요청 처리
+        if (!existingComment.getManagementUser().getId().equals(userId)) {
+            throw new DMLException(ErrorCode.NOTFOUND_USER);
+        }
+
+        //파일 삭제
         if (deleteFile && existingComment.getFile() != null) {
             deleteFileFromS3(existingComment.getFile());
             existingComment.setFile(null);
         }
 
         // 새로운 파일 업로드 처리
-        if (image != null && !image.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
+            // 기존 파일 삭제
             if (existingComment.getFile() != null) {
                 deleteFileFromS3(existingComment.getFile());
             }
-            existingComment.setFile(uploadFileToS3(image));
+            // 새 파일 설정
+            existingComment.setFile(uploadFileToS3(file));
         }
 
-        // 댓글 내용 및 평점 수정
         existingComment.setContent(reviewCommentDTO.getContent());
         existingComment.setScore(reviewCommentDTO.getScore());
         existingComment.setReview(review);
 
-        ReviewComment updatedComment = reviewCommentRepository.save(existingComment);
-        return ReviewCommentDTO.fromEntity(updatedComment);
+        return ReviewCommentDTO.fromEntity(reviewCommentRepository.save(existingComment));
     }
-
-    /**
-     * 특정 사용자가 작성한 댓글 조회
-     */
+    //댓글 사용자 ID로 조회
     @Override
     @Transactional(readOnly = true)
     public List<ReviewCommentDTO> reviewCommentFindAllByUserId(Long userId) {
+        log.info("사용자 ID로 댓글 조회: userId={}", userId);
+
         List<ReviewComment> comments = reviewCommentRepository.findAllByManagementUser_UserSeq(userId);
+
+        log.info("조회된 댓글 수: {}", comments.size());
+
         return comments.stream()
                 .map(ReviewCommentDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
     /**
-     * 특정 게시글에 대한 댓글 조회
+     * 특정 리뷰에 대한 댓글 전체 조회
      */
     @Override
     @Transactional(readOnly = true)
     public List<ReviewCommentDTO> reviewCommentFindAllByReviewId(Long reviewSeq) {
         List<ReviewComment> comments = reviewCommentRepository.findAllByReview_ReviewSeq(reviewSeq);
+        if (comments.isEmpty()) {
+            throw new DMLException(ErrorCode.NOTFOUND_REPLY);
+        }
         return comments.stream()
                 .map(ReviewCommentDTO::fromEntity)
                 .collect(Collectors.toList());
@@ -112,9 +129,15 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
      */
     @Override
     public void reviewCommentDelete(Long reviewCommentSeq) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         ReviewComment comment = findCommentById(reviewCommentSeq);
 
-        // 파일 삭제 처리
+        // 댓글 작성자 확인
+        if (!comment.getManagementUser().getId().equals(userId)) {
+            throw new DMLException(ErrorCode.NOTFOUND_USER);
+        }
+
+        // S3에서 파일 삭제
         if (comment.getFile() != null) {
             deleteFileFromS3(comment.getFile());
         }
@@ -123,7 +146,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     }
 
     /**
-     * 리뷰 ID로 조회
+     * 리뷰 ID로 리뷰 조회
      */
     private Review findReviewById(Long reviewSeq) {
         return reviewRepository.findById(reviewSeq)
@@ -131,7 +154,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     }
 
     /**
-     * 댓글 ID로 조회
+     * 댓글 ID로 댓글 조회
      */
     private ReviewComment findCommentById(Long reviewCommentSeq) {
         return reviewCommentRepository.findById(reviewCommentSeq)
@@ -143,7 +166,6 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
      */
     private File uploadFileToS3(MultipartFile image) {
         String uploadedPath = s3ImageService.upload(image);
-        log.info("File uploaded successfully: {}", uploadedPath);
         return new File(uploadedPath, image.getOriginalFilename());
     }
 
@@ -151,11 +173,6 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
      * S3에서 파일 삭제
      */
     private void deleteFileFromS3(File file) {
-        try {
-            s3ImageService.deleteImageFromS3(file.getPath());
-            log.info("File deleted successfully: {}", file.getPath());
-        } catch (Exception e) {
-            log.error("File deletion failed: {}", e.getMessage());
-        }
+        s3ImageService.deleteImageFromS3(file.getPath());
     }
 }

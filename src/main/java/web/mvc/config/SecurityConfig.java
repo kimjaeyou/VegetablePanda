@@ -61,6 +61,7 @@ public class SecurityConfig {
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(3600L);
 
+                        configuration.addExposedHeader("Set-Cookie");
                         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
                         return configuration;
                     }
@@ -81,7 +82,7 @@ public class SecurityConfig {
 
         // 권한 허용 설정
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/index", "/user", "/user/**", "boards","/api/shop/**","/api/**").permitAll()
+                .requestMatchers("/index", "/user", "/user/**", "boards","/api/shop/**","/api/**","/api/cart/**").permitAll()
                 .requestMatchers("/members", "/members/**", "/product/**","/stock", "/stock/**", "/payment/**","/myPage/**").permitAll()
                 .requestMatchers("/swagger-ui", "/swagger-ui/**", "/api/logistics", "/api/swagger-config", "/v3/api-docs/**").permitAll()
                 .requestMatchers("http://openapi.seoul.go.kr:8088/**", "/topic/notifications","/charge").permitAll()

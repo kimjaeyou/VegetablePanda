@@ -12,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.*;
-import web.mvc.dto.AllStockDTO;
-import web.mvc.dto.FarmerUserDTO;
-import web.mvc.dto.StockDTO;
-import web.mvc.dto.StockQuantityDTO;
+import web.mvc.dto.*;
 import web.mvc.service.FileService;
 import web.mvc.service.S3ImageService;
 import web.mvc.service.StockService;
@@ -55,6 +52,7 @@ public class StockController {
             stock.setStockGrade(new StockGrade(stockDTO.getStockGradeSeq()));
             stock.setStockOrganic(new StockOrganic(stockDTO.getStockOrganicSeq()));
             stock.setFarmerUser(new FarmerUser(farmerSeq));
+            stock.setFile(null);
 
             // 파일 업로드
             if(image != null) {
@@ -79,14 +77,25 @@ public class StockController {
     }
 
     // 상품 조회 (판매자 재고 보기)
-    @GetMapping("/stock/{userSeq}")
+//    @GetMapping("/stock/{userSeq}")
+//    public ResponseEntity<?> findStocksById(@PathVariable long userSeq) {
+//        log.info("상품 목록 조회");
+//
+//        List<Stock> stockList = stockService.findStocksById(userSeq);
+//        List<StockDTO> stockDTOList = stockList.stream().map(data -> modelMapper.map(data, StockDTO.class)).toList();
+//        System.out.println("stocklist 값" + stockList);
+//        return new ResponseEntity<>(stockDTOList, HttpStatus.OK);
+//    }
+
+    // 상품 목록 조회 (판매자 재고 보기)
+    @GetMapping("/stock/farmer/{userSeq}")
     public ResponseEntity<?> findStocksById(@PathVariable long userSeq) {
         log.info("상품 목록 조회");
 
-        List<Stock> stockList = stockService.findStocksById(userSeq);
-        List<StockDTO> stockDTOList = stockList.stream().map(data -> modelMapper.map(data, StockDTO.class)).toList();
-        System.out.println("stocklist 값" + stockList);
-        return new ResponseEntity<>(stockDTOList, HttpStatus.OK);
+        List<StockInfoDTO> stockInfoDTOList = stockService.findStockInfoById(userSeq);
+        System.out.println("stocklist 값" + stockInfoDTOList);
+
+        return new ResponseEntity<>(stockInfoDTOList, HttpStatus.OK);
     }
 
     // 상품 조회 (판매자 재고 보기)
@@ -99,25 +108,45 @@ public class StockController {
         return new ResponseEntity<>(stockDTO, HttpStatus.OK);
     }
 
+    // 상품 조회 (stock id에 해당하는 재고)
+    @GetMapping("/stock/{id}")
+    public ResponseEntity<?> findStockById(@PathVariable long id) {
+        log.info("상품 조회");
+        Stock stock = stockService.findStockById(id);
+        StockDTO stockDTO = modelMapper.map(stock, StockDTO.class);
+
+        return new ResponseEntity<>(stockDTO, HttpStatus.OK);
+    }
+
+
+
     // 상품 수정 -> userId와 StockDTO 에 정보를 담아 가져간다
     @PutMapping(value = "/stock", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     //public ResponseEntity<?> updateForm(Integer productCategorySeq, Integer productSeq, Integer stockGradeSeq, Integer stockOrganicSeq, Long farmerUserSeq, @RequestBody StockDTO stockDTO) {
-    public ResponseEntity<?> update(@RequestBody StockDTO stockDTO, @RequestPart(value = "image", required = false) MultipartFile image) {
+    public ResponseEntity<?> update(@RequestPart StockDTO stockDTO, @RequestPart(value = "image", required = false) MultipartFile image) {
         // 값 확인용
         System.out.println(stockDTO.getProductSeq());
         System.out.println(stockDTO.getStockGradeSeq());
         System.out.println(stockDTO.getStockOrganicSeq());
 
         long id = stockDTO.getStockSeq();
-        long fileSeq = stockDTO.getFile().getFileSeq();
+//        long fileSeq = stockDTO.getFile().getFileSeq();
 
+        Stock dbStock = stockService.findStockById(id);
+//        stockDTO.se
         Stock stock = modelMapper.map(stockDTO, Stock.class);
+
+        stock.setProduct(new Product(stockDTO.getProductSeq()));
+        stock.setStockGrade(new StockGrade(stockDTO.getStockGradeSeq()));
+        stock.setStockOrganic(new StockOrganic(stockDTO.getStockOrganicSeq()));
+        stock.setFarmerUser(new FarmerUser(stockDTO.getUserSeq()));
+        stock.setFile(modelMapper.map(stockDTO.getFile(), File.class));
 
         // 파일 업로드
         if(image != null) {
             // 기존 파일 삭제
-            //File dbFile = fileService.findById(fileSeq);
-            File dbFile = stock.getFile();
+            File dbFile = fileService.findById(dbStock.getFile().getFileSeq());
+            dbFile = stock.getFile();
             s3ImageService.deleteImageFromS3(dbFile.getPath());
 
             // 새 파일 업로드
@@ -141,7 +170,6 @@ public class StockController {
         log.info("Stock update : {}", stock);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-
 
     // 상품 삭제 : 상태값 바꾸기
     @DeleteMapping("/stock/{id}")
@@ -167,7 +195,7 @@ public class StockController {
         return new ResponseEntity<>(modelMapper.map(approvedStock, StockDTO.class), HttpStatus.OK);
     }
 
-    // 재고 개수 수정
+    // 재고 개수 조정
     @PutMapping("/stock/quantity")
     public ResponseEntity<?> changeQuantity(@RequestBody StockQuantityDTO request) {
         log.info("stockSeq : {}", request.getStockSeq());

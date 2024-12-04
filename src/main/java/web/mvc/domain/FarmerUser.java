@@ -56,7 +56,7 @@ public class FarmerUser {
     private String role;
 
     @ManyToOne(fetch = FetchType.LAZY)  // Lazy loading을 EAGER로 변경
-    @JoinColumn(name="farmerGradeSeq")
+    @JoinColumn(name="farmer_grade_seq")
     private FarmerGrade farmerGrade;
 
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
@@ -90,7 +90,7 @@ public class FarmerUser {
         this.email = email;
         this.state = state;
         this.role = role;
-        this.farmerGrade = new FarmerGrade(0L);
+        this.farmerGrade = new FarmerGrade(1L);
         this.regDate = LocalDateTime.now();
     }
 

@@ -61,6 +61,7 @@ public class LikeServiceImpl implements LikeService {
                     "관심 설정한"+farmerUser.getName()+"님의 방송이 시작합니다."+
                             "///"+farmerUser.getUserSeq());
         }
+        notificationService.sendMessageToTopic("/top/notifications", "1");
         return userList;
 
     }

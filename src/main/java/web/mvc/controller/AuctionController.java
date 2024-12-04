@@ -27,6 +27,7 @@ public class AuctionController {
     private final BidService bidService;
     private final UserBuyService userBuyService;
     private final LikeService likeService;
+    private final NotificationService notificationService;
 
 
     // 경매등록
@@ -49,7 +50,11 @@ public class AuctionController {
     @PatchMapping("/auction/{auctionSeq}")
     public ResponseEntity<?> update(@PathVariable Long auctionSeq) {
         log.info("경매 종료~~");
-        auctionService.updateAuction(auctionSeq);
+        int n=auctionService.updateAuction(auctionSeq);
+        if(n==1){
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+            notificationService.sendMessageToTopic("/top/notifications","1");
+        }
         return new ResponseEntity<>("1", HttpStatus.OK);
 
     }
@@ -62,8 +67,17 @@ public class AuctionController {
 
     @GetMapping("/auction/{userSeq}")
     public ResponseEntity<?> getAuction(@PathVariable Long userSeq) {
-        AuctionDTO result = modelMapper.map(auctionService.getAuction(userSeq), AuctionDTO.class);
-        HighestBidDTO highestBidDTO = bidService.checkHighestBid(result.getAuctionSeq(),userSeq);
+        Auction result =auctionService.getAuction(userSeq);
+        if(result!=null) {
+            AuctionDTO auctionDTO = AuctionDTO.builder()
+                    .auctionSeq(result.getAuctionSeq())
+                    .count(result.getCount()).stockSeq(result.getStock().getStockSeq())
+                    .closeTime(String.valueOf(result.getCloseTime()))
+                    .status(result.getStatus())
+                    .startTime(String.valueOf(result.getStartTime()))
+                    .build();
+            HighestBidDTO highestBidDTO = bidService.checkHighestBid(result.getAuctionSeq(), userSeq);
+        }
         return new ResponseEntity<>(result, HttpStatus.CREATED);
 
     }
@@ -73,10 +87,14 @@ public class AuctionController {
     public ResponseEntity<?> getHighestBid(@PathVariable Long userSeq) {
         Auction result = auctionService.getAuction(userSeq);
         System.out.println(result.getAuctionSeq());
-        HighestBidDTO highestBidDTO = bidService.getHighestBid(result.getAuctionSeq());
+        HighestBidDTO highestBidDTO = null;
+        if(result!=null) {
+                highestBidDTO = bidService.getHighestBid(result.getAuctionSeq());
+        }
         return new ResponseEntity<>(highestBidDTO, HttpStatus.CREATED);
-
     }
+
+
 
     @GetMapping("/current")
     public ResponseEntity<List<AuctionStatusDTO>> getCurrentAuctions() {

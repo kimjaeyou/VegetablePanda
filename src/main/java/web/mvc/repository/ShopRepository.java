@@ -11,6 +11,7 @@ import web.mvc.dto.ShopListDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, Long> {
@@ -20,9 +21,12 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "s.stock.product.productName, " +
             "s.stock.stockGrade.grade, " +
             "s.stock.stockOrganic.organicStatus, " +
-            "s.stock.file.path)" +
+            "s.stock.file.path," +
+            "s.stock.product.productCategory.content," +
+            "s.stock.farmerUser.name)" +
             "FROM Shop s " +
-            "WHERE s.stock.status = 1 " +
+            "LEFT JOIN s.stock.file " + // file이 없는 경우에도 데이터 포함
+            "WHERE s.stock.status = 3 " +
             "ORDER BY s.insertDate DESC")
     List<ShopListDTO> findAllShopItems();
 
@@ -56,7 +60,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     // 일별 상품별 통계
     @Query(value =
             "SELECT DATE_FORMAT(ub.buy_date, '%Y-%m-%d') as period, " +
-                    "p.product_name as product_name, " +
+                    "MAX(p.product_name) as product_name, " +
                     "COUNT(DISTINCT ub.buy_seq) as total_sales, " +
                     "SUM(ubd.count) as total_quantity, " +
                     "SUM(ubd.price * ubd.count) as total_amount, " +
@@ -67,18 +71,20 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
                     "JOIN product p ON st.product_seq = p.product_seq " +
                     "WHERE ub.buy_date BETWEEN :startDate AND :endDate " +
                     "AND ub.state = 1 " +
-                    "GROUP BY DATE_FORMAT(ub.buy_date, '%Y-%m-%d'), p.product_seq, p.product_name " +
+                    "AND st.product_seq = (SELECT product_seq FROM stock WHERE stock_seq = :stockSeq) " +
+                    "GROUP BY DATE_FORMAT(ub.buy_date, '%Y-%m-%d') " +
                     "ORDER BY period",
             nativeQuery = true)
     List<Object[]> findDailySalesStatistics(
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate
+            @Param("endDate") LocalDateTime endDate,
+            @Param("stockSeq") Long stockSeq
     );
 
     // 주별 상품별 통계
     @Query(value =
             "SELECT DATE_FORMAT(DATE_SUB(ub.buy_date, INTERVAL WEEKDAY(ub.buy_date) DAY), '%Y-%m-%d') as period, " +
-                    "p.product_name as product_name, " +
+                    "MAX(p.product_name) as product_name, " +
                     "COUNT(DISTINCT ub.buy_seq) as total_sales, " +
                     "SUM(ubd.count) as total_quantity, " +
                     "SUM(ubd.price * ubd.count) as total_amount, " +
@@ -89,19 +95,20 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
                     "JOIN product p ON st.product_seq = p.product_seq " +
                     "WHERE ub.buy_date BETWEEN :startDate AND :endDate " +
                     "AND ub.state = 1 " +
-                    "GROUP BY DATE_FORMAT(DATE_SUB(ub.buy_date, INTERVAL WEEKDAY(ub.buy_date) DAY), '%Y-%m-%d'), " +
-                    "p.product_seq, p.product_name " +
+                    "AND st.product_seq = (SELECT product_seq FROM stock WHERE stock_seq = :stockSeq) " +
+                    "GROUP BY DATE_FORMAT(DATE_SUB(ub.buy_date, INTERVAL WEEKDAY(ub.buy_date) DAY), '%Y-%m-%d') " +
                     "ORDER BY period",
             nativeQuery = true)
     List<Object[]> findWeeklySalesStatistics(
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate
+            @Param("endDate") LocalDateTime endDate,
+            @Param("stockSeq") Long stockSeq
     );
 
     // 월별 상품별 통계
     @Query(value =
             "SELECT DATE_FORMAT(ub.buy_date, '%Y-%m-01') as period, " +
-                    "p.product_name as product_name, " +
+                    "MAX(p.product_name) as product_name, " +
                     "COUNT(DISTINCT ub.buy_seq) as total_sales, " +
                     "SUM(ubd.count) as total_quantity, " +
                     "SUM(ubd.price * ubd.count) as total_amount, " +
@@ -112,41 +119,45 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
                     "JOIN product p ON st.product_seq = p.product_seq " +
                     "WHERE ub.buy_date BETWEEN :startDate AND :endDate " +
                     "AND ub.state = 1 " +
-                    "GROUP BY DATE_FORMAT(ub.buy_date, '%Y-%m-01'), p.product_seq, p.product_name " +
+                    "AND st.product_seq = (SELECT product_seq FROM stock WHERE stock_seq = :stockSeq) " +
+                    "GROUP BY DATE_FORMAT(ub.buy_date, '%Y-%m-01') " +
                     "ORDER BY period",
             nativeQuery = true)
     List<Object[]> findMonthlySalesStatistics(
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate
+            @Param("endDate") LocalDateTime endDate,
+            @Param("stockSeq") Long stockSeq
     );
 
-
-
-
+    // 어제 최고가 조회
     @Query(value =
             "SELECT MAX(ubd.price) " +
                     "FROM user_buy ub " +
                     "JOIN user_buy_detail ubd ON ub.buy_seq = ubd.user_buy_seq " +
+                    "JOIN stock st ON ubd.stock_seq = st.stock_seq " +
                     "WHERE DATE(ub.buy_date) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) " +
-                    "AND ub.state = 1",
+                    "AND ub.state = 1 " +
+                    "AND st.product_seq = (SELECT product_seq FROM stock WHERE stock_seq = :stockSeq)",
             nativeQuery = true)
-    Integer findYesterdayMaxPrice();
+    Integer findYesterdayMaxPrice(@Param("stockSeq") Long stockSeq);
 
     // 일주일 평균가 조회
     @Query(value =
             "SELECT ROUND(AVG(ubd.price)) " +
                     "FROM user_buy ub " +
                     "JOIN user_buy_detail ubd ON ub.buy_seq = ubd.user_buy_seq " +
+                    "JOIN stock st ON ubd.stock_seq = st.stock_seq " +
                     "WHERE ub.buy_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) " +
                     "AND ub.buy_date < CURDATE() " +
-                    "AND ub.state = 1",
+                    "AND ub.state = 1 " +
+                    "AND st.product_seq = (SELECT product_seq FROM stock WHERE stock_seq = :stockSeq)",
             nativeQuery = true)
-    Integer findWeeklyAveragePrice();
+    Integer findWeeklyAveragePrice(@Param("stockSeq") Long stockSeq);
 
 
 
 
 
-//    @Query("select ")
-    //List<ShopListDTO> findByUserSeq(long seq);
+    @Query("SELECT s FROM Shop s WHERE s.stock.stockSeq = :stockSeq")
+    Optional<Shop> findByStockSeq(@Param("stockSeq") Long stockSeq);
 }

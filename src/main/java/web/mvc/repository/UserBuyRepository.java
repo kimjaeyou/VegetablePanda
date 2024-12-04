@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface UserBuyRepository extends JpaRepository<UserBuy, Long> {
 
-    @Query("select new web.mvc.dto.UserBuyListByStockDTO(d.price, d.count, b.buyDate, d.stock.product.productName, d.stock.product.productCategory.content, d.stock.stockOrganic.organicStatus, d.stock.stockGrade.grade) from UserBuyDetail d join UserBuy b on b.buySeq = d.userBuySeq where d.stock.stockSeq = ?1 order by b.buyDate DESC ")
+    @Query("select new web.mvc.dto.UserBuyListByStockDTO(d.price, d.count, b.buyDate, d.stock.product.productName, d.stock.product.productCategory.content, d.stock.stockOrganic.organicStatus, d.stock.stockGrade.grade) from UserBuyDetail d join UserBuy b on b.buySeq = d.userBuy.buySeq where d.stock.stockSeq = ?1 order by b.buyDate DESC ")
     public List<UserBuyListByStockDTO> findByStockSeq(Long stockSeq);
 
     @Query(value = "select b from UserBuy b join Payment p on b.payment.id = p.id where b.orderUid = ?1")
