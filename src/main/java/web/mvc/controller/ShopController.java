@@ -2,6 +2,7 @@ package web.mvc.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.dto.SalesStatisticsDTO;
@@ -25,10 +26,9 @@ public class ShopController {
         return ResponseEntity.ok(items);
     }
 
-    @PostMapping("/shop")
-    public ResponseEntity<List<ShopListDTO>> getShopItemsUser(@RequestBody long userSeq) {
-        List<ShopListDTO> items = shopService.getAllShopItems(userSeq);
-        return ResponseEntity.ok(items);
+    @PostMapping("/shop/{seq}")
+    public ResponseEntity<List<ShopListDTO>> getShopItemsUser(@PathVariable Long seq) {
+        return new ResponseEntity <> (shopService.getAllShopItems(seq) , HttpStatus.OK);
     }
 
     @GetMapping("/daily")

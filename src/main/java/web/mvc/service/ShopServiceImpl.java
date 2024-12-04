@@ -49,16 +49,15 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public List<ShopListDTO> getAllShopItems(long seq) {
-        List<ShopListDTO> items=new ArrayList<>();
-        if(seq==0){
+        List<ShopListDTO> items = new ArrayList<>();
+        if(seq > 0){
+            items = shopRepository.findByUserSeq(seq);
+            log.info("item = {}",items);
+        } else {
             items = shopRepository.findAllShopItems();
             log.info("조회된 상품 개수: {}", items.size());
             items.forEach(item -> log.info("상품 정보: {}", item));  // 각 상품 정보 출력
         }
-        else{
-            //items = shopRepository.findByUserSeq(seq);
-        }
-
         return items;
     }
 

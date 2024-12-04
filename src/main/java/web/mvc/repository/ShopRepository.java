@@ -26,6 +26,18 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "ORDER BY s.insertDate DESC")
     List<ShopListDTO> findAllShopItems();
 
+    @Query("SELECT new web.mvc.dto.ShopListDTO(s.shopSeq, s.stock.stockSeq, s.stock.content, " +
+            "s.price, s.stock.count, " +
+            "CAST(s.insertDate AS string), " +
+            "s.stock.product.productName, " +
+            "s.stock.stockGrade.grade, " +
+            "s.stock.stockOrganic.organicStatus, " +
+            "s.stock.file.path)" +
+            "FROM Shop s " +
+            "WHERE s.stock.status = 1  and s.stock.farmerUser.userSeq = ?1 " +
+            "ORDER BY s.insertDate DESC")
+    List<ShopListDTO> findByUserSeq(Long seq);
+
     // 일별 상품별 통계
     @Query(value =
             "SELECT DATE_FORMAT(ub.buy_date, '%Y-%m-%d') as period, " +
