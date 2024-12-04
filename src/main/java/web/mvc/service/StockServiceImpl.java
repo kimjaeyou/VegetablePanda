@@ -9,6 +9,7 @@ import web.mvc.domain.Product;
 import web.mvc.domain.ProductCategory;
 import web.mvc.domain.Stock;
 import web.mvc.dto.AllStockDTO;
+import web.mvc.dto.StockInfoDTO;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.ProductException;
 import web.mvc.exception.StockException;
@@ -43,6 +44,12 @@ public class StockServiceImpl implements StockService {
         return stock;    }
 
     @Override
+    public Stock findStockById(long id) {
+        Stock stock = stockRepository.findById(id).orElseThrow(() -> new StockException(ErrorCode.STOCK_NOTFOUND));
+        return stock;
+    }
+
+    @Override
     public List<Stock> findStocksById(long farmerSeq) {
         List<Stock> stockList = stockRepository.findStocksById(farmerSeq);
         log.info("재고 유저 아이디 조회 : {}", stockList.get(0).getFarmerUser().getUserSeq());
@@ -54,6 +61,7 @@ public class StockServiceImpl implements StockService {
     //public Stock updateStock(long farmerUserSeq, int id, Stock stock) {
     public Stock updateStock(long id, Stock stock) {
         log.info("updateStock call... / stock.getStockSeq()={}", stock.getStockSeq());
+        log.info("stock.getStockGrade = {}", stock.getStockGrade().getStockGradeSeq());
 
         // 예외처리 필요
         Stock dbStock = stockRepository.findById(id).orElseThrow(()-> new StockException(ErrorCode.STOCK_UPDATE_FAILED));
@@ -63,12 +71,18 @@ public class StockServiceImpl implements StockService {
         // ProductCategory 넣기
         dbStock.getProduct().setProductCategory(stock.getProduct().getProductCategory());
 
+        // Grade, Organic 변경
+        dbStock.setStockGrade(stock.getStockGrade());
+        dbStock.setStockOrganic(stock.getStockOrganic());
+
+        // File 변경
+        dbStock.getFile().setFileSeq(stock.getFile().getFileSeq());
+
         dbStock.setCount(stock.getCount());
         dbStock.setContent(stock.getContent());
         dbStock.setColor(stock.getColor());
 
-       // stockRepository.save(dbStock);
-        return dbStock;
+        return stockRepository.save(dbStock);
     }
 
     @Override
@@ -128,5 +142,11 @@ public class StockServiceImpl implements StockService {
     @Override
     public List<Stock> findStocksByFarmerSeq(Long farmerSeq) {
         return stockRepository.findByFarmerUserSeq(farmerSeq);
+    }
+
+    @Override
+    public List<StockInfoDTO> findStockInfoById(long id) {
+
+        return stockRepository.findStockInfoById(id);
     }
 }
