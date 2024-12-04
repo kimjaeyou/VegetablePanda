@@ -33,6 +33,13 @@ public interface ShopService {
 
     List<ShopListDTO> getAllShopItems(long seq);
 
+    // 이것도 윤성이가 씀
+    List<ShopListDTO> getShopItemsUser(long seq);
+
+    // 이것도 윤성이가 씀
+
+
+    List<SalesStatisticsDTO> getDailySalesStatistics(LocalDateTime startDate, LocalDateTime endDate);
     List<SalesStatisticsDTO> getDailySalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq);
     List<SalesStatisticsDTO> getWeeklySalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq);
     List<SalesStatisticsDTO> getMonthlySalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq);
