@@ -19,7 +19,7 @@ public class UserBuyDetailServiceImpl implements UserBuyDetailService {
 
     @Override
     public List<UserBuyDetail> insertUserBuyDetail(List<UserBuyDetail> userBuyDetails) {
-        userBuyDetailRepository.saveAll(userBuyDetails);
-        return List.of();
+        List<UserBuyDetail> list = userBuyDetailRepository.saveAll(userBuyDetails);
+        return list;
     }
 }

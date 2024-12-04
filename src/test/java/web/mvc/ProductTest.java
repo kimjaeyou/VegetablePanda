@@ -76,4 +76,12 @@ public class ProductTest {
         productRepository.save(Product.builder().productCategory(new ProductCategory(1L)).productName("쌀").build());
         productRepository.save(Product.builder().productCategory(new ProductCategory(2L)).productName("상추").build());
     }
+
+    @Test
+    @Disabled
+    public void productAndCategoryTest() {
+        Product product = new Product(1L);
+        ProductCategory productCategory = new ProductCategory(1L);
+//        productCategory.setProducts(new Product(1L));
+    }
 }

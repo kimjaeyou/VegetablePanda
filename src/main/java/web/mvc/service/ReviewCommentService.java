@@ -9,7 +9,7 @@ import java.util.List;
 public interface ReviewCommentService {
 
     // 댓글 등록
-    ReviewCommentDTO reviewCommentSave(Long reviewSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file);
+    ReviewCommentDTO reviewCommentSave(Long reviewSeq, Long userBuyDetailSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file);
 
     // 댓글 수정
     ReviewCommentDTO reviewCommentUpdate(Long reviewSeq, Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file, boolean deleteFile);

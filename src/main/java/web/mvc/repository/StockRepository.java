@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import web.mvc.domain.Stock;
 import web.mvc.dto.AllStockDTO;
+import web.mvc.dto.StockInfoDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,4 +38,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
             @Param("endDate") LocalDateTime endDate
     );
 
+    @Query("select new web.mvc.dto.StockInfoDTO(s.stockSeq, s.content, s.count, s.color, s.product.productCategory.content, s.product.productSeq, s.product.productName, s.stockGrade.grade, s.stockOrganic.organicStatus, s.farmerUser.userSeq, s.farmerUser.userSeq, s.regDate, s.file.fileSeq, s.file.name, s.file.path) from Stock s left join s.file where s.farmerUser.userSeq = ?1")
+    List<StockInfoDTO> findStockInfoById(long id);
 }

@@ -56,7 +56,7 @@ public class Stock {
     private LocalDateTime regDate;
 
     @OneToOne
-    @JoinColumn(name = "file_seq")
+    @JoinColumn(name = "file_seq", nullable = true)
     private File file;
 
     public Stock(Long stockSeq){
