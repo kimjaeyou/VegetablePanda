@@ -73,16 +73,25 @@ public class CartServiceImpl implements CartService {
             for (Cookie cookie : cookies) {
                 if ("cart".equals(cookie.getName())) {
                     try {
+                        // URL 디코딩 후 JSON 파싱
                         String decodedValue = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
-                        return objectMapper.readValue(decodedValue,
+                        System.out.println("디코딩된 쿠키 값: " + decodedValue);
+
+                        // TypeReference를 사용하여 List<CartItemDTO>로 변환
+                        List<CartItemDTO> cartItems = objectMapper.readValue(decodedValue,
                                 new TypeReference<List<CartItemDTO>>() {});
+
+                        System.out.println("파싱된 장바구니 아이템: " + cartItems);
+                        return cartItems;
                     } catch (Exception e) {
-                        // 에러 시 빈 장바구니 반환
+                        System.err.println("쿠키 파싱 실패: " + e.getMessage());
+                        e.printStackTrace();
                         return new ArrayList<>();
                     }
                 }
             }
         }
+        System.out.println("쿠키를 찾을 수 없음");
         return new ArrayList<>();
     }
 
@@ -94,9 +103,22 @@ public class CartServiceImpl implements CartService {
             Cookie cookie = new Cookie("cart", encodedCart);
             cookie.setPath("/");
             cookie.setMaxAge(3 * 24 * 60 * 60);
-            cookie.setHttpOnly(true);
+            cookie.setDomain("");
+            cookie.setSecure(false);
+            cookie.setHttpOnly(false);
+
+            System.out.println("쿠키 생성: " + cookie.getName() + "=" + cookie.getValue());
+            System.out.println("쿠키 도메인: " + cookie.getDomain());
+            System.out.println("쿠키 경로: " + cookie.getPath());
+
             response.addCookie(cookie);
+
+            // CORS 헤더 추가
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+            response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173"); // React 앱 주소
         } catch (Exception e) {
+            System.err.println("쿠키 저장 실패: " + e.getMessage());
+            e.printStackTrace();
             throw new RuntimeException("장바구니 저장 실패", e);
         }
     }
