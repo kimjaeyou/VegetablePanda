@@ -27,7 +27,7 @@ public class ShopLike {
     private ManagementUser managementUser;
 
     @Column(name = "state")
-    @ColumnDefault("false")
+    @ColumnDefault("true")
     private Boolean state;
 
 
