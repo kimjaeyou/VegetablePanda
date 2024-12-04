@@ -106,6 +106,7 @@ public class StreamingController {
         if (activeStreamings.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+        System.out.println("반환되기 직전");
         return ResponseEntity.ok(activeStreamings);
     }
 

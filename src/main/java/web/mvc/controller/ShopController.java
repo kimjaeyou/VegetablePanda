@@ -2,8 +2,10 @@ package web.mvc.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import web.mvc.domain.ShopLike;
 import web.mvc.dto.SalesStatisticsDTO;
 import web.mvc.dto.ShopLikeDTO;
 import web.mvc.dto.ShopListDTO;
@@ -80,11 +82,22 @@ public class ShopController {
         return ResponseEntity.ok(shopService.getAllSalesStatistics(startDateTime, endDateTime, stockSeq));
     }
 
-    @PostMapping("/api/InsertShopLike")
-    public ResponseEntity<Integer> getShopItemsUser(@RequestBody ShopLikeDTO shopLike) {
-        shopService.insertShopLike(shopLike);
-        return ResponseEntity.ok(0);
+    @PostMapping("/insertShopLike")
+    public ResponseEntity<ShopLike> getShopItemsUser(@RequestBody ShopLikeDTO shopLikeDTO) {
+        System.out.println("찜하기");
+        ShopLike shopLikeDo = shopService.getByUserSeqAndStockSeq(shopLikeDTO.getUserSeq(),shopLikeDTO.getShopSeq());
+        if (shopLikeDo == null) {
+            shopService.insertShopLike(shopLikeDTO.getUserSeq(),shopLikeDTO.getShopSeq());
+        }
+        return new ResponseEntity<>(shopLikeDo, HttpStatus.CREATED);
     }
+
+    @GetMapping("/getShopLike")
+    public ResponseEntity<ShopLike> getShopLikeUser(@RequestParam Long userSeq, @RequestParam Long shopSeq) {
+        ShopLike shopLikeDo = shopService.getByUserSeqAndStockSeq(userSeq,shopSeq);
+        return new ResponseEntity<>(shopLikeDo, HttpStatus.CREATED);
+    }
+
     @GetMapping("/price/statistics")
     public ResponseEntity<Map<String, Integer>> getPriceStatistics(@RequestParam Long stockSeq) {
         return ResponseEntity.ok(shopService.getPriceStatistics(stockSeq));
