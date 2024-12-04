@@ -23,10 +23,10 @@ public class NotificationController {
     }
 
     // /all topic으로 메시지 전송
-    @PostMapping("/sendBidAll")
+    @PostMapping("/sendBidEnd")
     public String sendAllMessage(@RequestBody MessageReq messageRequest) {
-        notificationService.sendMessageToTopic("/all/notifications", messageRequest.getMessage());
-        return "Message sent to /all/notifications: " + messageRequest.getMessage();
+        notificationService.sendMessageToTopic("/end/notifications", messageRequest.getMessage());
+        return "Message sent to /end/notifications: " + messageRequest.getMessage();
     }
 
     // /top topic으로 메시지 전송

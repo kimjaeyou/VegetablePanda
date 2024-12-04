@@ -36,7 +36,7 @@ public class ApiDataCofig implements ServletContextListener {
 
 
     private List<row> dataList = new ArrayList<>();
-    private long num;
+    private long num=1;
 
     @Override
     public void contextInitialized(ServletContextEvent e) {
@@ -189,7 +189,7 @@ public class ApiDataCofig implements ServletContextListener {
         List<String> yangSet=Arrays.asList(new String[]{"브로커리","파세리","세러리","기타양채","양상추","양배추","빈스","칼라후라워"});
         List<String> fruitSet=Arrays.asList(new String[]{"대추","감","아보카도","감귤","포도","사과","블루베리",
                 "람부탄","메론","오렌지","배","복숭아","레몬","망고","기타과일","바나나","곶감","용과","유자","키위"});
-
+        List<String> gyunSet=Arrays.asList(new String[]{"땅콩","호두","아몬드","부럼","피스타치오"});
         if(mealSet.contains(name)){
          return 1;
         }else if(yupVeg.contains(name)){
@@ -202,9 +202,11 @@ public class ApiDataCofig implements ServletContextListener {
             return 5;
         } else if (fruitSet.contains(name)) {
             return 6;
+        }else if(gyunSet.contains(name)){
+            return 7;
         }
 
-        return 7;
+        return 8;
     }
 
     public List<GarakTotalCost> calcGarakAvg() throws Exception {

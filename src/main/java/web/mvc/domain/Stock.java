@@ -23,7 +23,7 @@ public class Stock {
     @Column(name = "stock_seq")
     private long stockSeq;
 
-    @Column(name = "content", nullable = false, length = 45)
+    @Column(name = "content", nullable = false, length = 2000)
     private String content;
 
     @Column(name = "count")

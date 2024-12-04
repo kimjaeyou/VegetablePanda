@@ -41,6 +41,7 @@ public class AuctionController {
          */
         if(result!=null){
             likeService.getLikeUserSeq(auctionDTO.getStockSeq());
+            notificationService.sendMessageToTopic("/top/notifications","1");
         }
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -52,8 +53,7 @@ public class AuctionController {
         log.info("경매 종료~~");
         int n=auctionService.updateAuction(auctionSeq);
         if(n==1){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-            notificationService.sendMessageToTopic("/top/notifications","1");
+            notificationService.sendMessageToTopic("/end/notifications","1");
         }
         return new ResponseEntity<>("1", HttpStatus.OK);
 
@@ -68,6 +68,9 @@ public class AuctionController {
     @GetMapping("/auction/{userSeq}")
     public ResponseEntity<?> getAuction(@PathVariable Long userSeq) {
         AuctionDTO result = modelMapper.map(auctionService.getAuction(userSeq), AuctionDTO.class);
+        if(result==null){
+
+        }
         HighestBidDTO highestBidDTO = bidService.checkHighestBid(result.getAuctionSeq(),userSeq);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
 
