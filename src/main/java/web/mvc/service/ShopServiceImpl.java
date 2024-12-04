@@ -61,6 +61,12 @@ public class ShopServiceImpl implements ShopService {
         return items;
     }
 
+    // 이것도 윤성이가 씀
+    @Override
+    public List<ShopListDTO> getShopItemsUser(long seq) {
+        return shopRepository.findLikeItems(seq);
+    }
+
     private SalesStatisticsDTO convertToDTO(Object[] result) {
         return new SalesStatisticsDTO(
                 (String) result[0],           // period (yyyy-MM-dd)

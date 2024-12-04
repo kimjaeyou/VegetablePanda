@@ -26,8 +26,15 @@ public class ShopController {
         return ResponseEntity.ok(items);
     }
 
+    // 윤성이가 씀
     @PostMapping("/shop/{seq}")
     public ResponseEntity<List<ShopListDTO>> getShopItemsUser(@PathVariable Long seq) {
+        return new ResponseEntity <> (shopService.getShopItemsUser(seq) , HttpStatus.OK);
+    }
+
+    // 윤성이가 씀
+    @PostMapping("/shop/select/{seq}")
+    public ResponseEntity<List<ShopListDTO>> getShopItemsUserSelect(@PathVariable Long seq) {
         return new ResponseEntity <> (shopService.getAllShopItems(seq) , HttpStatus.OK);
     }
 
