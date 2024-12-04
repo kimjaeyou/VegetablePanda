@@ -9,16 +9,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.UserBuy;
+import web.mvc.domain.UserBuyDetail;
 import web.mvc.domain.UserCharge;
 import web.mvc.dto.PaymentReq;
 import web.mvc.dto.RequestPayDTO;
 import web.mvc.dto.UserBuyReq;
 import web.mvc.dto.UserChargeDTO;
+import web.mvc.exception.ErrorCode;
+import web.mvc.exception.UserBuyException;
 import web.mvc.service.PaymentService;
+import web.mvc.service.UserBuyService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController()
@@ -28,6 +33,7 @@ import java.util.Map;
 public class PaymentController {
 
     private final PaymentService paymentService;
+    private final UserBuyService userBuyService;
     private final ModelMapper modelMapper;
 
     // API 결제 : 주문 객체를 받아서 결제 진행
@@ -79,6 +85,16 @@ public class PaymentController {
     // 주문내역에서 결제정보 찾아와 넘겨주기
     @GetMapping("/{id}")
     public ResponseEntity<?> paymentPage(@PathVariable("id") String orderUid, int status) {
+        log.info("재고 수량 확인");
+        UserBuy userBuy = userBuyService.findByOrderUid(orderUid);
+        List<UserBuyDetail> detailList = userBuy.getUserBuyDetailList();
+        for(UserBuyDetail detail : detailList){
+            int stockCount = detail.getStock().getCount();
+            if(stockCount < detail.getCount()){
+                throw new UserBuyException(ErrorCode.ORDER_FAILED);
+            }
+        }
+
         // 결제정보 불러오기
         log.info("paymentPage");
         RequestPayDTO requestDTO = paymentService.findRequestDto(orderUid, status);
@@ -86,7 +102,7 @@ public class PaymentController {
         return entity;
     }
 
-    // 포인트 결제 검증
+    // 결제 검증
     @PostMapping("/validate")
     public ResponseEntity<IamportResponse<Payment>> validatePayment(@RequestBody PaymentReq paymentReq, int status) {
         IamportResponse<Payment> iamportResponse = null;

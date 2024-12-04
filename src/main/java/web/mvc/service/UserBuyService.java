@@ -19,4 +19,9 @@ public interface UserBuyService {
      * 주문 삭제
      */
     public int deleteOrder(long userBuySeq);
+
+    /**
+     * 주문번호로 정보 검색
+     */
+    public UserBuy findByOrderUid(String orderUid);
 }

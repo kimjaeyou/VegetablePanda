@@ -53,7 +53,6 @@ public class UserBuyController {
         log.info("UserBuy의 user_seq: {}", userBuy.getManagementUser().getUserSeq());
         System.out.println(userBuy);
 
-        log.info("UserBuyDetail List 정보 {}", userBuy.getUserBuyDetailList().get(0).getUserBuySeq()); // 왜 null이지?
         log.info("Userbuyreq의 userbuydetail 정보 {}", userBuyReq.getUserBuyDetailDTOs());
 
         // 주문 상세 품목 변수 dtoList
@@ -94,5 +93,14 @@ public class UserBuyController {
         }
 
         return new ResponseEntity<>("주문이 삭제되지 않았습니다.", HttpStatus.NOT_FOUND);
+    }
+
+    // 주문 정보 가져오기
+    @PostMapping("/shop/order")
+    public ResponseEntity<?> getOrderInfo(String orderUid) {
+        log.info("주문 정보 가져오기 OrderUid : {}", orderUid);
+        UserBuy userBuy = userBuyService.findByOrderUid(orderUid);
+        UserBuyRes userBuyRes = new UserBuyRes(userBuy);
+        return new ResponseEntity<>(userBuyRes, HttpStatus.OK);
     }
 }
