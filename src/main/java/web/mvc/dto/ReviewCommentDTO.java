@@ -20,13 +20,6 @@ public class ReviewCommentDTO {
     private Long reviewSeq;         // 연결된 리뷰 ID
     private Long userBuyDetailSeq;  // 구매 정보 ID
 
-    public ReviewCommentDTO(Long reviewCommentSeq, String content, Integer score, Long reviewSeq) {
-        this.reviewCommentSeq = reviewCommentSeq;
-        this.content = content;
-        this.score = score;
-        this.reviewSeq = reviewSeq;
-    }
-
 
     // 엔티티를 DTO로 변환하는 정적 메서드
     public static ReviewCommentDTO fromEntity(ReviewComment reviewComment) {
