@@ -3,7 +3,9 @@ package web.mvc.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.Shop;
+import web.mvc.domain.ShopLike;
 import web.mvc.domain.Stock;
 import web.mvc.dto.SalesStatisticsDTO;
 import web.mvc.dto.ShopLikeDTO;
@@ -26,6 +28,16 @@ public class ShopServiceImpl implements ShopService {
     private final ShopRepository shopRepository;
     private final UserBuyDetailRepository userBuyDetailRepository;
     private final ShopLikeRepository shopLikeRepository;
+
+    @Transactional
+    @Override
+    public ShopLike getByUserSeqAndStockSeq(Long userSeq, Long shopSeq) {
+         ShopLike shopLike = shopLikeRepository.findByUserSeqAndShopSeq(userSeq,shopSeq);
+         if(shopLike!=null) {
+             shopLike.setState(!shopLike.getState());
+         }
+         return shopLike;
+    }
 
     public int shopInsert(StockDTO stock) {
         Shop shop = new Shop();
@@ -51,8 +63,8 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public void insertShopLike(ShopLikeDTO shopLike) {
-        shopLikeRepository.insertShopLike(shopLike.getShopSeq(),shopLike.getUserSeq());
+    public void insertShopLike(Long userSeq, Long shopSeq) {
+        shopLikeRepository.insertShopLike(userSeq,shopSeq);
     }
     @Override
     public List<ShopListDTO> getAllShopItems(long seq) {

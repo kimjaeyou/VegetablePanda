@@ -1,6 +1,7 @@
 package web.mvc.service;
 
 import web.mvc.domain.Shop;
+import web.mvc.domain.ShopLike;
 import web.mvc.domain.Stock;
 import web.mvc.dto.SalesStatisticsDTO;
 import web.mvc.dto.ShopLikeDTO;
@@ -27,7 +28,7 @@ public interface ShopService {
      * **/
     int shopDelete(Long code);
 
-    void insertShopLike(ShopLikeDTO shopLike);
+    void insertShopLike(Long userSeq,Long shopSeq);
 
 
     List<ShopListDTO> getAllShopItems(long seq);
@@ -37,5 +38,8 @@ public interface ShopService {
     List<SalesStatisticsDTO> getMonthlySalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq);
     Map<String, List<SalesStatisticsDTO>> getAllSalesStatistics(LocalDateTime startDate, LocalDateTime endDate, Long stockSeq);
     Map<String, Integer> getPriceStatistics(Long stockSeq);
+
+    ShopLike getByUserSeqAndStockSeq(Long userSeq, Long shopSeq);
+
 }
 
