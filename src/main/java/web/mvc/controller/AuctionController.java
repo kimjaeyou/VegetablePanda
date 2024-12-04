@@ -68,9 +68,6 @@ public class AuctionController {
     @GetMapping("/auction/{userSeq}")
     public ResponseEntity<?> getAuction(@PathVariable Long userSeq) {
         AuctionDTO result = modelMapper.map(auctionService.getAuction(userSeq), AuctionDTO.class);
-        if(result==null){
-
-        }
         HighestBidDTO highestBidDTO = bidService.checkHighestBid(result.getAuctionSeq(),userSeq);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
 

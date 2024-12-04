@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/streaming")
 public class StreamingController {
 
+
     @Autowired
     private StreamingServiceImpl streamingService;
 
@@ -151,6 +152,7 @@ public class StreamingController {
 
             // 스트리밍 엔티티 저장
             streamingService.save(streaming);
+            notificationService.sendMessageToTopic("/end/notifications","BroadCastEnd");
 
             return ResponseEntity.ok("채팅방에서 성공적으로 나왔습니다.");
         } else {
