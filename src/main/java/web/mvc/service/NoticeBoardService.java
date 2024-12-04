@@ -1,5 +1,7 @@
 package web.mvc.service;
 
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.NoticeBoard;
 
 import java.util.List;
@@ -9,12 +11,12 @@ public interface NoticeBoardService {
     /**
      * 공지사항 등록
      * */
-    public NoticeBoard noticeSave(NoticeBoard noticeBoard);
+    public NoticeBoard noticeSave(NoticeBoard noticeBoard, MultipartFile image);
 
     /**
      * 공지사항 수정
      * */
-    public NoticeBoard noticeUpdate(Long boardNoSeq, NoticeBoard noticeBoard);
+    public NoticeBoard noticeUpdate(Long boardNoSeq, NoticeBoard noticeBoard, MultipartFile image, boolean deleteFile);
 
     /**
      * 공지사항 조회

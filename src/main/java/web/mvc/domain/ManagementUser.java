@@ -48,6 +48,10 @@ public class ManagementUser {
     @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
     private List<ReviewComment> reviewCommentList;
 
+    @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
+    private List<ShopLike> shopLikes;
+
+
     @OneToOne
     @JoinColumn(name = "file_seq")
     private File file;

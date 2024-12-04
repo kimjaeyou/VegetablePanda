@@ -33,7 +33,7 @@ public class NoticeBoard {
     private LocalDateTime regDate;
 
     @OneToOne
-    @JoinColumn(name = "file_seq", nullable = true)
+    @JoinColumn(name = "file_seq")
     private File file;
 
 

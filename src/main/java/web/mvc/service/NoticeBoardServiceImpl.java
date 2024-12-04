@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import web.mvc.domain.File;
 import web.mvc.domain.NoticeBoard;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
@@ -17,14 +19,22 @@ import java.util.List;
 public class NoticeBoardServiceImpl implements NoticeBoardService {
 
     private final NoticeBoardRepository noticeBoardRepository;
+    private final S3ImageService s3ImageService;
 
     /**
      * 공지사항 등록
      */
     @Override
     @Transactional
-    public NoticeBoard noticeSave(NoticeBoard noticeBoard) {
+    public NoticeBoard noticeSave(NoticeBoard noticeBoard, MultipartFile image) {
         log.info("공지사항 등록 요청: {}", noticeBoard);
+
+        // 파일 업로드 처리
+        if (image != null && !image.isEmpty()) {
+            File uploadedFile = uploadFileToS3(image);
+            noticeBoard.setFile(uploadedFile);
+        }
+
         return noticeBoardRepository.save(noticeBoard);
     }
 
@@ -44,16 +54,29 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
      */
     @Override
     @Transactional
-    public NoticeBoard noticeUpdate(Long boardNoSeq, NoticeBoard noticeBoard) {
-        log.info("공지사항 글번호: ID={}, 내용={}", boardNoSeq, noticeBoard);
+    public NoticeBoard noticeUpdate(Long boardNoSeq, NoticeBoard noticeBoard, MultipartFile image, boolean deleteFile) {
+        log.info("공지사항 수정 요청: ID={}, 내용={}", boardNoSeq, noticeBoard);
 
-        NoticeBoard Notice = noticeBoardRepository.findById(boardNoSeq)
+        NoticeBoard existingNotice = noticeBoardRepository.findById(boardNoSeq)
                 .orElseThrow(() -> new DMLException(ErrorCode.UPDATE_FAILED));
 
-        Notice.setSubject(noticeBoard.getSubject());
-        Notice.setContent(noticeBoard.getContent());
+        // 기존 파일 삭제 처리
+        if (deleteFile && existingNotice.getFile() != null) {
+            deleteFileFromS3(existingNotice.getFile());
+            existingNotice.setFile(null);
+        }
 
-        return noticeBoardRepository.save(Notice);
+        // 새 파일 업로드 처리
+        if (image != null && !image.isEmpty()) {
+            File uploadedFile = uploadFileToS3(image);
+            existingNotice.setFile(uploadedFile);
+        }
+
+        // 공지사항 내용 수정
+        existingNotice.setSubject(noticeBoard.getSubject());
+        existingNotice.setContent(noticeBoard.getContent());
+
+        return noticeBoardRepository.save(existingNotice);
     }
 
     /**
@@ -72,10 +95,15 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
     @Override
     @Transactional
     public String noticeDelete(Long boardNoSeq) {
-        log.info("공지사항 글번호={}", boardNoSeq);
+        log.info("공지사항 삭제 요청: ID={}", boardNoSeq);
 
         NoticeBoard noticeBoard = noticeBoardRepository.findById(boardNoSeq)
                 .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+
+        // 파일 삭제 처리
+        if (noticeBoard.getFile() != null) {
+            deleteFileFromS3(noticeBoard.getFile());
+        }
 
         noticeBoardRepository.delete(noticeBoard);
         log.info("공지사항 삭제 성공: ID={}", boardNoSeq);
@@ -90,5 +118,23 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
 
         ntBoard.setReadnum(ntBoard.getReadnum() + 1);
         return noticeBoardRepository.save(ntBoard);
+    }
+
+
+    /**
+     * 파일 업로드 처리
+     */
+    private File uploadFileToS3(MultipartFile image) {
+        String uploadedImagePath = s3ImageService.upload(image);
+        log.info("File uploaded to S3 - Path: {}", uploadedImagePath);
+        return new File(uploadedImagePath, image.getOriginalFilename());
+    }
+
+    /**
+     * S3에서 파일 삭제
+     */
+    private void deleteFileFromS3(File file) {
+        s3ImageService.deleteImageFromS3(file.getPath());
+        log.info("File deleted from S3 - Path: {}", file.getPath());
     }
 }

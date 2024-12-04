@@ -28,7 +28,7 @@ public class Review {
     @JoinColumn(name = "user_seq", nullable = false)
     private ManagementUser managementUser;
 
-    @OneToMany(mappedBy = "review")
+    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE)
     private List<ReviewComment> reviewComments;
 
     public Review(long management_user,Integer visitNum,String intro) {

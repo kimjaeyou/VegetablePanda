@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "shop")
@@ -28,6 +29,9 @@ public class Shop {
     @Column(name = "insert_date", length = 60)
     private LocalDateTime insertDate;
 
+
+    @OneToMany(mappedBy = "shop",fetch = FetchType.LAZY)
+    private List<ShopLike> shopLikes;
 
     public void setStock(long stockSeq) {
         this.stock = new Stock(stockSeq);

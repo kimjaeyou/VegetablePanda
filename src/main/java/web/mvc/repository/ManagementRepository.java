@@ -26,4 +26,11 @@ public interface ManagementRepository extends JpaRepository<ManagementUser, Long
     @Query("select m from ManagementUser m where m.id=?1") //JPQL문법
     ManagementUser duplicateCheck(String id);
 
+    @Query("select m from ManagementUser m where m.id = ?1")
+    ManagementUser findByUserId(String id);
+
+    @Query("SELECT m.userSeq FROM ManagementUser m WHERE m.id = ?1")
+    Long findUserSeqByUserId(String userId);
+
+
 }

@@ -17,14 +17,4 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
 
-    //private final ReviewRepository reviewRepository;
-
-    /**
-     * 리뷰 페이지 조회
-     * */
-//    @Override
-//    public List<Review> getReviews(ManagementUser managementUser, Review review) {
-//
-//        return reviewRepository.selectSeq();
-//    }
 }
