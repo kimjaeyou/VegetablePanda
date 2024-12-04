@@ -9,6 +9,7 @@ import web.mvc.dto.ProductStatisticsDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Long> {
 
@@ -51,5 +52,12 @@ public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Lo
     List<Object[]> findDailyStats(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
+
     );
+
+    @Query("SELECT ubd FROM UserBuyDetail ubd " +
+            "JOIN ubd.userBuy ub " +
+            "JOIN ub.managementUser mu " +
+            "WHERE mu.userSeq = :userSeq")
+    List<UserBuyDetail> findByUserSeq(@Param("userSeq") Long userSeq);
 }

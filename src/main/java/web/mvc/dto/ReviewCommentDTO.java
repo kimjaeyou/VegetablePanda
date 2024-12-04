@@ -6,8 +6,6 @@ import web.mvc.domain.ReviewComment;
 import java.time.LocalDateTime;
 
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,10 +15,18 @@ public class ReviewCommentDTO {
     private Integer score;          // 평점
     private String filePath;        // 파일 경로
     private String fileName;        // 파일 이름
-    private Long userId;            // 작성자 ID
+    private Long userSeq;            // 작성자 ID
     private LocalDateTime regDate;  // 작성일
     private Long reviewSeq;         // 연결된 리뷰 ID
     private Long userBuyDetailSeq;  // 구매 정보 ID
+
+    public ReviewCommentDTO(Long reviewCommentSeq, String content, Integer score, Long reviewSeq) {
+        this.reviewCommentSeq = reviewCommentSeq;
+        this.content = content;
+        this.score = score;
+        this.reviewSeq = reviewSeq;
+    }
+
 
     // 엔티티를 DTO로 변환하는 정적 메서드
     public static ReviewCommentDTO fromEntity(ReviewComment reviewComment) {
@@ -30,7 +36,7 @@ public class ReviewCommentDTO {
                 .score(reviewComment.getScore())
                 .filePath(reviewComment.getFile() != null ? reviewComment.getFile().getPath() : null)
                 .fileName(reviewComment.getFile() != null ? reviewComment.getFile().getName() : null)
-                .userId(reviewComment.getManagementUser().getUserSeq())
+                .userSeq(reviewComment.getManagementUser().getUserSeq())
                 .regDate(reviewComment.getDate())
                 .reviewSeq(reviewComment.getReview().getReviewSeq())
                 .userBuyDetailSeq(reviewComment.getUserBuyDetail().getUserBuySeq())
