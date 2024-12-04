@@ -5,8 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import web.mvc.domain.Bid;
 import web.mvc.dto.BidAuctionDTO;
-import web.mvc.dto.BidCompanyListDTO;
-import web.mvc.dto.BidUserListDTO;
+import web.mvc.dto.BidListDTO;
 
 import java.util.List;
 
@@ -19,11 +18,13 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
             "WHERE b.managementUser.userSeq = ?1")
     List<BidAuctionDTO> auctionList(Long seq);
 
-    @Query("select new web.mvc.dto.BidUserListDTO(b.price,b.insertDate,u.name) from Bid b left join User u where b.auction.auctionSeq = ?1 and u.userSeq=b.managementUser.userSeq")
-    List<BidUserListDTO> auctionUserBidList(Long seq);
 
-    @Query("select new web.mvc.dto.BidCompanyListDTO(b.price,b.insertDate,c.comName) from Bid b join CompanyUser c on c.userSeq = b.managementUser.userSeq where b.auction.auctionSeq = ?1")
-    List<BidCompanyListDTO> auctionCompanyBidList(Long seq);
+    @Query("select new web.mvc.dto.BidListDTO(b.price,b.insertDate,c.comName) from Bid b left join CompanyUser c on b.auction.auctionSeq = ?1 order by b.insertDate ")
+    List<BidListDTO> auctionCompanyBidList(Long seq);
+
+    @Query("select new web.mvc.dto.BidListDTO(b.price,b.insertDate, u.name) from Bid b left join User u on b.auction.auctionSeq = ?1 order by b.insertDate")
+    List<BidListDTO> auctionUerBidList(Long seq);
+
 
     @Query("SELECT MAX(b.price) FROM Bid b WHERE b.auction.auctionSeq = :auctionSeq")
     Integer findHighestBidPrice(@Param("auctionSeq") Long auctionSeq);

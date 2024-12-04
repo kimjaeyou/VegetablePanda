@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserTempWalletDTO {
     private Long userSeq;
-    private int point;
+    private long point;
     private Long userWalletSeq;
 }

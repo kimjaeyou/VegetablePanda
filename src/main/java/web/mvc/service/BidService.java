@@ -23,8 +23,8 @@ public interface BidService {
 
     HighestBidDTO getHighestBid(Long auctionSeq);
 
-    List<BidCompanyListDTO> getComBids(Long auctionSeq);
+    List<BidListDTO> getComBids(Long auctionSeq);
 
-    List<BidUserListDTO> getUserBids(Long auctionSeq);
+    List<BidListDTO> getUserBids(Long auctionSeq);
 
 }
