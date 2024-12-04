@@ -69,9 +69,8 @@ public class UserBuyServiceImpl implements UserBuyService {
         List<UserBuy> userBuyList = userBuyRepository.findByOrderUid(orderUid);
         if(userBuyList.size() == 1) {
             return userBuyList.get(0);
-        } else if (userBuyList.size() == 0) {
+        } else {
             throw new UserBuyException(ErrorCode.ORDER_NOTFOUND);
         }
-        return null;
     }
 }

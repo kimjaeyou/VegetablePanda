@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.*;
 import web.mvc.dto.UserBuyDetailDTO;
 import web.mvc.dto.UserBuyReq;
@@ -97,9 +94,10 @@ public class UserBuyController {
 
     // 주문 정보 가져오기
     @PostMapping("/shop/order")
-    public ResponseEntity<?> getOrderInfo(String orderUid) {
+    public ResponseEntity<?> getOrderInfo(@RequestParam String orderUid) {
         log.info("주문 정보 가져오기 OrderUid : {}", orderUid);
         UserBuy userBuy = userBuyService.findByOrderUid(orderUid);
+        log.info("userbuy : {}", userBuy);
         UserBuyRes userBuyRes = new UserBuyRes(userBuy);
         return new ResponseEntity<>(userBuyRes, HttpStatus.OK);
     }
