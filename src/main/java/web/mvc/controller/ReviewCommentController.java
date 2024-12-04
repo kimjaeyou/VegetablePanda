@@ -27,19 +27,20 @@ public class ReviewCommentController {
     private final ReviewCommentService reviewCommentService;
     private final ObjectMapper objectMapper;
 
-    /**
-     * 리뷰 댓글 저장
-     */
-    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> reviewCommentSave(
             @RequestParam Long reviewSeq,
+            @RequestParam Long userBuyDetailSeq,
             @RequestPart(value = "reviewCommentDTO", required = true) String reviewCommentDTOJson,
             @RequestPart(value = "image", required = false) MultipartFile file) throws JsonProcessingException {
 
+        // JSON -> DTO 변환
         ReviewCommentDTO reviewCommentDTO = objectMapper.readValue(reviewCommentDTOJson, ReviewCommentDTO.class);
 
-        ReviewCommentDTO savedComment = reviewCommentService.reviewCommentSave(reviewSeq, reviewCommentDTO, file);
+        // 서비스 호출 및 저장
+        ReviewCommentDTO savedComment = reviewCommentService.reviewCommentSave(reviewSeq, userBuyDetailSeq, reviewCommentDTO, file);
+
+        // 저장된 결과 반환
         return ResponseEntity.status(HttpStatus.CREATED).body(savedComment);
     }
 
