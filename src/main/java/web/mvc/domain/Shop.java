@@ -1,5 +1,6 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +30,7 @@ public class Shop {
     @Column(name = "insert_date", length = 60)
     private LocalDateTime insertDate;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "shop",fetch = FetchType.LAZY)
     private List<ShopLike> shopLikes;
 
