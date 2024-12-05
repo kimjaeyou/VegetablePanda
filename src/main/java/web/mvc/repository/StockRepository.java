@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import web.mvc.domain.Stock;
 import web.mvc.dto.AllStockDTO;
 import web.mvc.dto.StockInfoDTO;
+import web.mvc.dto.StockUserSeqDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,4 +44,10 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 
     @Query("select s from Stock s where s.stockSeq=?1 and s.count>=?2")
     Stock checkCount(Long stockSeq,int count);
+
+    @Query("select new web.mvc.dto.StockUserSeqDTO(s.farmerUser.userSeq) from Stock s where s.stockSeq=?1 and s.count<=0")
+    StockUserSeqDTO checkCountZero(Long stockSeq);
+
+    @Query("SELECT s FROM Stock s WHERE s.status in (1,2) AND s.regDate < :yesterday")
+    List<Stock> findStocksBeforeYesterday(@Param("yesterday") LocalDateTime yesterday);
 }
