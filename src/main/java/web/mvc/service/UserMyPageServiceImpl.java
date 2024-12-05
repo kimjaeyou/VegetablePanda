@@ -22,8 +22,8 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final BuyMyPageRepository buyMyPageRepository;
     private final UserMyPageRepository userMyPageRepository;
     private final UserRepository userRepository;
-    private final ReviewRepository reviewRepository;
     private final BidRepository bidRepository;
+    private final ReviewRepository reviewRepository;
     private final WalletRepository walletRepository;
     private final PasswordEncoder passwordEncoder;
     private final LikeRepository likeRepository;
