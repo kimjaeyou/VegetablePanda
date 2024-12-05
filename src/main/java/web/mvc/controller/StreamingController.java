@@ -153,22 +153,9 @@ public class StreamingController {
     @PostMapping("/exit/{id}")
     public ResponseEntity<String> exitStreamingRoom(@PathVariable Long id) {
         // 스트리밍 엔티티를 가져옴
-        Streaming streaming = streamingService.findById(id);
-
+        Streaming streaming = streamingService.exitRoomById(id);
         // 스트리밍 존재 여부 확인
         if (streaming != null) {
-            // FarmerUser 및 상태값 초기화
-            Long farmerSeq = streaming.getFarmerUser().getUserSeq();
-            streaming.setFarmerUser(null);
-            streaming.setState(0);
-
-            // 스트리밍 엔티티 저장
-            streamingService.save(streaming);
-            System.out.println("!!!!!!!!!!!: "+farmerSeq);
-            notificationService.sendMessageTobidUser(farmerSeq.toString(),"방송이 종료되었습니다.");
-            notificationService.sendMessageToTopic("/end/"+farmerSeq.toString()+"/notifications","BroadCastEnd");
-
-
             return ResponseEntity.ok("채팅방에서 성공적으로 나왔습니다.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("스트리밍을 찾을 수 없습니다.");
