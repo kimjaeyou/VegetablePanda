@@ -110,7 +110,9 @@ public class UserBuyController {
     public ResponseEntity<?> getOrderInfo(@RequestParam String orderUid) {
         log.info("주문 정보 가져오기 OrderUid : {}", orderUid);
         UserBuy userBuy = userBuyService.findByOrderUid(orderUid);
+        log.info("주문 상세 품목 정보 가져오기");
         log.info("userbuy : {}", userBuy);
+        log.info("userBuyDetail : {}", userBuy.getUserBuyDetailList().get(0));
         UserBuyRes userBuyRes = new UserBuyRes(userBuy);
         return new ResponseEntity<>(userBuyRes, HttpStatus.OK);
     }
