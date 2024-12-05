@@ -30,6 +30,7 @@ public interface BuyMyPageRepository extends JpaRepository<UserBuy, Long>, JpaSp
    List<UserBuyDTO> selectAll(@Param("userSeq") Long seq);
 
 
+
    // 상태값 판매상태값 바꾸기
    @Modifying
    @Query("update UserBuy b set b.state = ?1 where b.managementUser.userSeq = ?2 and b.buySeq = ?3 ")

@@ -7,7 +7,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class CartItemDTO {
+    private Long userSeq;
     private Long stockSeq;
     private Integer quantity;
     private Integer price;
