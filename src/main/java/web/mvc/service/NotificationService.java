@@ -28,4 +28,10 @@ public class NotificationService {
         redisPublisher.publish("notifications", message); // Redis 발행
         messagingTemplate.convertAndSend("/user/" + userId + "/notifications", message); // 특정 사용자로 전송
     }
+
+    // 방송방 유저 메세지 전송
+    public void sendMessageTobidUser(String userId, String message) {
+        redisPublisher.publish("notifications", message); // Redis 발행
+        messagingTemplate.convertAndSend("/biduser/" + userId + "/notifications", message); // 특정 사용자로 전송
+    }
 }

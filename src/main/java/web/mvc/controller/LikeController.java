@@ -13,8 +13,10 @@ import web.mvc.dto.BidDTO;
 import web.mvc.dto.LikeDTO;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.LikeException;
+import web.mvc.service.BidService;
 import web.mvc.service.LikeService;
 import web.mvc.service.LikeServiceImpl;
+import web.mvc.service.NotificationService;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,12 +24,24 @@ import web.mvc.service.LikeServiceImpl;
 public class LikeController {
     private final LikeService likeService;
     private final LikeServiceImpl likeServiceImpl;
+    private final NotificationService notificationService;
 
     @PostMapping("/likeAction")
     public ResponseEntity<?> likeAction(@RequestBody LikeDTO likeDTO) {
         Likes like=likeService.like(likeDTO);
         if(like==null) {
             throw new LikeException(ErrorCode.LIKE_UPDATE_FAILED);
+        }else{
+            if(like.getState()){
+                notificationService.sendMessageToUser(
+                        like.getManagementUser().getUserSeq().toString(),
+                        "구독 성공 하셨습니다.");
+            }else{
+                notificationService.sendMessageToUser(
+                        like.getManagementUser().getUserSeq().toString(),
+                        "구독 취소 하셨습니다.");
+            }
+
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
