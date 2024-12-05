@@ -96,14 +96,22 @@ public class BidServiceImpl implements BidService {
 
                     highestBid.setPrice(newBidderDTO.getPrice());
 
-
                     highestBid.setUserSeq(newBidderTempWallet.getUserSeq());
                     Optional<User> beforeUserOpt= normalUserRepository.findById(beforeHigh);
-                    User beforeUser = beforeUserOpt.get();
-                    notificationService.sendMessageToUser(beforeHigh.toString(),
-                            beforeUser.getName()+"님\n"+
-                                "최고 입찰자가 변경되었습니다.\n"
-                                +"최고 입찰금액 : "+highestBid.getPrice());
+
+                    beforeUserOpt.ifPresentOrElse(
+                            beforeUser -> {
+                                notificationService.sendMessageToUser(
+                                        beforeHigh.toString(),
+                                        beforeUser.getName()+"님 "+
+                                        "최고 입찰자가 변경되었습니다.\n" +
+                                                "최고 입찰금액 : " + highestBid.getPrice()
+                                );
+                            },
+                            () -> {
+                                System.out.println("해당 ID를 가진 사용자가 존재하지 않습니다: " + beforeHigh);
+                            }
+                    );
 
                     System.out.println("redis에 변경사항 저장");
                     // 변경된 데이터를 Redis 트랜잭션 내에서 저장
