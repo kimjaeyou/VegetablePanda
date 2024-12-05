@@ -161,7 +161,7 @@ public class StreamingController {
             streamingService.save(streaming);
             System.out.println("!!!!!!!!!!!: "+farmerSeq);
             notificationService.sendMessageTobidUser(farmerSeq.toString(),"방송이 종료되었습니다.");
-            notificationService.sendMessageToTopic("/end/notifications","BroadCastEnd");
+            notificationService.sendMessageToTopic("/end/"+farmerSeq.toString()+"/notifications","BroadCastEnd");
 
 
             return ResponseEntity.ok("채팅방에서 성공적으로 나왔습니다.");
