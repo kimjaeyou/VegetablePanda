@@ -148,12 +148,16 @@ public class StreamingController {
         // 스트리밍 존재 여부 확인
         if (streaming != null) {
             // FarmerUser 및 상태값 초기화
+            Long farmerSeq = streaming.getFarmerUser().getUserSeq();
             streaming.setFarmerUser(null);
             streaming.setState(0);
 
             // 스트리밍 엔티티 저장
             streamingService.save(streaming);
+            System.out.println("!!!!!!!!!!!: "+farmerSeq);
+            notificationService.sendMessageTobidUser(farmerSeq.toString(),"방송이 종료되었습니다.");
             notificationService.sendMessageToTopic("/end/notifications","BroadCastEnd");
+
 
             return ResponseEntity.ok("채팅방에서 성공적으로 나왔습니다.");
         } else {
