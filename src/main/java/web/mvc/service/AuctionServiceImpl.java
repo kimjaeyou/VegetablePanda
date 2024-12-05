@@ -282,9 +282,8 @@ public class AuctionServiceImpl implements AuctionService {
 
         }
     }
-
-   // @Scheduled(cron = "0 0 18 * * ?")
-   @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0 18 * * ?")
+   //@Scheduled(cron = "0 * * * * ?")
     public void scheduledTask() {
         System.out.println("매일 오후 6시에 실행됩니다.");
         LocalDateTime yesterday = LocalDateTime.now().minusDays(1); // 현재 날짜에서 하루 전
