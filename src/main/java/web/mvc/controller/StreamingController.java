@@ -113,11 +113,19 @@ public class StreamingController {
     // 엔티티를 DTO로 변환하는 유틸리티 메서드
     private StreamingDTO convertToDTO(Streaming streaming) {
         Long farmerSeq = (streaming.getFarmerUser() != null) ? streaming.getFarmerUser().getUserSeq() : null;
+        String farmerName = (streaming.getFarmerUser() != null) ? streaming.getFarmerUser().getName() : null;
 
         // FarmerUser가 없을 때는 Stock 관련 정보를 빈 값으로 설정
-        List<Stock> stocks = (farmerSeq != null) ? stockService.findStocksByFarmerSeq(farmerSeq) : List.of();
+        List<Stock> stocks = (farmerSeq != null) ?
+                stockService.findStocksByFarmerSeq(farmerSeq).stream()
+                        .sorted((s1, s2) -> s2.getRegDate().compareTo(s1.getRegDate()))
+                        .toList()
+                : List.of();
+
         Long stockSeq = stocks.isEmpty() ? null : stocks.get(0).getStockSeq();
         String productName = stocks.isEmpty() ? null : stocks.get(0).getProduct().getProductName();
+        String filePath = stocks.isEmpty() ? null :
+                (stocks.get(0).getFile() != null ? stocks.get(0).getFile().getPath() : null);
 
         return new StreamingDTO(
                 streaming.getStreamingSeq(),
@@ -129,7 +137,9 @@ public class StreamingController {
                 streaming.getState(),
                 farmerSeq,
                 stockSeq,
-                productName
+                productName,
+                farmerName,
+                filePath
         );
     }
     @PostMapping("/streamingData/{seq}")
@@ -156,7 +166,7 @@ public class StreamingController {
             streamingService.save(streaming);
             System.out.println("!!!!!!!!!!!: "+farmerSeq);
             notificationService.sendMessageTobidUser(farmerSeq.toString(),"방송이 종료되었습니다.");
-            notificationService.sendMessageToTopic("/end/notifications","BroadCastEnd");
+            notificationService.sendMessageToTopic("/end/"+farmerSeq.toString()+"/notifications","BroadCastEnd");
 
 
             return ResponseEntity.ok("채팅방에서 성공적으로 나왔습니다.");
