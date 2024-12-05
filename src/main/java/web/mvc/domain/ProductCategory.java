@@ -1,5 +1,6 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class ProductCategory {
     @Column(name = "content", nullable = false, length = 45)
     private String content;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "productCategory",fetch = FetchType.LAZY)
     private List<Product> products;
 
