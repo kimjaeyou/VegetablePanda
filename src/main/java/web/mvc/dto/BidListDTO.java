@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BidListDTO {
+    private Long bidSeq;
 
     private Integer price;
 

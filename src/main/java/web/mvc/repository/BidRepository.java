@@ -19,11 +19,20 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     List<BidAuctionDTO> auctionList(Long seq);
 
 
-    @Query("select new web.mvc.dto.BidListDTO(b.price,b.insertDate,c.comName) from Bid b left join CompanyUser c on b.auction.auctionSeq = ?1 order by b.insertDate ")
-    List<BidListDTO> auctionCompanyBidList(Long seq);
+    @Query("SELECT new web.mvc.dto.BidListDTO(b.bidSeq, b.price, b.insertDate, c.comName)\n" +
+            "FROM Bid b\n" +
+            "JOIN CompanyUser c ON b.managementUser.userSeq = c.userSeq\n" +
+            "WHERE b.auction.auctionSeq = :auctionSeq\n" +
+            "GROUP BY b.bidSeq, b.price, b.insertDate, c.comName\n" +
+            "ORDER BY b.bidSeq")
+    List<BidListDTO> auctionCompanyBidList(@Param("auctionSeq") Long auctionSeq);
 
-    @Query("select new web.mvc.dto.BidListDTO(b.price,b.insertDate, u.name) from Bid b left join User u on b.auction.auctionSeq = ?1 order by b.insertDate")
-    List<BidListDTO> auctionUerBidList(Long seq);
+    @Query("SELECT new web.mvc.dto.BidListDTO(b.bidSeq, b.price, b.insertDate, u.name)\n" +
+            "FROM Bid b\n" +
+            "JOIN User u ON b.managementUser.userSeq =u.userSeq\n" +
+            "WHERE b.auction.auctionSeq = :auctionSeq\n" +
+            "GROUP BY b.bidSeq, b.price, b.insertDate, u.name\n" +
+            "ORDER BY b.bidSeq")    List<BidListDTO> auctionUerBidList(@Param("auctionSeq") Long auctionSeq);
 
 
     @Query("SELECT MAX(b.price) FROM Bid b WHERE b.auction.auctionSeq = :auctionSeq")
