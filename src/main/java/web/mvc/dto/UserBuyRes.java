@@ -1,12 +1,11 @@
 package web.mvc.dto;
 
 import lombok.*;
-import web.mvc.domain.ManagementUser;
-import web.mvc.domain.Stock;
-import web.mvc.domain.User;
-import web.mvc.domain.UserBuy;
+import web.mvc.domain.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,21 +15,26 @@ import java.time.LocalDateTime;
 @ToString
 public class UserBuyRes {
     private long buySeq;
-    private ManagementUser managementUser;
+//    private ManagementUser managementUser;
     private LocalDateTime buyDate;
     private Integer state;
     private Integer totalPrice;
     private String orderUid;
 
+    private List<UserBuyDetailDTO> userBuyDetails;
+
 
     // UserBuy Entity를 UserBuyRes로 변환
     public UserBuyRes (UserBuy userBuy) {
         buySeq = userBuy.getBuySeq();
-        managementUser = userBuy.getManagementUser();
+//        managementUser = userBuy.getManagementUser();
         buyDate = userBuy.getBuyDate();
         state = userBuy.getState();
         totalPrice = userBuy.getTotalPrice();
         orderUid = userBuy.getOrderUid();
-
+        userBuyDetails = new ArrayList<>();
+        for(UserBuyDetail userBuyDetail : userBuy.getUserBuyDetailList()) {
+            userBuyDetails.add(new UserBuyDetailDTO(userBuyDetail));
+        }
     }
 }

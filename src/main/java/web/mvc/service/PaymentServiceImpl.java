@@ -101,7 +101,8 @@ public class PaymentServiceImpl implements PaymentService {
                         User user = userRepository.findByUserSeq(userM.getUserSeq());
 //                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
 //                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
-                        List<String> items = userBuyDetailRepository.findByBuySeq(userBuy.get(0).getBuySeq());
+                        List<String> items = userBuyDetailRepository.findContentByBuySeq(userBuy.get(0).getBuySeq());
+                        log.info("List<String> items : {}", items);
                         requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
                                 .itemName(items.get(0)).paymentPrice((long) (userBuy.get(0).getTotalPrice())).orderUid(orderUid).build();
 
@@ -224,7 +225,11 @@ public class PaymentServiceImpl implements PaymentService {
             // 검증 후 주문상태 변경
             UserBuy result = changeOrder(userBuy.getBuySeq());
 
+            // 검증 후 재고 수량 변경
+            deductCount(userBuy);
+
             // 결제 상태 OK로 변경
+            userBuy.setState(2);
             userBuy.getPayment().changePaymentBySuccess(PaymentStatus.OK, iamportResponse.getResponse().getImpUid());
             return iamportResponse;
 
@@ -263,6 +268,19 @@ public class PaymentServiceImpl implements PaymentService {
         UserBuy userBuy = userBuyRepository.findById(Long.parseLong(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
         log.info("userBuy : {}", userBuy);
         return userBuy;
+    }
+
+    // UserBuy 정보에서 주문 물품들 찾아 주문수량만큼 차감하는 메소드
+    public void deductCount (UserBuy userBuy) {
+        List<UserBuyDetail> detailList = userBuy.getUserBuyDetailList();
+        for(UserBuyDetail detail : detailList){
+            int stockCount = detail.getStock().getCount();
+            if(stockCount < detail.getCount()){
+                throw new UserBuyException(ErrorCode.ORDER_FAILED);
+            }
+            detail.getStock().setCount(stockCount - detail.getCount());
+            log.info("PaymentService에서 주문 수량만큼 재고 차감");
+        }
     }
 
 }
