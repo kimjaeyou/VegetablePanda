@@ -7,8 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import web.mvc.domain.Auction;
-import web.mvc.domain.Bid;
 import web.mvc.dto.*;
 import web.mvc.service.BidService;
 import web.mvc.service.SendTopService;
@@ -46,9 +44,15 @@ public class BidController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @GetMapping("/bid/{auctionSeq}")
-    public ResponseEntity<?> bidList(@PathVariable Long auctionSeq) {
-        List<BidCompanyListDTO> result = bidService.getComBids(auctionSeq);
+    @GetMapping("/bidCom/{auctionSeq}")
+    public ResponseEntity<?> bidList1(@PathVariable Long auctionSeq) {
+        List<BidListDTO> result = bidService.getComBids(auctionSeq);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/bidUser/{auctionSeq}")
+    public ResponseEntity<?> bidList2(@PathVariable Long auctionSeq) {
+        List<BidListDTO> result = bidService.getUserBids(auctionSeq);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

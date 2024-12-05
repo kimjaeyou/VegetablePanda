@@ -12,12 +12,13 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BidCompanyListDTO {
+public class BidListDTO {
+    private Long bidSeq;
 
     private Integer price;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime insertDate;
 
-    private String comName;
+    private String name;
 }

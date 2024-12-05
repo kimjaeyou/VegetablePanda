@@ -118,7 +118,7 @@ public class AuctionController {
     @GetMapping("/buy/{stockSeq}")
     public ResponseEntity<List<UserBuyListByStockDTO>> buyList(HttpServletRequest req, @PathVariable Long stockSeq) {
         List<UserBuyListByStockDTO> userBuyListByStockDTOList = userBuyService.geUserBuyListByStockDtos(stockSeq);
-        return new ResponseEntity<>(userBuyListByStockDTOList, HttpStatus.CREATED);
+            return new ResponseEntity<>(userBuyListByStockDTOList, HttpStatus.CREATED);
     }
 
 

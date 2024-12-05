@@ -146,14 +146,14 @@ public class BidServiceImpl implements BidService {
 
 
     @Override
-    public List<BidCompanyListDTO> getComBids(Long auctionSeq) {
+    public List<BidListDTO> getComBids(Long auctionSeq) {
         return bidRepository.auctionCompanyBidList(auctionSeq);
 
     }
 
     @Override
-    public List<BidUserListDTO> getUserBids(Long auctionSeq) {
-        return List.of();
+    public List<BidListDTO> getUserBids(Long auctionSeq) {
+        return bidRepository.auctionUerBidList(auctionSeq);
     }
 
 
