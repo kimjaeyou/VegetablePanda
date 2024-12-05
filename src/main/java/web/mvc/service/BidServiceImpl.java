@@ -92,7 +92,9 @@ public class BidServiceImpl implements BidService {
                     }else{
                         newBidderTempWallet.setPoint(newBidderTempWallet.getPoint() - (int)(newBidderDTO.getPrice()*0.1));
                     }
+
                     Long beforeHigh=highestBid.getUserSeq();
+
 
                     highestBid.setPrice(newBidderDTO.getPrice());
 

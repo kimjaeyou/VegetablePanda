@@ -40,4 +40,7 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
 
     @Query("select new web.mvc.dto.StockInfoDTO(s.stockSeq, s.content, s.count, s.color, s.product.productCategory.content, s.product.productSeq, s.product.productName, s.stockGrade.grade, s.stockOrganic.organicStatus, s.farmerUser.userSeq, s.farmerUser.userSeq, s.regDate, s.file.fileSeq, s.file.name, s.file.path) from Stock s left join s.file where s.farmerUser.userSeq = ?1")
     List<StockInfoDTO> findStockInfoById(long id);
+
+    @Query("select s from Stock s where s.stockSeq=?1 and s.count>=?2")
+    Stock checkCount(Long stockSeq,int count);
 }
