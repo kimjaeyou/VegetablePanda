@@ -97,7 +97,6 @@ public class PaymentServiceImpl implements PaymentService {
 
                     if ("user".equals(userM.getContent())) {
 
-                        //List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
                         User user = userRepository.findByUserSeq(userM.getUserSeq());
 //                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
 //                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
@@ -106,7 +105,7 @@ public class PaymentServiceImpl implements PaymentService {
                         requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
                                 .itemName(items.get(0)).paymentPrice((long) (userBuy.get(0).getTotalPrice())).orderUid(orderUid).build();
 
-                    } else if ("company".equals(userM.getContent())) { // 업체 사용자 일반 물품 구매 안됐던거같은데
+                    } else if ("company".equals(userM.getContent())) { // 업체 사용자 일반 물품 구매 불가
 
                         throw new MemberAuthenticationException(ErrorCode.ORDER_FORBIDDEN);
 
@@ -187,7 +186,6 @@ public class PaymentServiceImpl implements PaymentService {
             // 결제 단건 조회
             IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
             // 주문내역 조회
-            //UserCharge userCharge = userChargeRepository.findByOrderUid(request.getOrderUid()).get(0);
             UserBuy userBuy = userBuyRepository.findOrderAndPayment(request.getOrderUid()).orElseThrow(()-> new UserBuyException(ErrorCode.ORDER_NOTFOUND));
             log.info("userBuy : {}", userBuy);
             log.info("payment : {}", userBuy.getPayment());
