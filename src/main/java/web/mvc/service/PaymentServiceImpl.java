@@ -7,14 +7,18 @@ import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.*;
 import web.mvc.dto.PaymentReq;
 import web.mvc.dto.RequestPayDTO;
+import web.mvc.dto.UserTempWalletDTO;
 import web.mvc.exception.*;
 import web.mvc.payment.PaymentStatus;
+import web.mvc.redis.RedisUtils;
 import web.mvc.repository.*;
 
 import java.io.IOException;
@@ -37,6 +41,13 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final UserBuyRepository userBuyRepository;
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private RedisUtils redisUtils;
+
+
     @Override
     public UserBuy paymentInsert(UserBuy userBuy) {
         // 결제 정보 등록 프로세스 // 주문에서 진행가능...
@@ -46,6 +57,11 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public int saveCharge(UserCharge userCharge) {
         log.info("포인트 충전 성공! 충전 포인트 : {}", userCharge.getPrice());
+        UserTempWalletDTO userTempWallet = redisUtils.getData("userTempWallet:"+userCharge.getManagementUser().getUserSeq(),UserTempWalletDTO.class).orElse(null);
+        if(userTempWallet !=null) {
+            userTempWallet.setPoint(userTempWallet.getPoint() + userCharge.getPrice());
+            redisUtils.saveData("userTempWallet:"+userCharge.getManagementUser().getUserSeq(),userTempWallet);
+        }
         UserCharge result = userChargeRepository.save(userCharge);
         return 1;
     }
