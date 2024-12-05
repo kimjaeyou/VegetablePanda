@@ -33,8 +33,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public List<UserBuyDTO> buyList(Long seq) {
-        Integer state = 2;
-        return buyMyPageRepository.select(seq, state);
+        return buyMyPageRepository.select(seq);
     }
 
     /**
@@ -42,8 +41,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public UserDTO selectUser(Long seq) {
-        UserDTO user = userMyPageRepository.selectUser(seq);
-        return user;
+        return userMyPageRepository.selectUser(seq);
     }
 
     /**
@@ -67,8 +65,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public int delete(Long seq) {
-        int i = userMyPageRepository.delete(seq);
-        return i;
+        return userMyPageRepository.delete(seq);
     }
 
     // 포인트 조회
@@ -91,7 +88,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public void deleteReview(Long reviewSeq, Long userSeq) {
-        int no = reviewRepository.deleteReview(reviewSeq, userSeq);
+        reviewRepository.deleteReview(reviewSeq, userSeq);
     }
 
     /**

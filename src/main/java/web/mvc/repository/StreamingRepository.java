@@ -55,7 +55,7 @@ public interface StreamingRepository extends JpaRepository<Streaming, Long> {
             "st.product.productName, s.farmerUser.name, st.file.path) " +
             "from Streaming s " +
             "join Stock st on s.farmerUser.userSeq = st.farmerUser.userSeq " +
-            "where s.state=1 and s.farmerUser.userSeq is not null and st.status=1 " +
+            "where s.state = 1 and s.farmerUser.userSeq is not null and st.status = 1 " +
             "and s.farmerUser.userSeq = ?1")
     List<StreamingDTO> streamingRooms(Long seq);
 }
