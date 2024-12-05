@@ -46,8 +46,11 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
 
     LIKE_UPDATE_FAILED (HttpStatus.BAD_REQUEST, "Stock update fail", "좋아요 실패했습니다."),
 
-    FILE_NOTFOUND (HttpStatus.NOT_FOUND, "File Not Found", "파일을 찾을 수 없습니다.");
+    FILE_NOTFOUND (HttpStatus.NOT_FOUND, "File Not Found", "파일을 찾을 수 없습니다."),
+    
+    STOCK_COUNT_LESS (HttpStatus.BAD_REQUEST, "Stock count less", "재고량 이하로 수량 등록하세요");
 
+    
     private final HttpStatus httpStatus;
     private  final String title;
     private final String message;

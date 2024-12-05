@@ -59,9 +59,10 @@ public class AuctionServiceImpl implements AuctionService {
     public Auction insertAuction(AuctionDTO auction,int price) {
         log.info("insert auction ServiceImpl");
 
-
+        Stock stock = stockRepository.checkCount(auction.getStockSeq(),auction.getCount());
+        if(stock==null) throw new AuctionException(ErrorCode.STOCK_COUNT_LESS);
         Auction saveAc = Auction.builder()
-                .stock(stockRepository.findById(auction.getStockSeq()).orElse(null))
+                .stock(stock)
                 .closeTime(LocalDateTime.parse(auction.getCloseTime(), FORMATTER))
                 .count(auction.getCount())
                 .status(auction.getStatus())
