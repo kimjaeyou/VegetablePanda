@@ -38,6 +38,8 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
     ORDER_FORBIDDEN (HttpStatus.FORBIDDEN, "Forbidden", "업체 사용자는 구매할 수 없습니다."),
     ORDER_FAILED (HttpStatus.FORBIDDEN, "Stock count less than order", "재고 수량이 부족합니다."),
 
+    PAYMENT_NOTFOUND (HttpStatus.NOT_FOUND, "Payment Info Not Found", "결제 정보를 찾을 수 없습니다."),
+
     HIGH_BIDDER (HttpStatus.NOT_FOUND, "Bidding", "입찰중인 상품입니다 ."),
     LOW_BID(HttpStatus.NOT_FOUND, "low Bid", "현재 입찰가보다 높게 입력하세요."),
 

@@ -44,6 +44,13 @@ public class ShopServiceImpl implements ShopService {
          return shopLike;
     }
 
+    @Transactional
+    @Override
+    public ShopLike getShopLike(Long userSeq, Long shopSeq) {
+        ShopLike shopLike = shopLikeRepository.findByUserSeqAndShopSeq(userSeq,shopSeq);
+        return shopLike;
+    }
+
     public int shopInsert(StockDTO stock) {
         Shop shop = new Shop();
         shop.setInsertDate(LocalDateTime.now());
@@ -69,7 +76,7 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public void insertShopLike(Long userSeq, Long shopSeq) {
-        shopLikeRepository.insertShopLike(userSeq,shopSeq);
+         shopLikeRepository.insertShopLike(userSeq,shopSeq);
     }
     @Override
     public List<ShopListDTO> getAllShopItems(long seq) {

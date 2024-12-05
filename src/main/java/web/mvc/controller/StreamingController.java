@@ -116,7 +116,12 @@ public class StreamingController {
         String farmerName = (streaming.getFarmerUser() != null) ? streaming.getFarmerUser().getName() : null;
 
         // FarmerUser가 없을 때는 Stock 관련 정보를 빈 값으로 설정
-        List<Stock> stocks = (farmerSeq != null) ? stockService.findStocksByFarmerSeq(farmerSeq) : List.of();
+        List<Stock> stocks = (farmerSeq != null) ?
+                stockService.findStocksByFarmerSeq(farmerSeq).stream()
+                        .sorted((s1, s2) -> s2.getRegDate().compareTo(s1.getRegDate()))
+                        .toList()
+                : List.of();
+
         Long stockSeq = stocks.isEmpty() ? null : stocks.get(0).getStockSeq();
         String productName = stocks.isEmpty() ? null : stocks.get(0).getProduct().getProductName();
         String filePath = stocks.isEmpty() ? null :

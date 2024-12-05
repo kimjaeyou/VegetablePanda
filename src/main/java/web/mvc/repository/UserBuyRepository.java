@@ -3,6 +3,7 @@ package web.mvc.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import web.mvc.domain.UserBuy;
+import web.mvc.dto.AdjustmentDTO;
 import web.mvc.dto.UserBuyListByStockDTO;
 
 import java.util.List;
@@ -23,4 +24,14 @@ public interface UserBuyRepository extends JpaRepository<UserBuy, Long> {
 
     @Query(value = "select u from UserBuy u where u.orderUid=?1")
     List<UserBuy> findByOrderUid(String orderUid);
+
+    @Query("SELECT new web.mvc.dto.AdjustmentDTO(b.buySeq, f.name, p.productName, b.totalPrice, b.state, b.buyDate) " +
+            "FROM UserBuy b " +
+            "JOIN UserBuyDetail d ON d.userBuy.buySeq = b.buySeq " +
+            "JOIN Stock s ON s.stockSeq = d.stock.stockSeq " +
+            "JOIN FarmerUser f ON f.userSeq = s.farmerUser.userSeq " +
+            "JOIN Product p ON p.productSeq = s.product.productSeq " +
+            "WHERE b.state = 6 " +
+            "ORDER BY b.buyDate DESC")
+    List<AdjustmentDTO> findPendingSettlements();
 }
