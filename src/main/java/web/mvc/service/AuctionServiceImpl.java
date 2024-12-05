@@ -62,7 +62,7 @@ public class AuctionServiceImpl implements AuctionService {
 
         Auction saveAc = Auction.builder()
                 .stock(stockRepository.findById(auction.getStockSeq()).orElse(null))
-                .closeTime(LocalDateTime.   parse(auction.getCloseTime(), FORMATTER))
+                .closeTime(LocalDateTime.parse(auction.getCloseTime(), FORMATTER))
                 .count(auction.getCount())
                 .status(auction.getStatus())
                 .build();

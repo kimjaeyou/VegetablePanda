@@ -34,7 +34,6 @@ public class LikeServiceImpl implements LikeService {
         Likes like=likeRepository.findByUserSeqAndFarmerSeq(
                 likeDTO.getUserSeq(),
                 likeDTO.getFarmerSeq());
-
         if(like!=null) {
             like.setState(!like.getState());
             like = likeRepository.save(like);
@@ -44,8 +43,6 @@ public class LikeServiceImpl implements LikeService {
                             likeDTO.getUserSeq(),
                             likeDTO.getFarmerSeq()));
         }
-
-
         return like;
     }
 
@@ -69,5 +66,15 @@ public class LikeServiceImpl implements LikeService {
 
     }
 
-
+    @Override
+    public int likeState(LikeDTO likeDTO) {
+        Long farmerSeq = likeDTO.getFarmerSeq();
+        Long userSeq = likeDTO.getUserSeq();
+        Boolean state = likeRepository.likeState(farmerSeq, userSeq);
+        if (state){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

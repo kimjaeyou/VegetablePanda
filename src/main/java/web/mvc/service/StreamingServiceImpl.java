@@ -51,4 +51,10 @@ public class StreamingServiceImpl implements StreamingService {
     public List<StreamingDTO> streaming() {
         return streamingRepository.streaming();
     }
+
+    // 윤성
+    @Override
+    public List<StreamingDTO> streamingRooms(Long seq) {
+        return streamingRepository.streamingRooms(seq);
+    }
 }

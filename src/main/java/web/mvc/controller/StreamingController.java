@@ -2,6 +2,7 @@ package web.mvc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.FarmerUser;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/streaming")
 public class StreamingController {
+
 
     @Autowired
     private StreamingServiceImpl streamingService;
@@ -63,7 +65,6 @@ public class StreamingController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("스트리밍을 찾을 수 없습니다.");
         }
     }
-
 
     // 승인 대기 중인 스트리밍 조회 (StreamingDTO로 반환)
     @GetMapping("/pending")
@@ -152,6 +153,7 @@ public class StreamingController {
 
             // 스트리밍 엔티티 저장
             streamingService.save(streaming);
+            notificationService.sendMessageToTopic("/end/notifications","BroadCastEnd");
 
             return ResponseEntity.ok("채팅방에서 성공적으로 나왔습니다.");
         } else {
@@ -159,5 +161,9 @@ public class StreamingController {
         }
     }
 
-
+    // 활성 스트리밍 조회 (seq에 맞는 스트리밍 조회) - 윤성
+    @GetMapping("/active-rooms/{seq}")
+    public ResponseEntity<?> streamingRooms(@PathVariable Long seq) {
+        return new ResponseEntity<>(  streamingService.streamingRooms(seq) ,HttpStatus.OK);
+    }
 }
