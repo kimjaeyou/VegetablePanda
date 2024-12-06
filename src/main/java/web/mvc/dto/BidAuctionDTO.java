@@ -6,25 +6,26 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @ToString
 public class BidAuctionDTO {
     private Long bidSeq;
-    private String content;
+    private String productName;
     private Integer count;
-    private Integer price;
+    private Integer totalPrice;
     private LocalDateTime insertDate;
     private String name;
-    private Integer status;
+    private Integer state;
 
-    public BidAuctionDTO(Long bidSeq, String content, Integer count, Integer price, LocalDateTime insertDate, String name, Integer status) {
-        this.bidSeq = bidSeq;
-        this.content = content;
+    private Long buySeq;
+
+    public BidAuctionDTO(Long buySeq, String productName, Integer count, Integer totalPrice, LocalDateTime insertDate, String name, Integer state) {
+        this.buySeq = buySeq;
+        this.productName = productName;
         this.count = count;
-        this.price = price;
+        this.totalPrice = totalPrice;
         this.insertDate = insertDate;
         this.name = name;
-        this.status = status;
+        this.state = state;
     }
 }

@@ -27,6 +27,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final WalletRepository walletRepository;
     private final PasswordEncoder passwordEncoder;
     private final LikeRepository likeRepository;
+    private final UserBuyRepository userBuyRepository;
 
     /**
      * 주문내역
@@ -34,6 +35,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     @Override
     public List<UserBuyDTO> buyList(Long seq) {
         Integer state = 2;
+//        return buyMyPageRepository.select(seq, state);
         return buyMyPageRepository.select(seq, state);
     }
 
@@ -102,6 +104,12 @@ public class UserMyPageServiceImpl implements UserMyPageService {
         return bidRepository.auctionList(seq);
     }
 
+    @Override
+    public List<BidAuctionDTO> successfulBidList(Long seq) {
+        log.info("successfulBidList seq : {}", seq);
+        return userBuyRepository.successfulBidList(seq);
+//        return null;
+    }
 
     /**
      * 좋아요 상품 목록

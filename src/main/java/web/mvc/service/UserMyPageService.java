@@ -44,4 +44,7 @@ public interface UserMyPageService {
 
     // 구독취소
     String userLikeDelete(Long seq, Long userLikeSeq);
+
+    // 경매 낙찰 내역 조회
+    List<BidAuctionDTO> successfulBidList (Long seq);
 }
