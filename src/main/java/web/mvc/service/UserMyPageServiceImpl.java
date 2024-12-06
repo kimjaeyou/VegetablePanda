@@ -32,8 +32,25 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 주문내역
      */
     @Override
-    public List<UserBuyDTO> buyList(Long seq) {
-        return buyMyPageRepository.select(seq);
+    public List<UserBuyListForReivewDTO> buyList(Long seq) {
+        log.info("주문내역 조회 서비스 시작 - userSeq: {}, state: {}", seq, 1);
+
+        try {
+            log.info("buyMyPageRepository.select 호출 시작");
+            List<UserBuyListForReivewDTO> result = buyMyPageRepository.selectShopBuyByUserSeq(seq);
+
+            log.info("주문내역 조회 결과 - 건수: {}", result != null ? result.size() : 0);
+            if (result == null || result.isEmpty()) {
+                log.info("주문내역이 없습니다 - userSeq: {}", seq);
+            } else {
+                log.info("조회된 주문내역: {}", result);
+            }
+
+            return result;
+        } catch (Exception e) {
+            log.error("주문내역 조회 중 오류 발생 - userSeq: {}, state: {}", seq, 1, e);
+            throw e;
+        }
     }
 
     /**
