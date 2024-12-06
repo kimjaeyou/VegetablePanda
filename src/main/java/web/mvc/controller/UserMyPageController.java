@@ -27,9 +27,22 @@ public class UserMyPageController {
      */
     @GetMapping("/buyList/{seq}")
     public ResponseEntity<List<UserBuyDTO>> buyList(@PathVariable Long seq) {
-        List<UserBuyDTO> list = userMyPageService.buyList(seq);
-        log.info("UserBuyDTO = {}", list);
-        return ResponseEntity.ok(list);
+        log.info("주문 내역 조회 컨트롤러 시작 - userSeq: {}", seq);
+
+        try {
+            List<UserBuyDTO> list = userMyPageService.buyList(seq);
+            log.info("주문 내역 조회 결과 - 건수: {}", list.size());
+            log.info("주문 내역 상세: {}", list);
+
+            if (list.isEmpty()) {
+                log.info("주문 내역이 없습니다 - userSeq: {}", seq);
+            }
+
+            return ResponseEntity.ok(list);
+        } catch (Exception e) {
+            log.error("주문 내역 조회 중 오류 발생 - userSeq: {}", seq, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     /**

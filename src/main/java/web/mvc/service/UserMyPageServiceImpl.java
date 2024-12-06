@@ -22,8 +22,8 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final BuyMyPageRepository buyMyPageRepository;
     private final UserMyPageRepository userMyPageRepository;
     private final UserRepository userRepository;
-    private final ReviewRepository reviewRepository;
     private final BidRepository bidRepository;
+    private final ReviewRepository reviewRepository;
     private final WalletRepository walletRepository;
     private final PasswordEncoder passwordEncoder;
     private final LikeRepository likeRepository;
@@ -41,7 +41,8 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public UserDTO selectUser(Long seq) {
-        return userMyPageRepository.selectUser(seq);
+        UserDTO user = userMyPageRepository.selectUser(seq);
+        return user;
     }
 
     /**
@@ -65,7 +66,8 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public int delete(Long seq) {
-        return userMyPageRepository.delete(seq);
+        int i = userMyPageRepository.delete(seq);
+        return i;
     }
 
     // 포인트 조회
@@ -88,7 +90,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public void deleteReview(Long reviewSeq, Long userSeq) {
-        reviewRepository.deleteReview(reviewSeq, userSeq);
+        int no = reviewRepository.deleteReview(reviewSeq, userSeq);
     }
 
     /**

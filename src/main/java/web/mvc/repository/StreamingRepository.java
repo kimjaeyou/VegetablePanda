@@ -58,4 +58,7 @@ public interface StreamingRepository extends JpaRepository<Streaming, Long> {
             "where s.state = 1 and s.farmerUser.userSeq is not null and st.status = 1 " +
             "and s.farmerUser.userSeq = ?1")
     List<StreamingDTO> streamingRooms(Long seq);
+
+    @Query("select s from  Streaming s where s.farmerUser.userSeq = ?1")
+    Streaming findByFarmerUserSeq(Long userSeq);
 }

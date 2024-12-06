@@ -1,6 +1,7 @@
 package web.mvc.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -18,6 +19,7 @@ public class    ShopLike {
     @Column(name = "shop_like_seq")
     private Long shopLikeSeq;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_seq", nullable = false)
     private Shop shop;

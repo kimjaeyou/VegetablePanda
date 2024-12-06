@@ -3,12 +3,14 @@ package web.mvc.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.ReviewCommentDTO2;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
@@ -44,4 +46,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             "where v.managementUser.userSeq = ?1")
     List<ReviewCommentDTO2> reviewList(Long userSeq);
 
+
+    @Query("SELECT r FROM Review r WHERE r.managementUser.userSeq = :userSeq")
+    Optional<Review> findByFarmerUserId(@Param("userSeq") Long userSeq);
+
+    Optional<Review> findByManagementUser_UserSeq(Long managementUserId);
 }

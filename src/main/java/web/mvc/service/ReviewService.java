@@ -3,18 +3,17 @@ package web.mvc.service;
 import org.springframework.http.ResponseEntity;
 import web.mvc.domain.ManagementUser;
 import web.mvc.domain.Review;
+import web.mvc.dto.ReviewDTO;
+import web.mvc.dto.ReviewDTO2;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewService {
 
-    /**
-     * 리뷰 페이지 조회
-     * */
-    //public List<Review> getReviews(ManagementUser managementUser, Review review);
 
+    Optional<Review> findByManagementUserId(Long managementUserId);
 
-    /**
-     * 리뷰 수정
-     * */
+    ReviewDTO2 convertToDTO(Review review);
+
 }

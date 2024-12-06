@@ -10,16 +10,16 @@ import web.mvc.domain.UserBuy;
 @ToString
 public class UserBuyDetailInfoDTO {
     private String productName;
-    private Integer count;
+    private Integer quantity;
     private Integer price;
-    private String file;
+    private String imageUrl;
     private Long stockSeq;
 
-    public UserBuyDetailInfoDTO(String productName, Integer count, Integer price, String file, Long stockSeq) {
+    public UserBuyDetailInfoDTO(String productName, Integer quantity, Integer price, String imageUrl, Long stockSeq) {
         this.productName = productName;
-        this.count = count;
+        this.quantity = quantity;
         this.price = price;
-        this.file = file;
+        this.imageUrl = imageUrl;
         this.stockSeq = stockSeq;
     }
 

@@ -5,12 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class ShopLikeDTO {
-    private Long userSeq;
-    private Long shopSeq;
-    private boolean state;
+public class UserBuyDetailGetAvgPriceDTO {
+    Double price;
 }

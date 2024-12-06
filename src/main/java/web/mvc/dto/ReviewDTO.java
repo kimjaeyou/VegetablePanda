@@ -15,4 +15,6 @@ public class ReviewDTO {
     private String content;
     private String name;
     private LocalDateTime date;
+
 }
+

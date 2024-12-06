@@ -44,6 +44,6 @@ public interface ShopService {
     Map<String, Integer> getPriceStatistics(Long stockSeq);
 
     ShopLike getByUserSeqAndStockSeq(Long userSeq, Long shopSeq);
-
+    ShopLike getShopLike(Long userSeq, Long shopSeq);
 }
 
