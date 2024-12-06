@@ -53,7 +53,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "join Stock k on s.stock.stockSeq = k.stockSeq " +
             "join Product p on p.productSeq = k.product.productSeq " +
             "join ShopLike l on l.shop.shopSeq = s.shopSeq " +
-            "WHERE s.stock.status = 1  and s.stock.farmerUser.userSeq = ?1 and l.state = true " +
+            "WHERE s.stock.status = 3 and s.stock.farmerUser.userSeq = ?1 and l.state = true " +
             "ORDER BY s.insertDate DESC")
     List<ShopListDTO> findLikeItems(Long seq);
 

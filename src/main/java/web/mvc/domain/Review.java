@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,4 +37,9 @@ public class Review {
         this.visitNum = visitNum;
         this.intro = intro;
     }
+
+    public Review(long reviewSeq) {
+        this.reviewSeq = reviewSeq;
+    }
+
 }

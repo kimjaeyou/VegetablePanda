@@ -2,6 +2,7 @@ package web.mvc.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.QaBoard;
+import web.mvc.dto.FileDTO;
 import web.mvc.dto.QaDTO;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface QaBoardService {
     /**
      * QA 등록
      * */
-    public QaDTO saveQaBoard(QaBoard qaBoard, MultipartFile file);
+    public QaDTO saveQaBoard(QaDTO qaDTO, MultipartFile file);
 
     /**
      * QA 수정
@@ -35,4 +36,5 @@ public interface QaBoardService {
 
     QaBoard increaseReadnum(Long boardNoSeq);
 
+    FileDTO downloadFile(Long boardNoSeq);
 }

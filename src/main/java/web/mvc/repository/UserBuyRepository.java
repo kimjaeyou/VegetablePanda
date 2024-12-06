@@ -36,6 +36,15 @@ public interface UserBuyRepository extends JpaRepository<UserBuy, Long> {
             "ORDER BY b.buyDate DESC")
     List<AdjustmentDTO> findPendingSettlements();
 
+    @Query("SELECT COUNT(CASE WHEN state = 1 THEN 1 END) FROM UserBuy")
+    long countAuctionPurchases();
+
+    @Query("SELECT COUNT(CASE WHEN state = 2 THEN 1 END) FROM UserBuy")
+    long countProductPurchases();
+
+    @Query("SELECT COUNT(CASE WHEN state = 4 THEN 1 END) FROM UserBuy")
+    long countCompanyAuctionPurchases();
+
     @Query("SELECT distinct new web.mvc.dto.BidAuctionDTO(u.buySeq, p.productName, ubd.count, u.totalPrice, u.buyDate, s.farmerUser.name, u.state) " +
             "FROM UserBuy u " +
             "Join UserBuyDetail ubd on u.buySeq = ubd.userBuy.buySeq " +

@@ -1,9 +1,11 @@
 package web.mvc.service;
 
 import web.mvc.domain.UserBuy;
+import web.mvc.domain.UserBuyDetail;
 import web.mvc.dto.UserBuyListByStockDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserBuyService {
     public UserBuy buy(UserBuy userBuy);
@@ -29,4 +31,8 @@ public interface UserBuyService {
      * 주문번호로 정보 검색
      */
     public UserBuy findByOrderUid(String orderUid);
+
+
+
+    Optional<UserBuyDetail> findById(Long id);
 }
