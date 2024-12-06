@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.*;
+import web.mvc.dto.FileDTO;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
@@ -34,33 +35,19 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
      * 댓글 저장
      */
     @Override
-    public ReviewCommentDTO reviewCommentSave(Review review, UserBuyDetail userBuyDetail, ReviewCommentDTO reviewCommentDTO, MultipartFile file) {
-        String writerId = getCurrentUserId();
-
-        // 현재 로그인한 사용자 정보 검색
-        ManagementUser managementUser = managementRepository.findById(writerId);
-
-        // 댓글 엔티티 생성
-        ReviewComment reviewComment = reviewCommentDTO.toEntity();
-        reviewComment.setReview(review); // 게시판(Review) 연결
-        reviewComment.setUserBuyDetail(userBuyDetail); // 구매 상세 정보 연결
-        reviewComment.setManagementUser(managementUser);
-        // 이미지 파일 처리
-        if (file != null && !file.isEmpty()) {
-            String s3Url = s3ImageService.upload(file); // S3 업로드
-            File uploadedFile = File.builder()
-                    .path(s3Url)
-                    .name(file.getOriginalFilename())
-                    .build();
-            File savedFile = fileService.save(uploadedFile); // 파일 메타데이터 저장
-            reviewComment.setFile(savedFile); // 댓글에 파일 연결
-        }
-
-        // 댓글 저장
+    public ReviewCommentDTO reviewCommentSave(ReviewComment reviewComment) {
         ReviewComment savedComment = reviewCommentRepository.save(reviewComment);
-
-        // DTO 변환 및 반환
-        return ReviewCommentDTO.fromEntity(savedComment);
+        ReviewCommentDTO reviewCommentDTO = ReviewCommentDTO.builder()
+                .reviewCommentSeq(savedComment.getReviewCommentSeq())
+                .score(savedComment.getScore())
+                .content(savedComment.getContent())
+                .file(new FileDTO(savedComment.getFile()))
+                .regDate(savedComment.getDate())
+                .reviewSeq(savedComment.getReview().getReviewSeq())
+                .userBuyDetailSeq(savedComment.getUserBuyDetail().getUserBuySeq())
+                .userSeq(savedComment.getManagementUser().getUserSeq())
+                .build();
+        return reviewCommentDTO;
     }
 
     @Override

@@ -9,16 +9,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class ReviewCommentDTO {
     private Long reviewCommentSeq;
     private String content;
     private Integer score;
-    private String filePath;
-    private String fileName;
     private Long userSeq;
     private LocalDateTime regDate;
     private Long reviewSeq; // 댓글이 속한 게시판(Review)의 ID
     private Long userBuyDetailSeq;
+    private FileDTO file;
 
 
 
@@ -28,8 +29,6 @@ public class ReviewCommentDTO {
                 .reviewCommentSeq(reviewComment.getReviewCommentSeq())
                 .content(reviewComment.getContent())
                 .score(reviewComment.getScore())
-                .filePath(reviewComment.getFile() != null ? reviewComment.getFile().getPath() : null)
-                .fileName(reviewComment.getFile() != null ? reviewComment.getFile().getName() : null)
                 .userSeq(reviewComment.getUserBuyDetail().getUserBuy().getManagementUser().getUserSeq())
                 .regDate(reviewComment.getDate())
                 .reviewSeq(reviewComment.getReview().getReviewSeq()) // 게시판 ID 설정
