@@ -15,4 +15,5 @@ import java.time.LocalDateTime;
 public class CalcPoint2 {
     private int totalPoint;
     private Long userBuySeq;
+    private Integer state;
 }
