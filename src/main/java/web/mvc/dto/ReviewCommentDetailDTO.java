@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ReviewCommentDetailDTO {
+    private Long reviewCommentSeq;
+    private Long userSeq;
+    private String productName;
     private String content;
     private Integer score;
     private String name ;
