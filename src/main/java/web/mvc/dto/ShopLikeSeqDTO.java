@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ShopLikeDTO {
+public class ShopLikeSeqDTO {
     private Long userSeq;
     private Long shopSeq;
-    private boolean state;
 }

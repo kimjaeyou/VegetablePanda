@@ -4,8 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import web.mvc.domain.UserBuyDetail;
-import web.mvc.dto.DailyStatsDTO;
 import web.mvc.dto.ProductStatisticsDTO;
+import web.mvc.dto.UserBuyDetailGetAvgPriceDTO;
+import web.mvc.dto.UserBuyDetailInfoDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,10 +16,8 @@ public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Lo
 
     UserBuyDetail findFirstByUserBuySeq(Long userBuySeq);
 
-    @Query("select s.content from UserBuyDetail d join Stock s on s.stockSeq = d.stock.stockSeq where d.userBuy.buySeq = ?1")
-    //@Query("select s.content from UserBuyDetail d left join fetch UserBuy b left join fetch Stock s where d.userBuySeq = ?1 order by d.userBuySeq limit 1")
-    //select content from user_buy_detail d join user_buy b join stock s;
-    List<String> findContentByBuySeq(Long userBuySeq);
+    @Query("select s.product.productName from UserBuyDetail d join Stock s on s.stockSeq = d.stock.stockSeq where d.userBuy.buySeq = ?1")
+    List<String> findproductNameByBuySeq(Long userBuySeq);
 
 
 
@@ -62,4 +61,15 @@ public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Lo
             "JOIN ub.managementUser mu " +
             "WHERE mu.userSeq = :userSeq")
     List<UserBuyDetail> findByUserSeq(@Param("userSeq") Long userSeq);
+
+    @Query("Select new web.mvc.dto.UserBuyDetailInfoDTO(s.product.productName, ubd.count, ubd.price, s.file.path, s.stockSeq) " +
+            "from UserBuyDetail ubd join Stock s on s.stockSeq = ubd.stock.stockSeq where s.stockSeq IN :stockSeqs and ubd.userBuy.buySeq = :userBuySeq")
+    List<UserBuyDetailInfoDTO> findInfoesByStockSeq(@Param("stockSeqs") List<Long> stockSeqs, Long userBuySeq);
+
+
+    @Query("select new web.mvc.dto.UserBuyDetailGetAvgPriceDTO(avg(u.price)) from UserBuyDetail u where u.stock.stockSeq=?1")
+    UserBuyDetailGetAvgPriceDTO getAvgPrice(Long stockSeq);
+
+    Optional<UserBuyDetail> findFirstByUserBuy_ManagementUser_UserSeqOrderByUserBuy_BuyDateDesc(Long userSeq);
+
 }

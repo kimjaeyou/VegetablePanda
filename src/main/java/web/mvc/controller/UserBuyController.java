@@ -80,11 +80,24 @@ public class UserBuyController {
         return ResponseEntity.ok(result.getOrderUid());
     }
 
-    // 결제 중 취소되는 경우 주문 내역 삭제
+    // 결제 중 취소되는 경우 주문 내역 삭제 (결제 창 뜨기 전)
     @DeleteMapping("/shop/cancel")
     public ResponseEntity<?> deleteOrder(long id) {
         log.info("userBuySeq: {}", id);
         int result = userBuyService.deleteOrder(id);
+        if(result == 1) {
+            return new ResponseEntity<>("1", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("주문이 삭제되지 않았습니다.", HttpStatus.NOT_FOUND);
+    }
+
+    // 결제 중 취소되는 경우 주문 내역, 결제 정보 삭제 (결제 창 뜨기 전)
+    @DeleteMapping("/shop/afterPayment")
+    public ResponseEntity<?> deleteOrder(@RequestParam String orderUid) {
+        log.info("orderUid: {}", orderUid);
+        
+        int result = userBuyService.deleteOrderAfterPayment(orderUid);
         if(result == 1) {
             return new ResponseEntity<>("1", HttpStatus.OK);
         }
@@ -97,7 +110,9 @@ public class UserBuyController {
     public ResponseEntity<?> getOrderInfo(@RequestParam String orderUid) {
         log.info("주문 정보 가져오기 OrderUid : {}", orderUid);
         UserBuy userBuy = userBuyService.findByOrderUid(orderUid);
+        log.info("주문 상세 품목 정보 가져오기");
         log.info("userbuy : {}", userBuy);
+        log.info("userBuyDetail : {}", userBuy.getUserBuyDetailList().get(0));
         UserBuyRes userBuyRes = new UserBuyRes(userBuy);
         return new ResponseEntity<>(userBuyRes, HttpStatus.OK);
     }

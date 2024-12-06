@@ -10,15 +10,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ReviewCommentDTO {
-    private Long reviewCommentSeq;  // 댓글 고유 번호
-    private String content;         // 댓글 내용
-    private Integer score;          // 평점
-    private String filePath;        // 파일 경로
-    private String fileName;        // 파일 이름
-    private Long userSeq;            // 작성자 ID
-    private LocalDateTime regDate;  // 작성일
-    private Long reviewSeq;         // 연결된 리뷰 ID
-    private Long userBuyDetailSeq;  // 구매 정보 ID
+    private Long reviewCommentSeq;
+    private String content;
+    private Integer score;
+    private String filePath;
+    private String fileName;
+    private Long userSeq;
+    private LocalDateTime regDate;
+    private Long reviewSeq; // 댓글이 속한 게시판(Review)의 ID
+    private Long userBuyDetailSeq;
+
 
 
     // 엔티티를 DTO로 변환하는 정적 메서드
@@ -29,9 +30,9 @@ public class ReviewCommentDTO {
                 .score(reviewComment.getScore())
                 .filePath(reviewComment.getFile() != null ? reviewComment.getFile().getPath() : null)
                 .fileName(reviewComment.getFile() != null ? reviewComment.getFile().getName() : null)
-                .userSeq(reviewComment.getManagementUser().getUserSeq())
+                .userSeq(reviewComment.getUserBuyDetail().getUserBuy().getManagementUser().getUserSeq())
                 .regDate(reviewComment.getDate())
-                .reviewSeq(reviewComment.getReview().getReviewSeq())
+                .reviewSeq(reviewComment.getReview().getReviewSeq()) // 게시판 ID 설정
                 .userBuyDetailSeq(reviewComment.getUserBuyDetail().getUserBuySeq())
                 .build();
     }

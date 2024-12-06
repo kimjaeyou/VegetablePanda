@@ -1,7 +1,9 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +30,10 @@ public class Shop {
     private Integer price;
 
     @Column(name = "insert_date", length = 60)
+    @CreationTimestamp
     private LocalDateTime insertDate;
 
-
+    @JsonIgnore
     @OneToMany(mappedBy = "shop",fetch = FetchType.LAZY)
     private List<ShopLike> shopLikes;
 
