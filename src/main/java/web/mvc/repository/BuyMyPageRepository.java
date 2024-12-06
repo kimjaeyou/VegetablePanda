@@ -20,7 +20,7 @@ public interface BuyMyPageRepository extends JpaRepository<UserBuy, Long>, JpaSp
            "JOIN UserBuy b ON b.buySeq = d.userBuySeq " +
            "JOIN Stock z ON z.stockSeq = d.stock.stockSeq " +
            "WHERE z.farmerUser.userSeq = ?1 AND b.state = ?2 order by d.userBuy.buyDate DESC " )
-   List<UserBuyDTO> select(@Param("userSeq") Long seq, Integer state);
+   List<UserBuyDTO> select(@Param("userSeq") Long seq);
 
    @Query("SELECT new web.mvc.dto.UserBuyDTO(d.userBuySeq, z.content, d.count, d.price, d.userBuy.buyDate, b.state) " +
            "FROM UserBuyDetail d " +
