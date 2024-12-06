@@ -1,9 +1,7 @@
 package web.mvc.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +73,7 @@ public class S3ImageService {
     }
 
     String extention = filename.substring(lastDotIndex + 1).toLowerCase();
-    List<String> allowedExtentionList = Arrays.asList("jpg", "jpeg", "png", "gif");
+    List<String> allowedExtentionList = Arrays.asList("jpg", "jpeg", "PNG","png", "gif", "webp");
 
     if (!allowedExtentionList.contains(extention)) {
       //throw new S3Exception(ErrorCode.INVALID_FILE_EXTENTION);
@@ -164,6 +162,30 @@ public class S3ImageService {
     }catch (MalformedURLException | UnsupportedEncodingException e){
       //throw new S3Exception(ErrorCode.IO_EXCEPTION_ON_IMAGE_DELETE);
       throw new RuntimeException("버킷 IO_EXCEPTION_ON_IMAGE_DELETE");
+    }
+  }
+
+  public byte[] downloadFile(String s3Path) {
+    try {
+      String key = getKeyFromImageAddress(s3Path);
+
+      S3Object s3Object = amazonS3.getObject(bucketName, key);
+      S3ObjectInputStream inputStream = s3Object.getObjectContent();
+
+      try {
+        byte[] content = IOUtils.toByteArray(inputStream);
+        return content;
+      } finally {
+        // 리소스 정리
+        inputStream.close();
+      }
+
+    } catch (AmazonS3Exception e) {
+      log.error("S3 파일 다운로드 실패 - S3 오류: {}", e.getMessage());
+      throw new RuntimeException("파일 다운로드 중 S3 오류가 발생했습니다.");
+    } catch (IOException e) {
+      log.error("S3 파일 다운로드 실패 - IO 오류: {}", e.getMessage());
+      throw new RuntimeException("파일 다운로드 중 IO 오류가 발생했습니다.");
     }
   }
 }

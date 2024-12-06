@@ -12,9 +12,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import web.mvc.domain.*;
 import web.mvc.dto.ReviewCommentDTO;
+import web.mvc.dto.StockDTO;
+import web.mvc.exception.DMLException;
+import web.mvc.exception.ErrorCode;
 import web.mvc.security.CustomMemberDetails;
-import web.mvc.service.ReviewCommentService;
+import web.mvc.service.*;
 
 import java.util.List;
 
@@ -25,24 +29,55 @@ import java.util.List;
 public class ReviewCommentController {
 
     private final ReviewCommentService reviewCommentService;
+    private final UserBuyDetailService userBuyDetailService;
+    private final ReviewService reviewService;
     private final ObjectMapper objectMapper;
+    private final FileService fileService;
+    private final S3ImageService s3ImageService;
 
     @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> reviewCommentSave(
-            @RequestParam Long reviewSeq,
-            @RequestParam Long userBuyDetailSeq,
-            @RequestPart(value = "reviewCommentDTO", required = true) String reviewCommentDTOJson,
-            @RequestPart(value = "image", required = false) MultipartFile file) throws JsonProcessingException {
 
-        // JSON -> DTO 변환
-        ReviewCommentDTO reviewCommentDTO = objectMapper.readValue(reviewCommentDTOJson, ReviewCommentDTO.class);
+    public ResponseEntity<?> saveReviewComment(
+            @RequestPart ReviewCommentDTO reviewCommentDTO,
+            @RequestPart(value = "image", required = false) MultipartFile image) throws JsonProcessingException {
 
-        // 서비스 호출 및 저장
-        ReviewCommentDTO savedComment = reviewCommentService.reviewCommentSave(reviewSeq, userBuyDetailSeq, reviewCommentDTO, file);
+        ReviewComment reviewComment = new ReviewComment();
+        reviewComment.setReview(new Review(reviewCommentDTO.getReviewSeq()));
+        reviewComment.setContent(reviewCommentDTO.getContent());
+        reviewComment.setScore(reviewCommentDTO.getScore());
+        reviewComment.setUserBuyDetail(new UserBuyDetail(reviewCommentDTO.getUserBuyDetailSeq()));
+        reviewComment.setManagementUser(new ManagementUser(reviewCommentDTO.getUserSeq()));
+        reviewComment.setFile(null);
 
-        // 저장된 결과 반환
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedComment);
+        // 파일 업로드
+        if(image != null) {
+            String stockImage = s3ImageService.upload(image);
+            log.info("file생성 - stockImage : {}", stockImage);
+
+//            // File 객체 생성 및 저장
+//            File newFile = new File(stockImage, reviewCommentDTO.getFile().getName());
+//            File file = fileService.save(newFile);
+//            reviewCommentDTO.setFile(file);
+        }
+
+//        ReviewCommentDTO reviewCommentDTO = objectMapper.readValue(reviewCommentDTOJson, ReviewCommentDTO.class);
+//
+//        Long userSeq = getAuthenticatedUserSeq(); // 인증된 사용자 ID
+//        UserBuyDetail userBuyDetail = userBuyDetailService.findLatestByUserSeq(userSeq)
+//                .orElseThrow(() -> new DMLException(ErrorCode.ORDER_NOTFOUND));
+//
+//        Stock stock = Stock.getStock();
+//        FarmerUser farmerUser = stock.getFarmerUser();
+//
+//
+//        Review review = reviewService.findByManagementUserId(farmerUser.getUserSeq())
+//                .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
+//
+//        ReviewCommentDTO savedComment = reviewCommentService.reviewCommentSave(review, userBuyDetail, reviewCommentDTO, file);
+//
+       return  null ;//ResponseEntity.status(HttpStatus.CREATED).body(savedComment);
     }
+
 
     /**
      * 리뷰 댓글 수정
@@ -64,7 +99,8 @@ public class ReviewCommentController {
     }
 
     /**
-     * 리뷰 댓글 조회 - 리뷰 ID로 조회
+     * 리뷰 댓글 조회 - 게시판 별 따로 전체 조회
+     * 정상 작동함
      */
     @GetMapping("/{reviewSeq}")
     public ResponseEntity<?> reviewCommentFindByReviewSeq(@PathVariable Long reviewSeq) {
@@ -73,9 +109,14 @@ public class ReviewCommentController {
         return ResponseEntity.ok(comments);
     }
 
+    
+    /**
+     * 내가 작성한 리뷰 댓글들만 조회
+     * 정상 작동함
+     * */
     @GetMapping("/myComments")
     public ResponseEntity<?> reviewCommentFindByUser() {
-        log.info("내가 작성한 리뷰 댓글 조회 요청");
+        log.info("내가 작성한 리뷰 댓글 전체 조회 요청");
 
         // 현재 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -92,7 +133,12 @@ public class ReviewCommentController {
     }
 
     /**
+     * 리뷰 상세 조회 만들어야 할듯?
+     * */
+
+    /**
      * 리뷰 댓글 삭제
+     * 정상 작동함
      */
     @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/{reviewCommentSeq}")

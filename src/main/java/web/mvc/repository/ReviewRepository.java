@@ -3,12 +3,14 @@ package web.mvc.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.ReviewCommentDTO2;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
@@ -45,16 +47,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<ReviewCommentDTO2> reviewList(Long userSeq);
 
 
-    /**
-     * Personal 페이지 리뷰 5건
-     */
-    @Query("select new web.mvc.dto.ReviewCommentDTO2(r.content, " +
-            "COALESCE(r.file.path, 'defaultPath'), " + // file.path가 null이면 'defaultPath'를 반환
-            "r.score, r.date, r.managementUser.userSeq) " +
-            "from ReviewComment r " +
-            "left join Review v on r.review.reviewSeq = v.reviewSeq " +
-            "left join File f on r.file.fileSeq = f.fileSeq " + // 파일 관련 LEFT JOIN 추가
-            "where v.managementUser.userSeq = ?1 order by r.date")
-    List<ReviewCommentDTO2> reviewListToPersonal(Long userSeq);
 
+    @Query("SELECT r FROM Review r WHERE r.managementUser.userSeq = :userSeq")
+    Optional<Review> findByFarmerUserId(@Param("userSeq") Long userSeq);
+
+    Optional<Review> findByManagementUser_UserSeq(Long managementUserId);
 }

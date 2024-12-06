@@ -10,6 +10,7 @@ import web.mvc.dto.UserBuyDetailInfoDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Long> {
 
@@ -68,5 +69,7 @@ public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Lo
 
     @Query("select new web.mvc.dto.UserBuyDetailGetAvgPriceDTO(avg(u.price)) from UserBuyDetail u where u.stock.stockSeq=?1")
     UserBuyDetailGetAvgPriceDTO getAvgPrice(Long stockSeq);
+
+    Optional<UserBuyDetail> findFirstByUserBuy_ManagementUser_UserSeqOrderByUserBuy_BuyDateDesc(Long userSeq);
 
 }

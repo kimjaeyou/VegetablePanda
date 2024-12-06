@@ -13,6 +13,7 @@ import web.mvc.service.UserMyPageService;
 
 import java.util.List;
 
+
 @RequiredArgsConstructor
 @RestController
 @Slf4j
@@ -25,11 +26,11 @@ public class UserMyPageController {
      * 주문내역 조회
      */
     @GetMapping("/buyList/{seq}")
-    public ResponseEntity<List<UserBuyDTO>> buyList(@PathVariable Long seq) {
+    public ResponseEntity<List<UserBuyListForReivewDTO>> buyList(@PathVariable Long seq) {
         log.info("주문 내역 조회 컨트롤러 시작 - userSeq: {}", seq);
 
         try {
-            List<UserBuyDTO> list = userMyPageService.buyList(seq);
+            List<UserBuyListForReivewDTO> list = userMyPageService.buyList(seq);
             log.info("주문 내역 조회 결과 - 건수: {}", list.size());
             log.info("주문 내역 상세: {}", list);
 
@@ -96,6 +97,7 @@ public class UserMyPageController {
         }
         return new ResponseEntity<>(userMyPageService.update(getAllUserDTO, seq), HttpStatus.OK);
     }
+
 
     /**
      * 탈퇴 (계정 상태 변경)
