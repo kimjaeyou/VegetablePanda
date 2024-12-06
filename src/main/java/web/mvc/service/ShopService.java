@@ -3,10 +3,7 @@ package web.mvc.service;
 import web.mvc.domain.Shop;
 import web.mvc.domain.ShopLike;
 import web.mvc.domain.Stock;
-import web.mvc.dto.SalesStatisticsDTO;
-import web.mvc.dto.ShopLikeDTO;
-import web.mvc.dto.ShopListDTO;
-import web.mvc.dto.StockDTO;
+import web.mvc.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,5 +42,7 @@ public interface ShopService {
 
     ShopLike getByUserSeqAndStockSeq(Long userSeq, Long shopSeq);
     ShopLike getShopLike(Long userSeq, Long shopSeq);
+
+    List<ShopLikeResponseDTO> getLikedShopsByUser(Long userSeq);
 }
 
