@@ -6,16 +6,21 @@ import org.springframework.data.jpa.repository.Query;
 import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
 import web.mvc.dto.ReviewCommentDTO;
+import web.mvc.dto.ReviewCommentDetailDTO;
 
 import java.util.List;
 
 public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Long> {
 
     // 특정 사용자가 작성한 댓글 조회
-    List<ReviewComment> findAllByManagementUser_UserSeq(Long userId);
+    @Query(value = "select new web.mvc.dto.ReviewCommentDetailDTO(r.content,r.score,u.name,r.date,r.file.path )from ReviewComment r join User u on r.managementUser.userSeq = u.userSeq where r.reviewCommentSeq=?1")
+    List<ReviewCommentDetailDTO> findAllByManagementUser_UserSeq(Long userId);
 
-    // 특정 리뷰에 대한 댓글 조회
-    List<ReviewComment> findAllByReview_ReviewSeq(Long reviewSeq);
+    // 유저가 단 리뷰 보기
+    @Query(value = "select new web.mvc.dto.ReviewCommentDetailDTO(r.content,r.score,u.name,r.date,r.file.path )from ReviewComment r join User u on r.managementUser.userSeq = u.userSeq where r.reviewCommentSeq=?1")
+    ReviewCommentDetailDTO findByReviewUser(Long reviewCommentSeq);
 
-
+    // 업체가 단 리뷰 보기
+    @Query(value = "select new web.mvc.dto.ReviewCommentDetailDTO(r.content,r.score,u.comName,r.date,r.file.path)from ReviewComment r join CompanyUser u on r.managementUser.userSeq = u.userSeq where r.reviewCommentSeq=?1")
+    ReviewCommentDetailDTO findByReviewCom(Long reviewCommentSeq);
 }
