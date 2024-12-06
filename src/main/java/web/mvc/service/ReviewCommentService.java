@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ReviewCommentService {
 
     // 댓글 등록
-    ReviewCommentDTO reviewCommentSave(Review review, UserBuyDetail userBuyDetail, ReviewCommentDTO reviewCommentDTO, MultipartFile file);
+    ReviewCommentDTO reviewCommentSave(ReviewComment reviewComment);
 
     // 댓글 수정
     ReviewCommentDTO reviewCommentUpdate(Long reviewSeq, Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file, boolean deleteFile);
