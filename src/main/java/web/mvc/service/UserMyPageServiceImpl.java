@@ -34,7 +34,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     @Override
     public List<UserBuyDTO> buyList(Long seq) {
         Integer state = 2;
-        return buyMyPageRepository.select(seq, state);
+        return buyMyPageRepository.select(seq);
     }
 
     /**

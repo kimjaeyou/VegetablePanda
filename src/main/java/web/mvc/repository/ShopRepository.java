@@ -25,7 +25,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "s.stock.product.productCategory.content," +
             "s.stock.farmerUser.name)" +
             "FROM Shop s " +
-            "LEFT JOIN s.stock.file " + // file이 없는 경우에도 데이터 포함
+            "LEFT JOIN s.stock.file " +
             "WHERE s.stock.status = 3 " +
             "ORDER BY s.insertDate DESC")
     List<ShopListDTO> findAllShopItems();
@@ -52,8 +52,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "FROM Shop s " +
             "join Stock k on s.stock.stockSeq = k.stockSeq " +
             "join Product p on p.productSeq = k.product.productSeq " +
-            "join ShopLike l on l.shop.shopSeq = s.shopSeq " +
-            "WHERE s.stock.status = 1  and s.stock.farmerUser.userSeq = ?1 and l.state = true " +
+            "WHERE s.stock.status = 3 and s.stock.farmerUser.userSeq = ?1" +
             "ORDER BY s.insertDate DESC")
     List<ShopListDTO> findLikeItems(Long seq);
 

@@ -85,6 +85,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         map.put("role", user.getRole());
         map.put("phone", user.getPhone());
         map.put("address", user.getAddress());
+        map.put("state", user.getState());
         Map<Long, Set<Long>> notiUserMap =(Map<Long,Set<Long>>)app.getAttribute("notiUserMap");
         if(role.equals("ROLE_FARMER")){
             if(!notiUserMap.containsKey(user.getUserSeq())) {

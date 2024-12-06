@@ -30,6 +30,7 @@ public class GetAllUserDTO {
     private String image;
     private String intro;
     private String path;
+    private Integer state;
 
 
     public GetAllUserDTO(FarmerUser fuser) {
@@ -44,6 +45,7 @@ public class GetAllUserDTO {
         this.email=fuser.getEmail();
         this.phone=fuser.getPhone();
         this.role=fuser.getRole();
+        this.state=fuser.getState();
     }
 
     public GetAllUserDTO(User nuser) {
@@ -56,6 +58,7 @@ public class GetAllUserDTO {
         this.email=nuser.getEmail();
         this.phone=nuser.getPhone();
         this.role=nuser.getRole();
+        this.state=nuser.getState();
     }
 
     public GetAllUserDTO(CompanyUser cuser) {
@@ -70,6 +73,7 @@ public class GetAllUserDTO {
         this.role=cuser.getRole();
         this.code=cuser.getCode();
         this.regName=cuser.getRegName();
+        this.state=cuser.getState();
     }
 
 }

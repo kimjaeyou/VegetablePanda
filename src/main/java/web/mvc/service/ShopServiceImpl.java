@@ -95,7 +95,7 @@ public class ShopServiceImpl implements ShopService {
     // 이것도 윤성이가 씀
     @Override
     public List<ShopListDTO> getShopItemsUser(long seq) {
-        return shopRepository.findLikeItems(seq);
+        return shopRepository.findByUserSeq(seq);
     }
 
     private SalesStatisticsDTO convertToDTO(Object[] result) {

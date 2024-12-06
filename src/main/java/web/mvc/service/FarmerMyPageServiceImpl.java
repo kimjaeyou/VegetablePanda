@@ -106,4 +106,13 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
         }
 
 
+        //personal page용 리뷰 5건
+        public List<ReviewCommentDTO2> reviewListToPersonal(Long seq) {
+            List<ReviewCommentDTO2> list = reviewRepository.reviewListToPersonal(seq);
+            return list;
+        }
+
+
+
+
 }
