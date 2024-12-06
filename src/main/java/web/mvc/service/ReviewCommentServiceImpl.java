@@ -13,9 +13,9 @@ import web.mvc.exception.ErrorCode;
 import web.mvc.repository.ManagementRepository;
 import web.mvc.repository.ReviewCommentRepository;
 import web.mvc.repository.ReviewRepository;
-import web.mvc.repository.UserBuyDetailRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,35 +28,47 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     private final ReviewRepository reviewRepository;
     private final S3ImageService s3ImageService;
     private final ManagementRepository managementRepository;
-    private final UserBuyDetailRepository userBuyDetailRepository;
+    private final FileService fileService;
 
     /**
      * 댓글 저장
      */
     @Override
-    public ReviewCommentDTO reviewCommentSave(Long reviewSeq, Long userBuyDetailSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file) {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+    public ReviewCommentDTO reviewCommentSave(Review review, UserBuyDetail userBuyDetail, ReviewCommentDTO reviewCommentDTO, MultipartFile file) {
+        String writerId = getCurrentUserId();
 
-        ManagementUser managementUser = managementRepository.findByUserId(userId);
-        if (managementUser == null) throw new DMLException(ErrorCode.NOTFOUND_USER);
+        // 현재 로그인한 사용자 정보 검색
+        ManagementUser managementUser = managementRepository.findById(writerId);
 
-        UserBuyDetail userBuyDetail = userBuyDetailRepository.findById(userBuyDetailSeq)
-                .orElseThrow(() -> new DMLException(ErrorCode.ORDER_NOTFOUND));
-
-        Review review = findReviewById(reviewSeq);
-
+        // 댓글 엔티티 생성
         ReviewComment reviewComment = reviewCommentDTO.toEntity();
-        reviewComment.setReview(review);
+        reviewComment.setReview(review); // 게시판(Review) 연결
+        reviewComment.setUserBuyDetail(userBuyDetail); // 구매 상세 정보 연결
         reviewComment.setManagementUser(managementUser);
-        reviewComment.setUserBuyDetail(userBuyDetail);
-
-        // 파일 처리
+        // 이미지 파일 처리
         if (file != null && !file.isEmpty()) {
-            reviewComment.setFile(uploadFileToS3(file));
+            String s3Url = s3ImageService.upload(file); // S3 업로드
+            File uploadedFile = File.builder()
+                    .path(s3Url)
+                    .name(file.getOriginalFilename())
+                    .build();
+            File savedFile = fileService.save(uploadedFile); // 파일 메타데이터 저장
+            reviewComment.setFile(savedFile); // 댓글에 파일 연결
         }
 
-        return ReviewCommentDTO.fromEntity(reviewCommentRepository.save(reviewComment));
+        // 댓글 저장
+        ReviewComment savedComment = reviewCommentRepository.save(reviewComment);
+
+        // DTO 변환 및 반환
+        return ReviewCommentDTO.fromEntity(savedComment);
     }
+
+    @Override
+    public Optional<Review> findByFarmerUserId(Long userSeq) {
+        return reviewRepository.findByFarmerUserId(userSeq);
+    }
+
+
     //댓글 업뎃
     @Override
     public ReviewCommentDTO reviewCommentUpdate(Long reviewSeq, Long reviewCommentSeq, ReviewCommentDTO reviewCommentDTO, MultipartFile file, boolean deleteFile) {
@@ -162,11 +174,21 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     }
 
     /**
+     * 현재 로그인한 사용자 ID 가져오기
+     */
+    private String getCurrentUserId() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    /**
      * 파일 업로드 처리
      */
     private File uploadFileToS3(MultipartFile image) {
-        String uploadedPath = s3ImageService.upload(image);
-        return new File(uploadedPath, image.getOriginalFilename());
+        String uploadedPath = s3ImageService.upload(image); // S3에 업로드
+        return File.builder()
+                .path(uploadedPath) // S3 URL 저장
+                .name(image.getOriginalFilename()) // 원본 파일 이름 저장
+                .build();
     }
 
     /**

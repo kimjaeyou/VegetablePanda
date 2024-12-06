@@ -8,6 +8,7 @@ import web.mvc.domain.UserBuyDetail;
 import web.mvc.repository.UserBuyDetailRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -21,5 +22,10 @@ public class UserBuyDetailServiceImpl implements UserBuyDetailService {
     public List<UserBuyDetail> insertUserBuyDetail(List<UserBuyDetail> userBuyDetails) {
         List<UserBuyDetail> list = userBuyDetailRepository.saveAll(userBuyDetails);
         return list;
+    }
+
+    @Override
+    public Optional<UserBuyDetail> findLatestByUserSeq(Long userSeq) {
+        return userBuyDetailRepository.findFirstByUserBuy_ManagementUser_UserSeqOrderByUserBuy_BuyDateDesc(userSeq);
     }
 }

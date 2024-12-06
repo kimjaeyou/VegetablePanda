@@ -55,9 +55,6 @@ public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Lo
 
     );
 
-    @Query("SELECT ubd FROM UserBuyDetail ubd " +
-            "JOIN ubd.userBuy ub " +
-            "JOIN ub.managementUser mu " +
-            "WHERE mu.userSeq = :userSeq")
-    List<UserBuyDetail> findByUserSeq(@Param("userSeq") Long userSeq);
+    Optional<UserBuyDetail> findFirstByUserBuy_ManagementUser_UserSeqOrderByUserBuy_BuyDateDesc(Long userSeq);
+
 }
