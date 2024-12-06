@@ -12,10 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import web.mvc.domain.FarmerUser;
-import web.mvc.domain.Review;
-import web.mvc.domain.Stock;
-import web.mvc.domain.UserBuyDetail;
+import web.mvc.domain.*;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.StockDTO;
 import web.mvc.exception.DMLException;
@@ -35,11 +32,33 @@ public class ReviewCommentController {
     private final UserBuyDetailService userBuyDetailService;
     private final ReviewService reviewService;
     private final ObjectMapper objectMapper;
+    private final FileService fileService;
+    private final S3ImageService s3ImageService;
 
     @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
     public ResponseEntity<?> saveReviewComment(
-            @RequestPart(value = "reviewCommentDTO", required = true) String reviewCommentDTOJson,
-            @RequestPart(value = "image", required = false) MultipartFile file) throws JsonProcessingException {
+            @RequestPart ReviewCommentDTO reviewCommentDTO,
+            @RequestPart(value = "image", required = false) MultipartFile image) throws JsonProcessingException {
+
+        ReviewComment reviewComment = new ReviewComment();
+        reviewComment.setReview(new Review(reviewCommentDTO.getReviewSeq()));
+        reviewComment.setContent(reviewCommentDTO.getContent());
+        reviewComment.setScore(reviewCommentDTO.getScore());
+        reviewComment.setUserBuyDetail(new UserBuyDetail(reviewCommentDTO.getUserBuyDetailSeq()));
+        reviewComment.setManagementUser(new ManagementUser(reviewCommentDTO.getUserSeq()));
+        reviewComment.setFile(null);
+
+        // 파일 업로드
+        if(image != null) {
+            String stockImage = s3ImageService.upload(image);
+            log.info("file생성 - stockImage : {}", stockImage);
+
+//            // File 객체 생성 및 저장
+//            File newFile = new File(stockImage, reviewCommentDTO.getFile().getName());
+//            File file = fileService.save(newFile);
+//            reviewCommentDTO.setFile(file);
+        }
 
 //        ReviewCommentDTO reviewCommentDTO = objectMapper.readValue(reviewCommentDTOJson, ReviewCommentDTO.class);
 //

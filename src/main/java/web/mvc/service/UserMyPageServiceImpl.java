@@ -32,14 +32,12 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      * 주문내역
      */
     @Override
-    public List<UserBuyDTO> buyList(Long seq) {
+    public List<UserBuyListForReivewDTO> buyList(Long seq) {
         log.info("주문내역 조회 서비스 시작 - userSeq: {}, state: {}", seq, 1);
 
         try {
-            Integer state = 2;
             log.info("buyMyPageRepository.select 호출 시작");
-
-            List<UserBuyDTO> result = buyMyPageRepository.select(seq, state);
+            List<UserBuyListForReivewDTO> result = buyMyPageRepository.selectShopBuyByUserSeq(seq);
 
             log.info("주문내역 조회 결과 - 건수: {}", result != null ? result.size() : 0);
             if (result == null || result.isEmpty()) {
@@ -53,8 +51,6 @@ public class UserMyPageServiceImpl implements UserMyPageService {
             log.error("주문내역 조회 중 오류 발생 - userSeq: {}, state: {}", seq, 1, e);
             throw e;
         }
-        Integer state = 2;
-        return buyMyPageRepository.select(seq, state);
     }
 
     /**
