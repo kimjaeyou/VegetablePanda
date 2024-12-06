@@ -15,7 +15,6 @@ import web.mvc.exception.ErrorCode;
 import web.mvc.redis.RedisUtils;
 import web.mvc.repository.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -47,6 +46,12 @@ public class AuctionServiceImpl implements AuctionService {
 
     private final BidRepository bidRepository;
 
+    private final StreamingRepository streamingRepository;
+
+    private final StreamingService streamingService;
+
+    private final ShopRepository shopRepository;
+
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -59,10 +64,11 @@ public class AuctionServiceImpl implements AuctionService {
     public Auction insertAuction(AuctionDTO auction,int price) {
         log.info("insert auction ServiceImpl");
 
-
+        Stock stock = stockRepository.checkCount(auction.getStockSeq(),auction.getCount());
+        if(stock==null) throw new AuctionException(ErrorCode.STOCK_COUNT_LESS);
         Auction saveAc = Auction.builder()
-                .stock(stockRepository.findById(auction.getStockSeq()).orElse(null))
-                .closeTime(LocalDateTime.   parse(auction.getCloseTime(), FORMATTER))
+                .stock(stock)
+                .closeTime(LocalDateTime.parse(auction.getCloseTime(), FORMATTER))
                 .count(auction.getCount())
                 .status(auction.getStatus())
                 .build();
@@ -149,9 +155,16 @@ public class AuctionServiceImpl implements AuctionService {
             // 가상지갑상태을 db에 반영한다., 경매 팔린만큼 재고 감소시킨다.
             UserTempWalletDTO userTempWalletDTO = redisUtils.getData("userTempWallet:"+highestBidDTO.getUserSeq(),UserTempWalletDTO.class).orElse(null);
             userWalletRepository.updateWallet(userTempWalletDTO.getUserSeq(),userTempWalletDTO.getPoint());
-            stockRepository.reduceCount(auction.getStockSeq(),auction.getCount());
+            Stock stock = stockRepository.findById(auction.getStockSeq()).orElse(null);
+            stock.setCount(stock.getCount()-auction.getCount());
             redisUtils.deleteData("highestBid:"+highestBidDTO.getAuctionSeq());
-
+            redisUtils.deleteData("auction:" + highestBidDTO.getAuctionSeq());
+            StockUserSeqDTO checkZeroStock = stockRepository.checkCountZero(auction.getStockSeq());
+            if(checkZeroStock!=null){
+                Streaming streaming =streamingRepository.findByFarmerUserSeq(checkZeroStock.getUserSeq());
+                streamingService.exitRoomById(streaming.getStreamingSeq());
+                stock.setStatus(4);
+            }
         }else{
             UserBuy userBuy =userBuyRepository.save(
                     UserBuy.builder()
@@ -172,9 +185,17 @@ public class AuctionServiceImpl implements AuctionService {
             // 가상지갑상태을 db에 반영한다., 경매 팔린만큼 재고 감소시킨다.
             UserTempWalletDTO userTempWalletDTO = redisUtils.getData("userTempWallet:"+highestBidDTO.getUserSeq(),UserTempWalletDTO.class).orElse(null);
             userWalletRepository.updateWallet(userTempWalletDTO.getUserSeq(),userTempWalletDTO.getPoint());
-            stockRepository.reduceCount(auction.getStockSeq(),auction.getCount());
-            redisUtils.deleteData("highestBid:"+highestBidDTO.getAuctionSeq());
+            Stock stock = stockRepository.findById(auction.getStockSeq()).orElse(null);
+            stock.setCount(stock.getCount()-auction.getCount());
 
+            redisUtils.deleteData("highestBid:"+highestBidDTO.getAuctionSeq());
+            redisUtils.deleteData("auction:" + highestBidDTO.getAuctionSeq());
+            StockUserSeqDTO checkZeroStock = stockRepository.checkCountZero(auction.getStockSeq());
+            if(checkZeroStock!=null){
+                Streaming streaming =streamingRepository.findByFarmerUserSeq(checkZeroStock.getUserSeq());
+                streamingService.exitRoomById(streaming.getStreamingSeq());
+                stock.setStatus(4);
+            }
         }
 
 
@@ -248,13 +269,35 @@ public class AuctionServiceImpl implements AuctionService {
             // 가상지갑상태을 db에 반영한다., 경매 팔린만큼 재고 감소시킨다.
             UserTempWalletDTO userTempWalletDTO = redisUtils.getData("userTempWallet:" + highestBidDTO.getUserSeq(), UserTempWalletDTO.class).orElse(null);
             userWalletRepository.updateWallet(userTempWalletDTO.getUserSeq(), userTempWalletDTO.getPoint());
-            stockRepository.reduceCount(auctionDTO.getStockSeq(), auction.getCount());
+            Stock stock = stockRepository.findById(auction.getStock().getStockSeq()).orElse(null);
+            stock.setCount(stock.getCount()-auction.getCount());
             redisUtils.deleteData("highestBid:" + highestBidDTO.getAuctionSeq());
             redisUtils.deleteData("auction:" + highestBidDTO.getAuctionSeq());
-
+            StockUserSeqDTO checkZeroStock = stockRepository.checkCountZero(auction.getStock().getStockSeq());
+            if(checkZeroStock!=null){
+                Streaming streaming =streamingRepository.findByFarmerUserSeq(checkZeroStock.getUserSeq());
+                streamingService.exitRoomById(streaming.getStreamingSeq());
+                stock.setStatus(4);
+            }
 
         }
     }
+    @Scheduled(cron = "0 0 18 * * ?")
+   //@Scheduled(cron = "0 * * * * ?")
+    public void scheduledTask() {
+        System.out.println("매일 오후 6시에 실행됩니다.");
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1); // 현재 날짜에서 하루 전
+        List<Stock> stocks = stockRepository.findStocksBeforeYesterday(yesterday);
+        for (Stock stock : stocks) {
+            stock.setStatus(3);
+            Shop shop = new Shop();
+            UserBuyDetailGetAvgPriceDTO avgPrice = userBuyDetailRepository.getAvgPrice(stock.getStockSeq());
+            shop.setPrice((int)Math.floor(avgPrice.getPrice()));
+            shop.setStock(stock.getStockSeq());
+            shopRepository.save(shop);
+        }
+    }
+
 
     @Override
     public List<AuctionStatusDTO> getCurrentAuctions() {

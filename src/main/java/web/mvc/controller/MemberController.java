@@ -3,6 +3,7 @@ package web.mvc.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,7 @@ public class MemberController {
         memberService.signUp(user, image);
         return "ok";
     }
+
     //추가한 부분
     @GetMapping("/api/user")
     public ResponseEntity<?> getUserInfo() {
@@ -53,5 +55,11 @@ public class MemberController {
         response.put("address", userDetails.getUser().getAddress());
 
         return ResponseEntity.ok(response);
+    }
+
+    // 판매자 명단
+    @GetMapping("/farmer")
+    public ResponseEntity<?> farmer(){
+        return new ResponseEntity<> (memberService.farmer(), HttpStatus.OK);
     }
 }

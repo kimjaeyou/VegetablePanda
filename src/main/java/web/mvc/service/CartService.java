@@ -8,16 +8,18 @@ import web.mvc.dto.CartItemDTO;
 import java.util.List;
 
 public interface CartService {
-    void addToCart(HttpServletRequest request, HttpServletResponse response, Long stockSeq, Integer quantity);
+    void addToCart(HttpServletRequest request, HttpServletResponse response,
+              Long stockSeq, Integer quantity, Long userSeq);
 
-    List<CartItemDTO> getCartItems(HttpServletRequest request);
+    List<CartItemDTO> getCartItems(HttpServletRequest request, Long userSeq);
 
-    void removeFromCart(HttpServletRequest request, HttpServletResponse response, Long stockSeq);
+    void removeFromCart(HttpServletRequest request, HttpServletResponse response,
+                        Long stockSeq, Long userSeq);
 
-    void clearCart(HttpServletResponse response);
+    void clearCart(HttpServletResponse response, Long userSeq);
 
     void updateQuantity(HttpServletRequest request, HttpServletResponse response,
-                        Long stockSeq, Integer quantity);
+                        Long stockSeq, Integer quantity, Long userSeq);
 
     int calculateTotal(List<CartItemDTO> cartItems);
 }

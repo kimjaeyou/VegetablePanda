@@ -157,7 +157,6 @@ public class UserMyPageController {
      */
     @DeleteMapping("/like/delete/{seq}")
     public String likeDelete(@PathVariable Long seq, @PathVariable Long likeSeq) {
-
         return userMyPageService.likeDelete(seq, likeSeq);
     }
 

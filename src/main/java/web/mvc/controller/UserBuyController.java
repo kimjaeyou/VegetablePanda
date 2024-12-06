@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.*;
 import web.mvc.dto.UserBuyDetailDTO;
 import web.mvc.dto.UserBuyReq;
@@ -53,7 +50,6 @@ public class UserBuyController {
         log.info("UserBuy의 user_seq: {}", userBuy.getManagementUser().getUserSeq());
         System.out.println(userBuy);
 
-        log.info("UserBuyDetail List 정보 {}", userBuy.getUserBuyDetailList().get(0).getUserBuySeq()); // 왜 null이지?
         log.info("Userbuyreq의 userbuydetail 정보 {}", userBuyReq.getUserBuyDetailDTOs());
 
         // 주문 상세 품목 변수 dtoList
@@ -84,7 +80,7 @@ public class UserBuyController {
         return ResponseEntity.ok(result.getOrderUid());
     }
 
-    // 결제 중 취소되는 경우 주문 내역 삭제
+    // 결제 중 취소되는 경우 주문 내역 삭제 (결제 창 뜨기 전)
     @DeleteMapping("/shop/cancel")
     public ResponseEntity<?> deleteOrder(long id) {
         log.info("userBuySeq: {}", id);
@@ -94,5 +90,30 @@ public class UserBuyController {
         }
 
         return new ResponseEntity<>("주문이 삭제되지 않았습니다.", HttpStatus.NOT_FOUND);
+    }
+
+    // 결제 중 취소되는 경우 주문 내역, 결제 정보 삭제 (결제 창 뜨기 전)
+    @DeleteMapping("/shop/afterPayment")
+    public ResponseEntity<?> deleteOrder(@RequestParam String orderUid) {
+        log.info("orderUid: {}", orderUid);
+        
+        int result = userBuyService.deleteOrderAfterPayment(orderUid);
+        if(result == 1) {
+            return new ResponseEntity<>("1", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("주문이 삭제되지 않았습니다.", HttpStatus.NOT_FOUND);
+    }
+
+    // 주문 정보 가져오기
+    @PostMapping("/shop/order")
+    public ResponseEntity<?> getOrderInfo(@RequestParam String orderUid) {
+        log.info("주문 정보 가져오기 OrderUid : {}", orderUid);
+        UserBuy userBuy = userBuyService.findByOrderUid(orderUid);
+        log.info("주문 상세 품목 정보 가져오기");
+        log.info("userbuy : {}", userBuy);
+        log.info("userBuyDetail : {}", userBuy.getUserBuyDetailList().get(0));
+        UserBuyRes userBuyRes = new UserBuyRes(userBuy);
+        return new ResponseEntity<>(userBuyRes, HttpStatus.OK);
     }
 }

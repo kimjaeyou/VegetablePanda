@@ -9,6 +9,8 @@ import web.mvc.domain.Payment;
 import web.mvc.domain.UserBuy;
 import web.mvc.domain.UserBuyDetail;
 import web.mvc.dto.UserBuyListByStockDTO;
+import web.mvc.exception.PaymentException;
+import web.mvc.repository.UserBuyRepository;
 import web.mvc.repository.*;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.UserBuyException;
@@ -63,6 +65,31 @@ public class UserBuyServiceImpl implements UserBuyService {
         UserBuy userBuy = userBuyRepository.findById(userBuySeq).orElseThrow(()-> new UserBuyException(ErrorCode.ORDER_NOTFOUND));
         userBuyRepository.delete(userBuy);
         return 1;
+    }
+
+    public int deleteOrderAfterPayment(String orderUid) {
+        log.info("deleteOrderAfterPayment : {}", orderUid);
+        UserBuy userBuy = null;
+        Payment payment = null;
+        if(userBuyRepository.findByOrderUid(orderUid).size() == 1) {
+            userBuy = userBuyRepository.findByOrderUid(orderUid).get(0);
+            payment = paymentRepository.findOrderAndPayment(orderUid).orElseThrow(()->new PaymentException(ErrorCode.PAYMENT_NOTFOUND));
+        } else {
+            throw new UserBuyException(ErrorCode.ORDER_NOTFOUND);
+        }
+        paymentRepository.delete(payment);
+        userBuyRepository.delete(userBuy);
+        return 1;
+    }
+
+    @Override
+    public UserBuy findByOrderUid(String orderUid) {
+        List<UserBuy> userBuyList = userBuyRepository.findByOrderUid(orderUid);
+        if(userBuyList.size() == 1) {
+            return userBuyList.get(0);
+        } else {
+            throw new UserBuyException(ErrorCode.ORDER_NOTFOUND);
+        }
     }
 
     @Override

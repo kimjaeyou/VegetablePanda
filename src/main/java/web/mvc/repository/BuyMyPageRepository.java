@@ -19,15 +19,16 @@ public interface BuyMyPageRepository extends JpaRepository<UserBuy, Long>, JpaSp
            "FROM UserBuyDetail d " +
            "JOIN UserBuy b ON b.buySeq = d.userBuySeq " +
            "JOIN Stock z ON z.stockSeq = d.stock.stockSeq " +
-           "WHERE b.managementUser.userSeq = ?1 AND b.state = ?2 order by d.userBuy.buyDate DESC " )
+           "WHERE z.farmerUser.userSeq = ?1 AND b.state = ?2 order by d.userBuy.buyDate DESC " )
    List<UserBuyDTO> select(@Param("userSeq") Long seq, Integer state);
 
    @Query("SELECT new web.mvc.dto.UserBuyDTO(d.userBuySeq, z.content, d.count, d.price, d.userBuy.buyDate, b.state) " +
            "FROM UserBuyDetail d " +
            "JOIN UserBuy b ON b.buySeq = d.userBuySeq " +
            "JOIN Stock z ON z.stockSeq = d.stock.stockSeq " +
-           "WHERE b.managementUser.userSeq = ?1 AND b.state between 0 and 10 order by d.userBuy.buyDate DESC " )
+           "WHERE z.farmerUser.userSeq = ?1 AND b.state between 1 and 3 order by d.userBuy.buyDate DESC " )
    List<UserBuyDTO> selectAll(@Param("userSeq") Long seq);
+
 
 
    // 상태값 판매상태값 바꾸기

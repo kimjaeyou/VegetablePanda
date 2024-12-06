@@ -7,14 +7,18 @@ import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.*;
 import web.mvc.dto.PaymentReq;
 import web.mvc.dto.RequestPayDTO;
+import web.mvc.dto.UserTempWalletDTO;
 import web.mvc.exception.*;
 import web.mvc.payment.PaymentStatus;
+import web.mvc.redis.RedisUtils;
 import web.mvc.repository.*;
 
 import java.io.IOException;
@@ -37,6 +41,13 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final UserBuyRepository userBuyRepository;
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private RedisUtils redisUtils;
+
+
     @Override
     public UserBuy paymentInsert(UserBuy userBuy) {
         // 결제 정보 등록 프로세스 // 주문에서 진행가능...
@@ -46,6 +57,11 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public int saveCharge(UserCharge userCharge) {
         log.info("포인트 충전 성공! 충전 포인트 : {}", userCharge.getPrice());
+        UserTempWalletDTO userTempWallet = redisUtils.getData("userTempWallet:"+userCharge.getManagementUser().getUserSeq(),UserTempWalletDTO.class).orElse(null);
+        if(userTempWallet !=null) {
+            userTempWallet.setPoint(userTempWallet.getPoint() + userCharge.getPrice());
+            redisUtils.saveData("userTempWallet:"+userCharge.getManagementUser().getUserSeq(),userTempWallet);
+        }
         UserCharge result = userChargeRepository.save(userCharge);
         return 1;
     }
@@ -97,15 +113,15 @@ public class PaymentServiceImpl implements PaymentService {
 
                     if ("user".equals(userM.getContent())) {
 
-                        //List<User> user = userRepository.findListByUserSeq(userM.getUserSeq());
                         User user = userRepository.findByUserSeq(userM.getUserSeq());
 //                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
 //                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
-                        List<String> items = userBuyDetailRepository.findByBuySeq(userBuy.get(0).getBuySeq());
+                        List<String> items = userBuyDetailRepository.findproductNameByBuySeq(userBuy.get(0).getBuySeq());
+                        log.info("List<String> items : {}", items);
                         requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
                                 .itemName(items.get(0)).paymentPrice((long) (userBuy.get(0).getTotalPrice())).orderUid(orderUid).build();
 
-                    } else if ("company".equals(userM.getContent())) { // 업체 사용자 일반 물품 구매 안됐던거같은데
+                    } else if ("company".equals(userM.getContent())) { // 업체 사용자 일반 물품 구매 불가
 
                         throw new MemberAuthenticationException(ErrorCode.ORDER_FORBIDDEN);
 
@@ -186,7 +202,6 @@ public class PaymentServiceImpl implements PaymentService {
             // 결제 단건 조회
             IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
             // 주문내역 조회
-            //UserCharge userCharge = userChargeRepository.findByOrderUid(request.getOrderUid()).get(0);
             UserBuy userBuy = userBuyRepository.findOrderAndPayment(request.getOrderUid()).orElseThrow(()-> new UserBuyException(ErrorCode.ORDER_NOTFOUND));
             log.info("userBuy : {}", userBuy);
             log.info("payment : {}", userBuy.getPayment());
@@ -224,7 +239,11 @@ public class PaymentServiceImpl implements PaymentService {
             // 검증 후 주문상태 변경
             UserBuy result = changeOrder(userBuy.getBuySeq());
 
+            // 검증 후 재고 수량 변경
+            deductCount(userBuy);
+
             // 결제 상태 OK로 변경
+            userBuy.setState(2);
             userBuy.getPayment().changePaymentBySuccess(PaymentStatus.OK, iamportResponse.getResponse().getImpUid());
             return iamportResponse;
 
@@ -263,6 +282,19 @@ public class PaymentServiceImpl implements PaymentService {
         UserBuy userBuy = userBuyRepository.findById(Long.parseLong(orderUid)).orElseThrow(()->new UserChargeException(ErrorCode.NOTFOUND_USER));
         log.info("userBuy : {}", userBuy);
         return userBuy;
+    }
+
+    // UserBuy 정보에서 주문 물품들 찾아 주문수량만큼 차감하는 메소드
+    public void deductCount (UserBuy userBuy) {
+        List<UserBuyDetail> detailList = userBuy.getUserBuyDetailList();
+        for(UserBuyDetail detail : detailList){
+            int stockCount = detail.getStock().getCount();
+            if(stockCount < detail.getCount()){
+                throw new UserBuyException(ErrorCode.ORDER_FAILED);
+            }
+            detail.getStock().setCount(stockCount - detail.getCount());
+            log.info("PaymentService에서 주문 수량만큼 재고 차감");
+        }
     }
 
 }

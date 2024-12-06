@@ -2,6 +2,7 @@ package web.mvc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.FarmerUser;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/streaming")
 public class StreamingController {
+
 
     @Autowired
     private StreamingServiceImpl streamingService;
@@ -63,7 +65,6 @@ public class StreamingController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("스트리밍을 찾을 수 없습니다.");
         }
     }
-
 
     // 승인 대기 중인 스트리밍 조회 (StreamingDTO로 반환)
     @GetMapping("/pending")
@@ -112,11 +113,19 @@ public class StreamingController {
     // 엔티티를 DTO로 변환하는 유틸리티 메서드
     private StreamingDTO convertToDTO(Streaming streaming) {
         Long farmerSeq = (streaming.getFarmerUser() != null) ? streaming.getFarmerUser().getUserSeq() : null;
+        String farmerName = (streaming.getFarmerUser() != null) ? streaming.getFarmerUser().getName() : null;
 
         // FarmerUser가 없을 때는 Stock 관련 정보를 빈 값으로 설정
-        List<Stock> stocks = (farmerSeq != null) ? stockService.findStocksByFarmerSeq(farmerSeq) : List.of();
+        List<Stock> stocks = (farmerSeq != null) ?
+                stockService.findStocksByFarmerSeq(farmerSeq).stream()
+                        .sorted((s1, s2) -> s2.getRegDate().compareTo(s1.getRegDate()))
+                        .toList()
+                : List.of();
+
         Long stockSeq = stocks.isEmpty() ? null : stocks.get(0).getStockSeq();
         String productName = stocks.isEmpty() ? null : stocks.get(0).getProduct().getProductName();
+        String filePath = stocks.isEmpty() ? null :
+                (stocks.get(0).getFile() != null ? stocks.get(0).getFile().getPath() : null);
 
         return new StreamingDTO(
                 streaming.getStreamingSeq(),
@@ -128,7 +137,9 @@ public class StreamingController {
                 streaming.getState(),
                 farmerSeq,
                 stockSeq,
-                productName
+                productName,
+                farmerName,
+                filePath
         );
     }
     @PostMapping("/streamingData/{seq}")
@@ -142,22 +153,18 @@ public class StreamingController {
     @PostMapping("/exit/{id}")
     public ResponseEntity<String> exitStreamingRoom(@PathVariable Long id) {
         // 스트리밍 엔티티를 가져옴
-        Streaming streaming = streamingService.findById(id);
-
+        Streaming streaming = streamingService.exitRoomById(id);
         // 스트리밍 존재 여부 확인
         if (streaming != null) {
-            // FarmerUser 및 상태값 초기화
-            streaming.setFarmerUser(null);
-            streaming.setState(0);
-
-            // 스트리밍 엔티티 저장
-            streamingService.save(streaming);
-
             return ResponseEntity.ok("채팅방에서 성공적으로 나왔습니다.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("스트리밍을 찾을 수 없습니다.");
         }
     }
 
-
+    // 활성 스트리밍 조회 (seq에 맞는 스트리밍 조회) - 윤성
+    @GetMapping("/active-rooms/{seq}")
+    public ResponseEntity<?> streamingRooms(@PathVariable Long seq) {
+        return new ResponseEntity<>(  streamingService.streamingRooms(seq) ,HttpStatus.OK);
+    }
 }

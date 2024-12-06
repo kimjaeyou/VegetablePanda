@@ -36,6 +36,9 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
     ORDER_NOTPAID (HttpStatus.NOT_FOUND, "Not Paid Order", "결제되지 않았습니다."),
     ORDER_CANCELED (HttpStatus.NOT_FOUND, "결제 금액 위변조 의심", "결제가 취소되었습니다."),
     ORDER_FORBIDDEN (HttpStatus.FORBIDDEN, "Forbidden", "업체 사용자는 구매할 수 없습니다."),
+    ORDER_FAILED (HttpStatus.FORBIDDEN, "Stock count less than order", "재고 수량이 부족합니다."),
+
+    PAYMENT_NOTFOUND (HttpStatus.NOT_FOUND, "Payment Info Not Found", "결제 정보를 찾을 수 없습니다."),
 
     HIGH_BIDDER (HttpStatus.NOT_FOUND, "Bidding", "입찰중인 상품입니다 ."),
     LOW_BID(HttpStatus.NOT_FOUND, "low Bid", "현재 입찰가보다 높게 입력하세요."),
@@ -45,8 +48,11 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
 
     LIKE_UPDATE_FAILED (HttpStatus.BAD_REQUEST, "Stock update fail", "좋아요 실패했습니다."),
 
-    FILE_NOTFOUND (HttpStatus.NOT_FOUND, "File Not Found", "파일을 찾을 수 없습니다.");
+    FILE_NOTFOUND (HttpStatus.NOT_FOUND, "File Not Found", "파일을 찾을 수 없습니다."),
+    
+    STOCK_COUNT_LESS (HttpStatus.BAD_REQUEST, "Stock count less", "재고량 이하로 수량 등록하세요");
 
+    
     private final HttpStatus httpStatus;
     private  final String title;
     private final String message;

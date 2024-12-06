@@ -19,6 +19,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,8 @@ public class CartServiceImpl implements CartService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void addToCart(HttpServletRequest request, HttpServletResponse response, Long stockSeq, Integer quantity) {
+    public void addToCart(HttpServletRequest request, HttpServletResponse response,
+                          Long stockSeq, Integer quantity, Long userSeq) {
         Stock stock = stockRepository.findById(stockSeq)
                 .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
 
@@ -43,7 +45,7 @@ public class CartServiceImpl implements CartService {
             throw new RuntimeException("재고가 부족합니다.");
         }
 
-        List<CartItemDTO> cart = getCartFromCookie(request);
+        List<CartItemDTO> cart = getCartFromCookie(request, userSeq);
 
         CartItemDTO existingItem = cart.stream()
                 .filter(item -> item.getStockSeq().equals(stockSeq))
@@ -54,6 +56,7 @@ public class CartServiceImpl implements CartService {
             existingItem.setQuantity(existingItem.getQuantity() + quantity);
         } else {
             CartItemDTO newItem = CartItemDTO.builder()
+                    .userSeq(userSeq)
                     .stockSeq(stock.getStockSeq())
                     .quantity(quantity)
                     .price(shop.getPrice())
@@ -64,20 +67,24 @@ public class CartServiceImpl implements CartService {
             cart.add(newItem);
         }
 
-        saveCartToCookie(response, cart);
+        saveCartToCookie(response, cart, userSeq);
     }
 
-    private List<CartItemDTO> getCartFromCookie(HttpServletRequest request) {
+    private List<CartItemDTO> getCartFromCookie(HttpServletRequest request, Long userSeq) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("cart".equals(cookie.getName())) {
+                if (("cart_" + userSeq).equals(cookie.getName())) {  // 쿠키 이름에 userSeq 추가
                     try {
                         String decodedValue = URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8);
-                        return objectMapper.readValue(decodedValue,
+                        List<CartItemDTO> cartItems = objectMapper.readValue(decodedValue,
                                 new TypeReference<List<CartItemDTO>>() {});
+                        return cartItems.stream()
+                                .filter(item -> item.getUserSeq().equals(userSeq))
+                                .collect(Collectors.toList());
                     } catch (Exception e) {
-                        // 에러 시 빈 장바구니 반환
+                        System.err.println("쿠키 파싱 실패: " + e.getMessage());
+                        e.printStackTrace();
                         return new ArrayList<>();
                     }
                 }
@@ -86,36 +93,43 @@ public class CartServiceImpl implements CartService {
         return new ArrayList<>();
     }
 
-    private void saveCartToCookie(HttpServletResponse response, List<CartItemDTO> cart) {
+    private void saveCartToCookie(HttpServletResponse response, List<CartItemDTO> cart, Long userSeq) {
         try {
             String cartJson = objectMapper.writeValueAsString(cart);
             String encodedCart = URLEncoder.encode(cartJson, StandardCharsets.UTF_8);
 
-            Cookie cookie = new Cookie("cart", encodedCart);
+            Cookie cookie = new Cookie("cart_" + userSeq, encodedCart);  // 쿠키 이름에 userSeq 추가
             cookie.setPath("/");
             cookie.setMaxAge(3 * 24 * 60 * 60);
-            cookie.setHttpOnly(true);
+            cookie.setDomain("");
+            cookie.setSecure(false);
+            cookie.setHttpOnly(false);
+
             response.addCookie(cookie);
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+            response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
         } catch (Exception e) {
             throw new RuntimeException("장바구니 저장 실패", e);
         }
     }
 
     @Override
-    public List<CartItemDTO> getCartItems(HttpServletRequest request) {
-        return getCartFromCookie(request);
+    public List<CartItemDTO> getCartItems(HttpServletRequest request, Long userSeq) {
+        return getCartFromCookie(request, userSeq);
     }
 
     @Override
-    public void removeFromCart(HttpServletRequest request, HttpServletResponse response, Long stockSeq) {
-        List<CartItemDTO> cart = getCartFromCookie(request);
-        cart.removeIf(item -> item.getStockSeq().equals(stockSeq));
-        saveCartToCookie(response, cart);
+    public void removeFromCart(HttpServletRequest request, HttpServletResponse response,
+                               Long stockSeq, Long userSeq) {
+        List<CartItemDTO> cart = getCartFromCookie(request, userSeq);
+        cart.removeIf(item -> item.getStockSeq().equals(stockSeq)
+                && item.getUserSeq().equals(userSeq));
+        saveCartToCookie(response, cart, userSeq);
     }
 
     @Override
-    public void clearCart(HttpServletResponse response) {
-        Cookie cookie = new Cookie("cart", null);
+    public void clearCart(HttpServletResponse response, Long userSeq) {
+        Cookie cookie = new Cookie("cart_" + userSeq, null);  // 쿠키 이름에 userSeq 추가
         cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
@@ -123,7 +137,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void updateQuantity(HttpServletRequest request, HttpServletResponse response,
-                               Long stockSeq, Integer quantity) {
+                               Long stockSeq, Integer quantity, Long userSeq) {
         Stock stock = stockRepository.findById(stockSeq)
                 .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
 
@@ -131,13 +145,14 @@ public class CartServiceImpl implements CartService {
             throw new RuntimeException("재고가 부족합니다.");
         }
 
-        List<CartItemDTO> cart = getCartFromCookie(request);
+        List<CartItemDTO> cart = getCartFromCookie(request, userSeq);
         cart.stream()
-                .filter(item -> item.getStockSeq().equals(stockSeq))
+                .filter(item -> item.getStockSeq().equals(stockSeq)
+                        && item.getUserSeq().equals(userSeq))
                 .findFirst()
                 .ifPresent(item -> item.setQuantity(quantity));
 
-        saveCartToCookie(response, cart);
+        saveCartToCookie(response, cart, userSeq);
     }
 
     @Override

@@ -41,6 +41,7 @@ public class AuctionController {
          */
         if(result!=null){
             likeService.getLikeUserSeq(auctionDTO.getStockSeq());
+            notificationService.sendMessageToTopic("/top/notifications","1");
         }
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -52,8 +53,7 @@ public class AuctionController {
         log.info("경매 종료~~");
         int n=auctionService.updateAuction(auctionSeq);
         if(n==1){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-            notificationService.sendMessageToTopic("/top/notifications","1");
+            notificationService.sendMessageToTopic("/end/notifications","1");
         }
         return new ResponseEntity<>("1", HttpStatus.OK);
 
@@ -68,8 +68,9 @@ public class AuctionController {
     @GetMapping("/auction/{userSeq}")
     public ResponseEntity<?> getAuction(@PathVariable Long userSeq) {
         Auction result =auctionService.getAuction(userSeq);
+        AuctionDTO auctionDTO = null;
         if(result!=null) {
-            AuctionDTO auctionDTO = AuctionDTO.builder()
+            auctionDTO = AuctionDTO.builder()
                     .auctionSeq(result.getAuctionSeq())
                     .count(result.getCount()).stockSeq(result.getStock().getStockSeq())
                     .closeTime(String.valueOf(result.getCloseTime()))
@@ -78,13 +79,14 @@ public class AuctionController {
                     .build();
             HighestBidDTO highestBidDTO = bidService.checkHighestBid(result.getAuctionSeq(), userSeq);
         }
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        return new ResponseEntity<>(auctionDTO, HttpStatus.CREATED);
 
     }
 
 
     @GetMapping("/highestBid/{userSeq}")
     public ResponseEntity<?> getHighestBid(@PathVariable Long userSeq) {
+        System.out.println("최고가 갖고오기");
         Auction result = auctionService.getAuction(userSeq);
         System.out.println(result.getAuctionSeq());
         HighestBidDTO highestBidDTO = null;
@@ -117,7 +119,7 @@ public class AuctionController {
     @GetMapping("/buy/{stockSeq}")
     public ResponseEntity<List<UserBuyListByStockDTO>> buyList(HttpServletRequest req, @PathVariable Long stockSeq) {
         List<UserBuyListByStockDTO> userBuyListByStockDTOList = userBuyService.geUserBuyListByStockDtos(stockSeq);
-        return new ResponseEntity<>(userBuyListByStockDTOList, HttpStatus.CREATED);
+            return new ResponseEntity<>(userBuyListByStockDTOList, HttpStatus.CREATED);
     }
 
 

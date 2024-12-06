@@ -53,6 +53,8 @@ public class UserMyPageServiceImpl implements UserMyPageService {
             log.error("주문내역 조회 중 오류 발생 - userSeq: {}, state: {}", seq, 1, e);
             throw e;
         }
+        Integer state = 2;
+        return buyMyPageRepository.select(seq, state);
     }
 
     /**

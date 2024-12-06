@@ -25,4 +25,8 @@ public interface FarmerMyPageRepository extends JpaRepository<FarmerUser, Long> 
     @Query("update FarmerUser u set u.state = 0 where u.userSeq = ?1")
     int delete(Long seq);
 
+    @Query("select new web.mvc.dto.FarmerUserDTO2(u.userSeq, u.name, f.path, r.intro) from FarmerUser u " +
+            "join File f on f.managementUser.userSeq = u.userSeq " +
+            "join Review r on r.managementUser.userSeq = u.userSeq ")
+    List<FarmerUserDTO2> farmer();
 }

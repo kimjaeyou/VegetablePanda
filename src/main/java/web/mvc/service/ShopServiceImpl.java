@@ -29,6 +29,11 @@ public class ShopServiceImpl implements ShopService {
     private final UserBuyDetailRepository userBuyDetailRepository;
     private final ShopLikeRepository shopLikeRepository;
 
+    @Override
+    public List<SalesStatisticsDTO> getDailySalesStatistics(LocalDateTime startDate, LocalDateTime endDate) {
+        return List.of();
+    }
+
     @Transactional
     @Override
     public ShopLike getByUserSeqAndStockSeq(Long userSeq, Long shopSeq) {
@@ -37,6 +42,13 @@ public class ShopServiceImpl implements ShopService {
              shopLike.setState(!shopLike.getState());
          }
          return shopLike;
+    }
+
+    @Transactional
+    @Override
+    public ShopLike getShopLike(Long userSeq, Long shopSeq) {
+        ShopLike shopLike = shopLikeRepository.findByUserSeqAndShopSeq(userSeq,shopSeq);
+        return shopLike;
     }
 
     public int shopInsert(StockDTO stock) {
@@ -64,21 +76,26 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public void insertShopLike(Long userSeq, Long shopSeq) {
-        shopLikeRepository.insertShopLike(userSeq,shopSeq);
+         shopLikeRepository.insertShopLike(userSeq,shopSeq);
     }
     @Override
     public List<ShopListDTO> getAllShopItems(long seq) {
-        List<ShopListDTO> items=new ArrayList<>();
-        if(seq==0){
+        List<ShopListDTO> items = new ArrayList<>();
+        if(seq > 0){
+            items = shopRepository.findByUserSeq(seq);
+            log.info("item = {}",items);
+        } else {
             items = shopRepository.findAllShopItems();
             log.info("조회된 상품 개수: {}", items.size());
             items.forEach(item -> log.info("상품 정보: {}", item));  // 각 상품 정보 출력
         }
-        else{
-            //items = shopRepository.findByUserSeq(seq);
-        }
-
         return items;
+    }
+
+    // 이것도 윤성이가 씀
+    @Override
+    public List<ShopListDTO> getShopItemsUser(long seq) {
+        return shopRepository.findLikeItems(seq);
     }
 
     private SalesStatisticsDTO convertToDTO(Object[] result) {

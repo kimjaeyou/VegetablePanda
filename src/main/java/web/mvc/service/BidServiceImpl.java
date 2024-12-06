@@ -12,15 +12,13 @@ import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 import web.mvc.domain.Bid;
 import web.mvc.domain.ManagementUser;
+import web.mvc.domain.User;
 import web.mvc.domain.UserWallet;
 import web.mvc.dto.*;
 import web.mvc.exception.BidException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.redis.RedisUtils;
-import web.mvc.repository.AuctionRepository;
-import web.mvc.repository.BidRepository;
-import web.mvc.repository.ManagementRepository;
-import web.mvc.repository.WalletRepository;
+import web.mvc.repository.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +35,10 @@ public class BidServiceImpl implements BidService {
     private final ManagementRepository managementRepository;
 
     private final AuctionRepository auctionRepository;
+
+    private final NotificationService notificationService;
+
+    private final NormalUserRepository normalUserRepository;
 
 
     @Autowired
@@ -90,10 +92,28 @@ public class BidServiceImpl implements BidService {
                     }else{
                         newBidderTempWallet.setPoint(newBidderTempWallet.getPoint() - (int)(newBidderDTO.getPrice()*0.1));
                     }
+
+                    Long beforeHigh=highestBid.getUserSeq();
+
+
                     highestBid.setPrice(newBidderDTO.getPrice());
+
                     highestBid.setUserSeq(newBidderTempWallet.getUserSeq());
+                    Optional<User> beforeUserOpt= normalUserRepository.findById(beforeHigh);
 
-
+                    beforeUserOpt.ifPresentOrElse(
+                            beforeUser -> {
+                                notificationService.sendMessageToUser(
+                                        beforeHigh.toString(),
+                                        beforeUser.getName()+"님 "+
+                                        "최고 입찰자가 변경되었습니다.\n" +
+                                                "최고 입찰금액 : " + highestBid.getPrice()
+                                );
+                            },
+                            () -> {
+                                System.out.println("해당 ID를 가진 사용자가 존재하지 않습니다: " + beforeHigh);
+                            }
+                    );
 
                     System.out.println("redis에 변경사항 저장");
                     // 변경된 데이터를 Redis 트랜잭션 내에서 저장
@@ -146,14 +166,14 @@ public class BidServiceImpl implements BidService {
 
 
     @Override
-    public List<BidCompanyListDTO> getComBids(Long auctionSeq) {
+    public List<BidListDTO> getComBids(Long auctionSeq) {
         return bidRepository.auctionCompanyBidList(auctionSeq);
 
     }
 
     @Override
-    public List<BidUserListDTO> getUserBids(Long auctionSeq) {
-        return List.of();
+    public List<BidListDTO> getUserBids(Long auctionSeq) {
+        return bidRepository.auctionUerBidList(auctionSeq);
     }
 
 

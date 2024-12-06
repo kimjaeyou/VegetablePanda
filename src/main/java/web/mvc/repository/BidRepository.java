@@ -5,25 +5,36 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import web.mvc.domain.Bid;
 import web.mvc.dto.BidAuctionDTO;
-import web.mvc.dto.BidCompanyListDTO;
-import web.mvc.dto.BidUserListDTO;
+import web.mvc.dto.BidListDTO;
 
 import java.util.List;
 
 public interface BidRepository extends JpaRepository<Bid, Long> {
 
-    @Query("SELECT new web.mvc.dto.BidAuctionDTO(b.bidSeq, s.content, a.count, b.price, b.insertDate, s.farmerUser.name, a.status) " +
+    @Query("SELECT new web.mvc.dto.BidAuctionDTO(b.bidSeq, p.productName, a.count, b.price, b.insertDate, s.farmerUser.name, a.status) " +
             "FROM Bid b " +
             "JOIN Auction a ON b.auction.auctionSeq = a.auctionSeq " +
             "JOIN Stock s ON s.stockSeq = a.stock.stockSeq " +
+            "Join Product p on p.productSeq = s.product.productSeq " +
             "WHERE b.managementUser.userSeq = ?1")
     List<BidAuctionDTO> auctionList(Long seq);
 
-    @Query("select new web.mvc.dto.BidUserListDTO(b.price,b.insertDate,u.name) from Bid b left join User u where b.auction.auctionSeq = ?1 and u.userSeq=b.managementUser.userSeq")
-    List<BidUserListDTO> auctionUserBidList(Long seq);
 
-    @Query("select new web.mvc.dto.BidCompanyListDTO(b.price,b.insertDate,c.comName) from Bid b join CompanyUser c on c.userSeq = b.managementUser.userSeq where b.auction.auctionSeq = ?1")
-    List<BidCompanyListDTO> auctionCompanyBidList(Long seq);
+    @Query("SELECT new web.mvc.dto.BidListDTO(b.bidSeq, b.price, b.insertDate, c.comName)\n" +
+            "FROM Bid b\n" +
+            "JOIN CompanyUser c ON b.managementUser.userSeq = c.userSeq\n" +
+            "WHERE b.auction.auctionSeq = :auctionSeq\n" +
+            "GROUP BY b.bidSeq, b.price, b.insertDate, c.comName\n" +
+            "ORDER BY b.bidSeq")
+    List<BidListDTO> auctionCompanyBidList(@Param("auctionSeq") Long auctionSeq);
+
+    @Query("SELECT new web.mvc.dto.BidListDTO(b.bidSeq, b.price, b.insertDate, u.name)\n" +
+            "FROM Bid b\n" +
+            "JOIN User u ON b.managementUser.userSeq =u.userSeq\n" +
+            "WHERE b.auction.auctionSeq = :auctionSeq\n" +
+            "GROUP BY b.bidSeq, b.price, b.insertDate, u.name\n" +
+            "ORDER BY b.bidSeq")    List<BidListDTO> auctionUerBidList(@Param("auctionSeq") Long auctionSeq);
+
 
     @Query("SELECT MAX(b.price) FROM Bid b WHERE b.auction.auctionSeq = :auctionSeq")
     Integer findHighestBidPrice(@Param("auctionSeq") Long auctionSeq);

@@ -1,6 +1,7 @@
 package web.mvc.service;
 
 import web.mvc.domain.UserBuyDetail;
+import web.mvc.dto.UserBuyDetailInfoDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,4 +14,9 @@ public interface UserBuyDetailService {
 
 
     Optional<UserBuyDetail> findLatestByUserSeq(Long userSeq);
+
+    /**
+     * 주문된 일반 물품 정보 가져오기
+     */
+    public List<UserBuyDetailInfoDTO> getUserBuyDetailInfoes(List<Long> stockSeqs, Long userBuySeq);
 }

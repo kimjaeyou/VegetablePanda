@@ -22,6 +22,16 @@ public interface UserBuyService {
      */
     public int deleteOrder(long userBuySeq);
 
+    /**
+     * 결제창 팝업 후 취소 시 주문 삭제
+     */
+    public int deleteOrderAfterPayment(String orderUid);
+
+    /**
+     * 주문번호로 정보 검색
+     */
+    public UserBuy findByOrderUid(String orderUid);
+
 
 
     Optional<UserBuyDetail> findById(Long id);

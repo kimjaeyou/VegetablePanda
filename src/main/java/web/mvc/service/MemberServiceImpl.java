@@ -7,10 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.*;
+import web.mvc.dto.FarmerUserDTO2;
 import web.mvc.dto.GetAllUserDTO;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.MemberAuthenticationException;
 import web.mvc.repository.*;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
     private final FileRepository fileRepository;
     private final FileService fileService;
     private final S3ImageService s3ImageService;
+    private final FarmerMyPageRepository farmerMyPageRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -138,5 +142,10 @@ public class MemberServiceImpl implements MemberService {
                         "ROLE_COMPANY"
                 );
         companyUserRepository.save(cuser);
+    }
+
+    @Override
+    public List<FarmerUserDTO2> farmer() {
+        return farmerMyPageRepository.farmer();
     }
 }

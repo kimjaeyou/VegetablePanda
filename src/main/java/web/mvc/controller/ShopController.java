@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.ShopLike;
 import web.mvc.dto.SalesStatisticsDTO;
 import web.mvc.dto.ShopLikeDTO;
+import web.mvc.dto.ShopLikeSeqDTO;
 import web.mvc.dto.ShopListDTO;
 import web.mvc.service.ShopService;
 
@@ -28,10 +29,16 @@ public class ShopController {
         return ResponseEntity.ok(items);
     }
 
-    @PostMapping("/shop")
-    public ResponseEntity<List<ShopListDTO>> getShopItemsUser(@RequestBody long userSeq) {
-        List<ShopListDTO> items = shopService.getAllShopItems(userSeq);
-        return ResponseEntity.ok(items);
+    // 윤성이가 씀
+    @PostMapping("/shop/{seq}")
+    public ResponseEntity<List<ShopListDTO>> getShopItemsUser(@PathVariable Long seq) {
+        return new ResponseEntity <> (shopService.getShopItemsUser(seq) , HttpStatus.OK);
+    }
+
+    // 윤성이가 씀
+    @PostMapping("/shop/select/{seq}")
+    public ResponseEntity<List<ShopListDTO>> getShopItemsUserSelect(@PathVariable Long seq) {
+        return new ResponseEntity <> (shopService.getAllShopItems(seq) , HttpStatus.OK);
     }
 
     @GetMapping("/daily")
@@ -83,19 +90,31 @@ public class ShopController {
     }
 
     @PostMapping("/insertShopLike")
-    public ResponseEntity<ShopLike> getShopItemsUser(@RequestBody ShopLikeDTO shopLikeDTO) {
-        System.out.println("찜하기");
+    public ResponseEntity<ShopLikeDTO> getShopItemsUser(@RequestBody ShopLikeSeqDTO shopLikeDTO) {
+        System.out.println("찜하기"+shopLikeDTO.getUserSeq()+shopLikeDTO.getShopSeq());
         ShopLike shopLikeDo = shopService.getByUserSeqAndStockSeq(shopLikeDTO.getUserSeq(),shopLikeDTO.getShopSeq());
         if (shopLikeDo == null) {
             shopService.insertShopLike(shopLikeDTO.getUserSeq(),shopLikeDTO.getShopSeq());
+            shopLikeDo = shopService.getByUserSeqAndStockSeq(shopLikeDTO.getUserSeq(),shopLikeDTO.getShopSeq());
         }
-        return new ResponseEntity<>(shopLikeDo, HttpStatus.CREATED);
+        ShopLikeDTO shopLike = ShopLikeDTO.builder()
+                .shopSeq(shopLikeDo.getShop().getShopSeq())
+                .userSeq(shopLikeDo.getManagementUser().getUserSeq())
+                .state(shopLikeDo.getState())
+                .build();
+        return ResponseEntity.ok(shopLike);
     }
 
     @GetMapping("/getShopLike")
-    public ResponseEntity<ShopLike> getShopLikeUser(@RequestParam Long userSeq, @RequestParam Long shopSeq) {
-        ShopLike shopLikeDo = shopService.getByUserSeqAndStockSeq(userSeq,shopSeq);
-        return new ResponseEntity<>(shopLikeDo, HttpStatus.CREATED);
+    public ResponseEntity<ShopLikeDTO> getShopLikeUser(@RequestParam Long userSeq, @RequestParam Long shopSeq) {
+        ShopLike shopLikeDo = shopService.getShopLike(userSeq,shopSeq);
+        ShopLikeDTO shopLike = ShopLikeDTO.builder()
+                .shopSeq(shopLikeDo.getShop().getShopSeq())
+                .userSeq(shopLikeDo.getManagementUser().getUserSeq())
+                .state(shopLikeDo.getState())
+                .build();
+
+        return ResponseEntity.ok(shopLike);
     }
 
     @GetMapping("/price/statistics")
