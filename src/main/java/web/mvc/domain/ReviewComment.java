@@ -35,7 +35,7 @@ public class ReviewComment {
     private ManagementUser managementUser;
 
     @CreationTimestamp
-    @Column(name="reg_date" , nullable = false)
+    @Column(name="reg_date")
     private LocalDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)

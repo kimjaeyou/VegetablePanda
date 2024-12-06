@@ -22,11 +22,12 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final BuyMyPageRepository buyMyPageRepository;
     private final UserMyPageRepository userMyPageRepository;
     private final UserRepository userRepository;
-    private final BidRepository bidRepository;
     private final ReviewRepository reviewRepository;
+    private final BidRepository bidRepository;
     private final WalletRepository walletRepository;
     private final PasswordEncoder passwordEncoder;
     private final LikeRepository likeRepository;
+    private final UserBuyRepository userBuyRepository;
 
     /**
      * 주문내역
@@ -118,6 +119,14 @@ public class UserMyPageServiceImpl implements UserMyPageService {
         return bidRepository.auctionList(seq);
     }
 
+    /**
+     * 일반 유저 경매 내역
+     */
+    @Override
+    public List<BidAuctionDTO> successfulBidList(Long seq) {
+        log.info("successfulBidList seq : {}", seq);
+        return userBuyRepository.successfulBidList(seq);
+    }
 
     /**
      * 좋아요 상품 목록

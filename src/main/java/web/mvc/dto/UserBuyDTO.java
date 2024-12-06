@@ -26,4 +26,12 @@ public class UserBuyDTO {
         this.buyDate = buyDate;
         this.state = state;
     }
+
+    public UserBuyDTO(String content, Integer count, Integer price, LocalDateTime buyDate, Integer state) {
+        this.content = content;
+        this.count = count;
+        this.price = price;
+        this.buyDate = buyDate;
+        this.state = state;
+    }
 }
