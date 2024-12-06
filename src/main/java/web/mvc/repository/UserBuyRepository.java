@@ -31,7 +31,7 @@ public interface UserBuyRepository extends JpaRepository<UserBuy, Long> {
             "JOIN Stock s ON s.stockSeq = d.stock.stockSeq " +
             "JOIN FarmerUser f ON f.userSeq = s.farmerUser.userSeq " +
             "JOIN Product p ON p.productSeq = s.product.productSeq " +
-            "WHERE b.state = 6 " +
+            "WHERE b.state IN (6, 7, 8) " +
             "ORDER BY b.buyDate DESC")
     List<AdjustmentDTO> findPendingSettlements();
 
