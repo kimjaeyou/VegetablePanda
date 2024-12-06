@@ -7,10 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import web.mvc.domain.Shop;
 import web.mvc.domain.ShopLike;
 import web.mvc.domain.Stock;
-import web.mvc.dto.SalesStatisticsDTO;
-import web.mvc.dto.ShopLikeDTO;
-import web.mvc.dto.ShopListDTO;
-import web.mvc.dto.StockDTO;
+import web.mvc.dto.*;
 import web.mvc.repository.ShopLikeRepository;
 import web.mvc.repository.ShopRepository;
 import web.mvc.repository.UserBuyDetailRepository;
@@ -156,5 +153,9 @@ public class ShopServiceImpl implements ShopService {
         priceStats.put("weeklyAveragePrice", weeklyAvg != null ? weeklyAvg : 0);
 
         return priceStats;
+    }
+
+    public List<ShopLikeResponseDTO> getLikedShopsByUser(Long userSeq) {
+        return shopLikeRepository.findLikedShopsByUserSeq(userSeq);
     }
 }
