@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.*;
 import web.mvc.dto.FileDTO;
 import web.mvc.dto.ReviewCommentDTO;
+import web.mvc.dto.ReviewCommentDetailDTO;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.repository.ManagementRepository;
@@ -93,34 +94,31 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
 
         return ReviewCommentDTO.fromEntity(reviewCommentRepository.save(existingComment));
     }
-    //댓글 사용자 ID로 조회
+    //내가 쓴 리뷰 목록 보기
     @Override
     @Transactional(readOnly = true)
-    public List<ReviewCommentDTO> reviewCommentFindAllByUserId(Long userId) {
+    public List<ReviewCommentDetailDTO> reviewCommentFindAllByUserId(Long userId) {
         log.info("사용자 ID로 댓글 조회: userId={}", userId);
 
-        List<ReviewComment> comments = reviewCommentRepository.findAllByManagementUser_UserSeq(userId);
+        List<ReviewCommentDetailDTO> comments = reviewCommentRepository.findAllByManagementUser_UserSeq(userId);
 
         log.info("조회된 댓글 수: {}", comments.size());
 
-        return comments.stream()
-                .map(ReviewCommentDTO::fromEntity)
-                .collect(Collectors.toList());
+        return comments;
     }
 
     /**
-     * 특정 리뷰에 대한 댓글 전체 조회
+     * 자신이 단 리뷰 조회
      */
     @Override
     @Transactional(readOnly = true)
-    public List<ReviewCommentDTO> reviewCommentFindAllByReviewId(Long reviewSeq) {
-        List<ReviewComment> comments = reviewCommentRepository.findAllByReview_ReviewSeq(reviewSeq);
-        if (comments.isEmpty()) {
+    public ReviewCommentDetailDTO reviewCommentFindAllByReviewId(Long reviewSeq) {
+        ReviewCommentDetailDTO comments = reviewCommentRepository.findByReviewUser(reviewSeq);
+
+        if (comments==null) {
             throw new DMLException(ErrorCode.NOTFOUND_REPLY);
         }
-        return comments.stream()
-                .map(ReviewCommentDTO::fromEntity)
-                .collect(Collectors.toList());
+        return comments;
     }
 
     /**

@@ -19,6 +19,16 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
             "WHERE b.managementUser.userSeq = ?1")
     List<BidAuctionDTO> auctionList(Long seq);
 
+//    @Query("SELECT distinct new web.mvc.dto.BidAuctionDTO(u.buySeq, p.productName, a.count, b.price, b.insertDate, s.farmerUser.name, a.status) " +
+//            "FROM UserBuy u " +
+//            "Join Bid b on b.managementUser.userSeq = u.managementUser.userSeq " +
+//            "JOIN Auction a ON b.auction.auctionSeq = a.auctionSeq " +
+//            "JOIN Stock s ON s.stockSeq = a.stock.stockSeq " +
+//            "Join Product p on p.productSeq = s.product.productSeq " +
+//            "WHERE b.managementUser.userSeq = ?1 " +
+//            "AND u.state = 1")
+//    List<BidAuctionDTO> successfulBidList(Long seq);
+
 
     @Query("SELECT new web.mvc.dto.BidListDTO(b.bidSeq, b.price, b.insertDate, c.comName)\n" +
             "FROM Bid b\n" +

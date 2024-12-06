@@ -114,8 +114,16 @@ public class FarmerMyPageController {
      * 정산 신청하기
      */
     @PostMapping("/calculate/{seq}")
-    public void settle(@PathVariable Long seq, @RequestBody CalculateDTO calculateDTO) {
-        List<CalcPoint2> list = calculateDTO.getCalculateDTO();
-        farmerMyPageService.settle(seq, list);
+    public ResponseEntity<String> settle(@PathVariable Long seq, @RequestBody CalculateDTO calculateDTO) {
+        try {
+            log.info("정산 신청 요청 - userSeq: {}, 데이터: {}", seq, calculateDTO);
+            List<CalcPoint2> list = calculateDTO.getCalculateDTO();
+            farmerMyPageService.settle(seq, list);
+            return ResponseEntity.ok("정산 신청이 완료되었습니다.");
+        } catch (Exception e) {
+            log.error("정산 신청 처리 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("정산 신청 처리 중 오류가 발생했습니다.");
+        }
     }
 }

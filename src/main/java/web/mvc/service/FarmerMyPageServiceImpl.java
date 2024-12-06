@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import web.mvc.domain.FarmerUser;
 import web.mvc.domain.ManagementUser;
 import web.mvc.domain.Stock;
+import web.mvc.domain.UserBuy;
 import web.mvc.dto.*;
 import web.mvc.repository.*;
 
@@ -85,24 +86,41 @@ public class FarmerMyPageServiceImpl implements FarmerMyPageService {
     }
 
     @Override
+    @Transactional
     public void settle(Long seq, List<CalcPoint2> list) {
         ManagementUser managementUser = managementRepository.findSeq(seq);
         LocalDateTime now = LocalDateTime.now();
-        for (CalcPoint2 calcPoint : list) {// 반복문 계속돌기
 
-            // 반복문 돌면서 정산신청 차례로 ㄱㄱㅆ
-            web.mvc.domain.CalcPoint calcPoint1 = new web.mvc.domain.CalcPoint();
-            calcPoint1.setManagementUser(managementUser);
-            calcPoint1.setTotalPoint(calcPoint.getTotalPoint());
-            calcPoint1.setInsertDate(now);
-            calcPoint1.setState(1);
-            Long buySeq = calcPoint.getUserBuySeq(); // 일단 해당 번호 가져와서
-            log.info("buySeq = {}",buySeq); // 이게 나오긴 하나..?
-            int i = buyMyPageRepository.update(6, seq, buySeq); // 상태값 바꿔서 아예 체크도 없애기
-            if (i == 1) { // true면?
-                calcPointRepository.save(calcPoint1); // 바꾸는걸 성공하면 바로 저장
-            }
+        for (CalcPoint2 calcPoint : list) {
+            // 현재 상태 확인
+            Long buySeq = calcPoint.getUserBuySeq();
+            UserBuy userBuy = buyMyPageRepository.findById(buySeq)
+                    .orElseThrow(() -> new RuntimeException("구매 정보를 찾을 수 없습니다."));
+
+            log.info("정산 처리 전 - buySeq: {}, 현재 상태: {}", buySeq, userBuy.getState());
+
+            // 상태값 업데이트
+            int updateResult = buyMyPageRepository.update(buySeq);
+            log.info("상태값 업데이트 결과: {}", updateResult);
+
+            if (updateResult > 0) {
+                // 정산 포인트 저장
+                web.mvc.domain.CalcPoint calcPoint1 = new web.mvc.domain.CalcPoint();
+                calcPoint1.setManagementUser(managementUser);
+                calcPoint1.setTotalPoint(calcPoint.getTotalPoint());
+                calcPoint1.setInsertDate(now);
+                calcPoint1.setState(1);
+                calcPointRepository.save(calcPoint1);
+
+                // 업데이트 후 상태 확인
+                UserBuy updatedUserBuy = buyMyPageRepository.findById(buySeq)
+                        .orElseThrow(() -> new RuntimeException("구매 정보를 찾을 수 없습니다."));
+                log.info("정산 처리 후 - buySeq: {}, 변경된 상태: {}", buySeq, updatedUserBuy.getState());
+            } else {
+                log.error("상태값 업데이트 실패 - buySeq: {}", buySeq);
             }
         }
+    }
+
 
 }

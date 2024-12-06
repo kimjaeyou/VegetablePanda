@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.*;
 import web.mvc.dto.ReviewCommentDTO;
+import web.mvc.dto.ReviewCommentDetailDTO;
 import web.mvc.dto.StockDTO;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
@@ -36,7 +37,7 @@ public class ReviewCommentController {
     private final S3ImageService s3ImageService;
 
     @Transactional
-    @PostMapping(value = "/reviewComment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/reviewComment/all", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> saveReviewComment(
             @RequestPart ReviewCommentDTO reviewCommentDTO,
             @RequestPart(value = "image", required = false) MultipartFile image) throws JsonProcessingException {
@@ -83,7 +84,7 @@ public class ReviewCommentController {
     /**
      * 리뷰 댓글 수정
      */
-    @PutMapping(value = "/{reviewCommentSeq}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/reviewComment/{reviewCommentSeq}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> reviewCommentUpdate(
             @RequestParam Long reviewSeq,
             @PathVariable Long reviewCommentSeq,
@@ -100,20 +101,19 @@ public class ReviewCommentController {
     }
 
     /**
-     * 리뷰 댓글 조회 - 게시판 별 따로 전체 조회
+     * 내가 쓴 리뷰 조회
      * 정상 작동함
      */
     @GetMapping("/reviewComment/{reviewCommentSeq}")
     public ResponseEntity<?> reviewCommentFindByReviewSeq(@PathVariable Long reviewCommentSeq) {
-
-        List<ReviewCommentDTO> comments = reviewCommentService.reviewCommentFindAllByReviewId(reviewCommentSeq);
-        return ResponseEntity.ok(comments);
+        ReviewCommentDetailDTO review = reviewCommentService.reviewCommentFindAllByReviewId(reviewCommentSeq);
+        return ResponseEntity.ok(review);
     }
 
     
     /**
-     * 내가 작성한 리뷰 댓글들만 조회
-     * 정상 작동함
+     * 내가 작성한 리뷰 조회
+     *
      * */
     @GetMapping("/myComments/{userSeq}")
     public ResponseEntity<?> reviewCommentFindByUser(@PathVariable Long userSeq) {
@@ -122,7 +122,7 @@ public class ReviewCommentController {
         log.info("현재 사용자 ID: {}", userSeq);
 
         // 서비스 계층 호출
-        List<ReviewCommentDTO> myComments = reviewCommentService.reviewCommentFindAllByUserId(userSeq);
+        List<ReviewCommentDetailDTO> myComments = reviewCommentService.reviewCommentFindAllByUserId(userSeq);
 
         // 결과 반환
         return ResponseEntity.ok(myComments);
@@ -136,7 +136,7 @@ public class ReviewCommentController {
      * 리뷰 댓글 삭제
      * 정상 작동함
      */
-    @DeleteMapping("/{reviewCommentSeq}")
+    @DeleteMapping("/reviewComment/{reviewCommentSeq}")
     public ResponseEntity<?> reviewCommentDelete(@PathVariable Long reviewCommentSeq) {
 
         reviewCommentService.reviewCommentDelete(reviewCommentSeq);

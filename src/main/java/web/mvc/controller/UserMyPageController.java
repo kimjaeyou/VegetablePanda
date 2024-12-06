@@ -146,6 +146,14 @@ public class UserMyPageController {
     }
 
     /**
+     * 경매 낙찰내역 조회
+     */
+    @GetMapping("/auction/result/{seq}")
+    public ResponseEntity<List<BidAuctionDTO>> successfulBid (@PathVariable Long seq) {
+        return new ResponseEntity(userMyPageService.successfulBidList(seq), HttpStatus.OK);
+    }
+
+    /**
      * 상품 좋아요 목록
      */
     @GetMapping("/like/{seq}")

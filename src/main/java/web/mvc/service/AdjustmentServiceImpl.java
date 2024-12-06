@@ -24,13 +24,23 @@ public class AdjustmentServiceImpl implements AdjustmentService {
     @Override
     public void approveSettlement(Long buySeq) {
         UserBuy userBuy = userBuyRepository.findById(buySeq)
-            .orElseThrow(() -> new RuntimeException("해당 주문을 찾을 수 없습니다."));
-            
-        if (userBuy.getState() != 6) {
-            throw new RuntimeException("정산 신청 상태가 아닙니다.");
+                .orElseThrow(() -> new RuntimeException("해당 주문을 찾을 수 없습니다."));
+
+        // 상태값에 따른 처리
+        switch (userBuy.getState()) {
+            case 6:
+                userBuy.setState(10); // 6 -> 10
+                break;
+            case 7:
+                userBuy.setState(9);  // 7 -> 9
+                break;
+            case 8:
+                userBuy.setState(0);  // 8 -> 0
+                break;
+            default:
+                throw new RuntimeException("올바른 정산 신청 상태가 아닙니다.");
         }
-        
-        userBuy.setState(0); // 승인 상태로 변경
+
         userBuyRepository.save(userBuy);
     }
 }
