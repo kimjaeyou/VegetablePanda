@@ -70,7 +70,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
                     "JOIN stock st ON ubd.stock_seq = st.stock_seq " +
                     "JOIN product p ON st.product_seq = p.product_seq " +
                     "WHERE ub.buy_date BETWEEN :startDate AND :endDate " +
-                    "AND ub.state = 1 " +
+                    "AND ub.state IN (0, 1, 2, 4, 9, 10) " +
                     "AND st.product_seq = (SELECT product_seq FROM stock WHERE stock_seq = :stockSeq) " +
                     "GROUP BY DATE_FORMAT(ub.buy_date, '%Y-%m-%d') " +
                     "ORDER BY period",
@@ -94,7 +94,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
                     "JOIN stock st ON ubd.stock_seq = st.stock_seq " +
                     "JOIN product p ON st.product_seq = p.product_seq " +
                     "WHERE ub.buy_date BETWEEN :startDate AND :endDate " +
-                    "AND ub.state = 1 " +
+                    "AND ub.state IN (0, 1, 2, 4, 9, 10) " +
                     "AND st.product_seq = (SELECT product_seq FROM stock WHERE stock_seq = :stockSeq) " +
                     "GROUP BY DATE_FORMAT(DATE_SUB(ub.buy_date, INTERVAL WEEKDAY(ub.buy_date) DAY), '%Y-%m-%d') " +
                     "ORDER BY period",
@@ -118,7 +118,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
                     "JOIN stock st ON ubd.stock_seq = st.stock_seq " +
                     "JOIN product p ON st.product_seq = p.product_seq " +
                     "WHERE ub.buy_date BETWEEN :startDate AND :endDate " +
-                    "AND ub.state = 1 " +
+                    "AND ub.state IN (0, 1, 2, 4, 9, 10) " +
                     "AND st.product_seq = (SELECT product_seq FROM stock WHERE stock_seq = :stockSeq) " +
                     "GROUP BY DATE_FORMAT(ub.buy_date, '%Y-%m-01') " +
                     "ORDER BY period",
@@ -136,7 +136,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
                     "JOIN user_buy_detail ubd ON ub.buy_seq = ubd.user_buy_seq " +
                     "JOIN stock st ON ubd.stock_seq = st.stock_seq " +
                     "WHERE DATE(ub.buy_date) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) " +
-                    "AND ub.state = 1 " +
+                    "AND ub.state IN (0, 1, 2, 4, 9, 10) " +
                     "AND st.product_seq = (SELECT product_seq FROM stock WHERE stock_seq = :stockSeq)",
             nativeQuery = true)
     Integer findYesterdayMaxPrice(@Param("stockSeq") Long stockSeq);
@@ -149,7 +149,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
                     "JOIN stock st ON ubd.stock_seq = st.stock_seq " +
                     "WHERE ub.buy_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) " +
                     "AND ub.buy_date < CURDATE() " +
-                    "AND ub.state = 1 " +
+                    "AND ub.state IN (0, 1, 2, 4, 9, 10) " +
                     "AND st.product_seq = (SELECT product_seq FROM stock WHERE stock_seq = :stockSeq)",
             nativeQuery = true)
     Integer findWeeklyAveragePrice(@Param("stockSeq") Long stockSeq);
