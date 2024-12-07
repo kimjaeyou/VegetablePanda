@@ -22,19 +22,36 @@ public class UserMyPageServiceImpl implements UserMyPageService {
     private final BuyMyPageRepository buyMyPageRepository;
     private final UserMyPageRepository userMyPageRepository;
     private final UserRepository userRepository;
-    private final BidRepository bidRepository;
     private final ReviewRepository reviewRepository;
+    private final BidRepository bidRepository;
     private final WalletRepository walletRepository;
     private final PasswordEncoder passwordEncoder;
     private final LikeRepository likeRepository;
+    private final UserBuyRepository userBuyRepository;
 
     /**
      * 주문내역
      */
     @Override
-    public List<UserBuyDTO> buyList(Long seq) {
-        Integer state = 2;
-        return buyMyPageRepository.select(seq);
+    public List<UserBuyListForReivewDTO> buyList(Long seq) {
+        log.info("주문내역 조회 서비스 시작 - userSeq: {}, state: {}", seq, 1);
+
+        try {
+            log.info("buyMyPageRepository.select 호출 시작");
+            List<UserBuyListForReivewDTO> result = buyMyPageRepository.selectShopBuyByUserSeq(seq);
+
+            log.info("주문내역 조회 결과 - 건수: {}", result != null ? result.size() : 0);
+            if (result == null || result.isEmpty()) {
+                log.info("주문내역이 없습니다 - userSeq: {}", seq);
+            } else {
+                log.info("조회된 주문내역: {}", result);
+            }
+
+            return result;
+        } catch (Exception e) {
+            log.error("주문내역 조회 중 오류 발생 - userSeq: {}, state: {}", seq, 1, e);
+            throw e;
+        }
     }
 
     /**
@@ -102,6 +119,14 @@ public class UserMyPageServiceImpl implements UserMyPageService {
         return bidRepository.auctionList(seq);
     }
 
+    /**
+     * 일반 유저 경매 내역
+     */
+    @Override
+    public List<BidAuctionDTO> successfulBidList(Long seq) {
+        log.info("successfulBidList seq : {}", seq);
+        return userBuyRepository.successfulBidList(seq);
+    }
 
     /**
      * 좋아요 상품 목록

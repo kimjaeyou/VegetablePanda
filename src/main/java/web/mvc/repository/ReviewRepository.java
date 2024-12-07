@@ -47,6 +47,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<ReviewCommentDTO2> reviewList(Long userSeq);
 
 
+
     @Query("SELECT r FROM Review r WHERE r.managementUser.userSeq = :userSeq")
     Optional<Review> findByFarmerUserId(@Param("userSeq") Long userSeq);
 

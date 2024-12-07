@@ -90,7 +90,7 @@ public class FarmerUser {
         this.email = email;
         this.state = state;
         this.role = role;
-        this.farmerGrade = new FarmerGrade(1L);
+        this.farmerGrade = new FarmerGrade(0L);
         this.regDate = LocalDateTime.now();
     }
 

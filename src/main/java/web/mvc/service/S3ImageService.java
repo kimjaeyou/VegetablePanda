@@ -73,7 +73,7 @@ public class S3ImageService {
     }
 
     String extention = filename.substring(lastDotIndex + 1).toLowerCase();
-    List<String> allowedExtentionList = Arrays.asList("jpg", "jpeg", "png", "gif");
+    List<String> allowedExtentionList = Arrays.asList("jpg", "jpeg", "PNG","png", "gif", "webp");
 
     if (!allowedExtentionList.contains(extention)) {
       //throw new S3Exception(ErrorCode.INVALID_FILE_EXTENTION);

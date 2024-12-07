@@ -43,4 +43,8 @@ public class UserBuyDetail {
         this.stock = new Stock(stockSeq);
     }
 
+    public UserBuyDetail (Long userBuySeq) {
+        this.userBuySeq = userBuySeq;
+    }
+
 }

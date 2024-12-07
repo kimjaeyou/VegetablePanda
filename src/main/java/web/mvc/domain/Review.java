@@ -37,4 +37,9 @@ public class Review {
         this.visitNum = visitNum;
         this.intro = intro;
     }
+
+    public Review(long reviewSeq) {
+        this.reviewSeq = reviewSeq;
+    }
+
 }

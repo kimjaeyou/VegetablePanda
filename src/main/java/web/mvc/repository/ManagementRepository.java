@@ -3,6 +3,7 @@ package web.mvc.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import web.mvc.domain.ManagementUser;
 import web.mvc.domain.User;
 
@@ -32,5 +33,7 @@ public interface ManagementRepository extends JpaRepository<ManagementUser, Long
     @Query("SELECT m.userSeq FROM ManagementUser m WHERE m.id = ?1")
     Long findUserSeqByUserId(String userId);
 
+    @Query("SELECT COUNT(m) FROM ManagementUser m WHERE m.content = :content")
+    long countByContent(@Param("content") String content);
 
 }

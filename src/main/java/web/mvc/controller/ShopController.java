@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.domain.ShopLike;
-import web.mvc.dto.SalesStatisticsDTO;
-import web.mvc.dto.ShopLikeDTO;
-import web.mvc.dto.ShopLikeSeqDTO;
-import web.mvc.dto.ShopListDTO;
+import web.mvc.dto.*;
 import web.mvc.service.ShopService;
 
 import java.time.LocalDate;
@@ -120,5 +117,11 @@ public class ShopController {
     @GetMapping("/price/statistics")
     public ResponseEntity<Map<String, Integer>> getPriceStatistics(@RequestParam Long stockSeq) {
         return ResponseEntity.ok(shopService.getPriceStatistics(stockSeq));
+    }
+
+    @GetMapping("/likes")
+    public ResponseEntity<List<ShopLikeResponseDTO>> getLikedShops(@RequestParam Long userSeq) {
+        List<ShopLikeResponseDTO> likedShops = shopService.getLikedShopsByUser(userSeq);
+        return ResponseEntity.ok(likedShops);
     }
 }

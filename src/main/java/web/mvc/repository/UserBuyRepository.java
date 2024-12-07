@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import web.mvc.domain.UserBuy;
 import web.mvc.dto.AdjustmentDTO;
+import web.mvc.dto.BidAuctionDTO;
 import web.mvc.dto.UserBuyListByStockDTO;
 
 import java.util.List;
@@ -31,7 +32,26 @@ public interface UserBuyRepository extends JpaRepository<UserBuy, Long> {
             "JOIN Stock s ON s.stockSeq = d.stock.stockSeq " +
             "JOIN FarmerUser f ON f.userSeq = s.farmerUser.userSeq " +
             "JOIN Product p ON p.productSeq = s.product.productSeq " +
-            "WHERE b.state = 6 " +
+            "WHERE b.state IN (6, 7, 8) " +
             "ORDER BY b.buyDate DESC")
     List<AdjustmentDTO> findPendingSettlements();
+
+    @Query("SELECT COUNT(CASE WHEN state = 1 THEN 1 END) FROM UserBuy")
+    long countAuctionPurchases();
+
+    @Query("SELECT COUNT(CASE WHEN state = 2 THEN 1 END) FROM UserBuy")
+    long countProductPurchases();
+
+    @Query("SELECT COUNT(CASE WHEN state = 4 THEN 1 END) FROM UserBuy")
+    long countCompanyAuctionPurchases();
+
+    @Query("SELECT distinct new web.mvc.dto.BidAuctionDTO(u.buySeq, p.productName, ubd.count, u.totalPrice, u.buyDate, s.farmerUser.name, u.state) " +
+            "FROM UserBuy u " +
+            "Join UserBuyDetail ubd on u.buySeq = ubd.userBuy.buySeq " +
+            "JOIN Stock s ON s.stockSeq = ubd.stock.stockSeq " +
+            "Join Product p on p.productSeq = s.product.productSeq " +
+            "Join FarmerUser f on f.userSeq = s.farmerUser.userSeq " +
+            "WHERE u.managementUser.userSeq = ?1 " +
+            "AND u.state = 1")
+    List<BidAuctionDTO> successfulBidList(Long seq);
 }

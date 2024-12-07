@@ -139,7 +139,7 @@ public class AuctionServiceImpl implements AuctionService {
             UserBuy userBuy =userBuyRepository.save(
                     UserBuy.builder()
                             .managementUser(user)
-                            .state(0)
+                            .state(1)
                             .totalPrice(highestBidDTO.getPrice())
                             .build()
             );
@@ -169,7 +169,7 @@ public class AuctionServiceImpl implements AuctionService {
             UserBuy userBuy =userBuyRepository.save(
                     UserBuy.builder()
                             .managementUser(user)
-                            .state(2)
+                            .state(3)
                             .totalPrice((int) (highestBidDTO.getPrice()))
                             .build()
             );
@@ -235,7 +235,7 @@ public class AuctionServiceImpl implements AuctionService {
                 UserBuy userBuy = userBuyRepository.save(
                         UserBuy.builder()
                                 .managementUser(user)
-                                .state(0)
+                                .state(1)
                                 .totalPrice(highestBidDTO.getPrice())
                                 .build()
                 );
@@ -253,7 +253,7 @@ public class AuctionServiceImpl implements AuctionService {
                 UserBuy userBuy = userBuyRepository.save(
                         UserBuy.builder()
                                 .managementUser(user)
-                                .state(2)
+                                .state(3)
                                 .totalPrice((highestBidDTO.getPrice()))
                                 .build()
                 );

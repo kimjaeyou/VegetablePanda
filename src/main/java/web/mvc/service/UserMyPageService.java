@@ -10,7 +10,7 @@ import java.util.List;
 public interface UserMyPageService {
 
     // 주문내역 조회
-    List<UserBuyDTO> buyList(Long seq);
+    List<UserBuyListForReivewDTO> buyList(Long seq);
 
     // 회원정보 출력
     UserDTO selectUser(Long seq);
@@ -44,4 +44,7 @@ public interface UserMyPageService {
 
     // 구독취소
     String userLikeDelete(Long seq, Long userLikeSeq);
+
+    // 경매 낙찰 내역 조회
+    List<BidAuctionDTO> successfulBidList (Long seq);
 }
