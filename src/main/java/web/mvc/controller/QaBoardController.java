@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +18,8 @@ import web.mvc.service.FileService;
 import web.mvc.service.QaBoardService;
 import web.mvc.service.S3ImageService;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -44,26 +43,27 @@ public class QaBoardController {
             log.info("QA 등록 요청: {}", qaDTO);
 
             QaDTO savedQaBoard = qaBoardService.saveQaBoard(qaDTO, file);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedQaBoard);
 
-        } catch (JsonProcessingException e) {
-            log.error("JSON 변환 오류: {}", e.getMessage());
-            return ResponseEntity.badRequest().body("Invalid JSON format.");
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedQaBoard);
+        } catch (Exception e) {
+            log.error("QA 등록 중 예기치 않은 오류 발생: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("QA 등록 실패.");
         }
     }
 
     /**
      * QA 수정
      */
-    @PutMapping(value = "/{boardNoSeq}", consumes = "multipart/form-data")
+    @PutMapping(value = "/{boardNoSeq}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> qaUpdate(
             @PathVariable Long boardNoSeq,
-            @RequestPart("qaBoard") QaDTO qaDTO,
+            @RequestPart("qaBoard") String qaBoardJson,
             @RequestPart(value = "file", required = false) MultipartFile file,
-            @RequestParam(value = "deleteFile", required = false, defaultValue = "false") boolean deleteFile) {
+            @RequestParam(value = "deleteFile", required = false, defaultValue = "false") boolean deleteFile) throws JsonProcessingException {
+
+        QaDTO qaDTO = objectMapper.readValue(qaBoardJson, QaDTO.class);
         log.info("QA 수정 요청: ID={}, 데이터={}", boardNoSeq, qaDTO);
 
-        // 파일 업로드 및 수정 처리
         QaDTO updatedQaBoard = qaBoardService.qaUpdate(boardNoSeq, qaDTO, file, deleteFile);
         return ResponseEntity.ok(updatedQaBoard);
     }
@@ -118,33 +118,31 @@ public class QaBoardController {
      */
     @GetMapping("/downloadFile/{boardNoSeq}")
     public ResponseEntity<?> downloadFile(@PathVariable Long boardNoSeq) {
-        log.info("파일 다운로드 요청: ID={}", boardNoSeq);
-
         try {
-            // 서비스 계층에서 파일 정보 가져오기
             FileDTO fileDTO = qaBoardService.downloadFile(boardNoSeq);
-            if (fileDTO == null || fileDTO.getPath() == null) {
-                log.warn("파일이 존재하지 않거나 경로가 없습니다: ID={}", boardNoSeq);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("파일이 존재하지 않습니다.");
-            }
-
-            // S3 서비스에서 파일 다운로드
             byte[] fileData = s3ImageService.downloadFile(fileDTO.getPath());
-            if (fileData == null || fileData.length == 0) {
-                log.warn("파일 데이터를 다운로드할 수 없습니다: 경로={}", fileDTO.getPath());
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("파일 데이터를 다운로드할 수 없습니다.");
-            }
 
-            // 헤더 설정 및 파일 반환
+            // 파일 확장자에 따른 MediaType 설정
+            String extension = fileDTO.getName().substring(fileDTO.getName().lastIndexOf(".") + 1);
+            MediaType mediaType = MediaTypeFactory
+                    .getMediaType(fileDTO.getName())
+                    .orElse(MediaType.APPLICATION_OCTET_STREAM);
+
+            // 파일명 인코딩 처리
+            String encodedFileName = URLEncoder.encode(fileDTO.getName(), StandardCharsets.UTF_8)
+                    .replaceAll("\\+", "%20");
+
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headers.setContentDispositionFormData("attachment", fileDTO.getName());
+            headers.setContentType(mediaType);
+            headers.setContentDisposition(ContentDisposition.builder("attachment")
+                    .filename(encodedFileName)
+                    .build());
 
-            log.info("파일 다운로드 성공: ID={}, 이름={}", boardNoSeq, fileDTO.getName());
             return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("파일 다운로드 중 오류 발생: ID={}, 오류={}", boardNoSeq, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 다운로드 중 오류가 발생했습니다.");
+            log.error("파일 다운로드 실패: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("파일 다운로드에 실패했습니다.");
         }
     }
 

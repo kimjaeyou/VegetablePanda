@@ -35,13 +35,16 @@ public class QaBoard extends QaDTO {
     @Column(name = "reg_date", nullable = false)
     private LocalDateTime regDate;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "file_seq")
     private File file;
 
-    @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq", nullable = false)
     @ToString.Exclude
     private ManagementUser managementUser;
+
+    @OneToMany(mappedBy = "qaBoard", cascade = CascadeType.ALL, orphanRemoval = true)  // 댓글 함께 삭제
+    private List<QaBoardReply> replies;
 
 }
