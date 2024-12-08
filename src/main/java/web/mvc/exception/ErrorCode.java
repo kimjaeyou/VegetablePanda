@@ -50,7 +50,8 @@ public enum ErrorCode { //enum은 'Enumeration' 의 약자로 열거, 목록 이
 
     FILE_NOTFOUND (HttpStatus.NOT_FOUND, "File Not Found", "파일을 찾을 수 없습니다."),
     
-    STOCK_COUNT_LESS (HttpStatus.BAD_REQUEST, "Stock count less", "재고량 이하로 수량 등록하세요");
+    STOCK_COUNT_LESS (HttpStatus.BAD_REQUEST, "Stock count less", "재고량 이하로 수량 등록하세요"),
+    SAVE_FAILD (HttpStatus.BAD_REQUEST, "Save Failed", "등록 실패!");
 
     
     private final HttpStatus httpStatus;

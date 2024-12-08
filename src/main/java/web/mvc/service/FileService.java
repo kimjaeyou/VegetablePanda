@@ -12,4 +12,5 @@ public interface FileService {
      * 파일 찾기
      */
     public File findById(long id);
+
 }

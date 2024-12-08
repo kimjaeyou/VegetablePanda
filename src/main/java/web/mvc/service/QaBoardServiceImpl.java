@@ -28,7 +28,9 @@ public class QaBoardServiceImpl implements QaBoardService {
     private final QaBoardRepository qaBoardRepository;
     private final S3ImageService s3ImageService;
     private final ManagementRepository managementRepository;
+    private final FileService fileService;
     private final FileRepository fileRepository;
+
 
     /**
      * 게시글 등록
@@ -37,53 +39,57 @@ public class QaBoardServiceImpl implements QaBoardService {
     public QaDTO saveQaBoard(QaDTO qaDTO, MultipartFile file) {
         String writerId = getCurrentUserId();
 
-        // 현재 로그인한 사용자 정보 검색
         ManagementUser managementUser = managementRepository.findById(writerId);
 
-        // DTO -> 엔티티 변환 및 기본값 설정
         QaBoard qaBoard = qaDTO.toEntity();
         qaBoard.setManagementUser(managementUser);
         qaBoard.setReadnum(0);
 
-        // 파일 업로드 처리
         if (file != null && !file.isEmpty()) {
-            qaBoard.setFile(uploadFileToS3(file));
+            String uploadedPath = s3ImageService.upload(file);
+            File newFile = new File(uploadedPath, file.getOriginalFilename());
+            File savedFile = fileService.save(newFile);
+            qaBoard.setFile(savedFile);
         }
 
-        // 데이터베이스에 저장
         QaBoard savedQaBoard = qaBoardRepository.save(qaBoard);
         return QaDTO.fromEntity(savedQaBoard, writerId);
     }
-
-    /**
-     * 게시글 수정
-     */
+/**
+ * 게시글 수정
+ * */
     @Override
     public QaDTO qaUpdate(Long boardNoSeq, QaDTO qaDTO, MultipartFile file, boolean deleteFile) {
         QaBoard qaBoard = qaBoardRepository.findById(boardNoSeq)
                 .orElseThrow(() -> new DMLException(ErrorCode.NOTFOUND_BOARD));
 
-        // 게시글 제목 및 내용 업데이트
         qaBoard.setSubject(qaDTO.getSubject());
         qaBoard.setContent(qaDTO.getContent());
 
-        // 기존 파일 삭제 처리
-        if (deleteFile && qaBoard.getFile() != null) {
-            deleteFileFromS3(qaBoard.getFile());
-            qaBoard.setFileDTO(null);
+        // 파일 처리
+        File currentFile = qaBoard.getFile();
+
+        if (deleteFile && currentFile != null) {
+            s3ImageService.deleteImageFromS3(currentFile.getPath());
+            fileRepository.delete(currentFile);
+            qaBoard.setFile(null);
         }
 
-        // 새로운 파일 업로드 처리
         if (file != null && !file.isEmpty()) {
-            if (qaBoard.getFile() != null) {
-                deleteFileFromS3(qaBoard.getFile());
+            // 기존 파일이 있다면 삭제
+            if (currentFile != null && !deleteFile) {
+                s3ImageService.deleteImageFromS3(currentFile.getPath());
+                fileRepository.delete(currentFile);
             }
-            qaBoard.setFile(uploadFileToS3(file));
+
+            String uploadedPath = s3ImageService.upload(file);
+            File newFile = fileService.save(new File(uploadedPath, file.getOriginalFilename()));
+            qaBoard.setFile(newFile);
         }
 
-        // 업데이트된 게시글 저장
         QaBoard updatedQaBoard = qaBoardRepository.save(qaBoard);
-        return QaDTO.fromEntity(updatedQaBoard, updatedQaBoard.getManagementUser().getId());
+
+        return QaDTO.fromEntity(updatedQaBoard, getCurrentUserId());
     }
 
     /**

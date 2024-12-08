@@ -53,4 +53,3 @@ public interface BuyMyPageRepository extends JpaRepository<UserBuy, Long>, JpaSp
    int update(Long buySeq);
 
 }
- 
