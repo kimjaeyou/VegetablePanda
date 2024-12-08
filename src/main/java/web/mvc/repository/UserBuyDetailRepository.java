@@ -31,7 +31,7 @@ public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Lo
             "JOIN s.product p " +
             "JOIN ubd.userBuy ub " +
             "WHERE ub.buyDate BETWEEN :startDate AND :endDate " +
-            "AND ub.state = 2 " +
+            "AND ub.state IN (0, 1, 2, 4, 9, 10) " +
             "GROUP BY p.productName " +
             "ORDER BY SUM(ubd.price) DESC")
     List<ProductStatisticsDTO> findProductStats(
@@ -46,7 +46,7 @@ public interface UserBuyDetailRepository extends JpaRepository<UserBuyDetail, Lo
                     "FROM user_buy ub " +
                     "LEFT JOIN user_buy_detail ubd ON ubd.user_buy_seq = ub.buy_seq " +
                     "WHERE ub.buy_date BETWEEN :startDate AND :endDate " +
-                    "AND ub.state = 2 " +
+                    "AND ub.state IN (0, 1, 2, 4, 9, 10) " +
                     "GROUP BY DATE_FORMAT(ub.buy_date, '%Y-%m-%d') " +
                     "ORDER BY date ASC",
             nativeQuery = true)

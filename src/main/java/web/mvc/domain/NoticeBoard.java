@@ -46,4 +46,13 @@ public class NoticeBoard {
         this.file = file;
 
     }
+
+    public void updateFrom(NoticeBoard other) {
+        this.subject = other.getSubject();
+        this.content = other.getContent();
+    }
+
+    public void increaseReadnum() {
+        this.readnum++;
+    }
 }
