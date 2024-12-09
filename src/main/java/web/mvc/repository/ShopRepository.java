@@ -38,7 +38,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "s.stock.stockOrganic.organicStatus, " +
             "s.stock.file.path)" +
             "FROM Shop s " +
-            "WHERE s.stock.status = 1  and s.stock.farmerUser.userSeq = ?1 " +
+            "WHERE s.stock.status = 3 and s.stock.farmerUser.userSeq = ?1 " +
             "ORDER BY s.insertDate DESC")
     List<ShopListDTO> findByUserSeq(Long seq);
 
