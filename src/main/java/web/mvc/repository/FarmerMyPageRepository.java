@@ -41,17 +41,35 @@ public interface FarmerMyPageRepository extends JpaRepository<FarmerUser, Long> 
             "WHERE f.managementUser.userSeq = u.userSeq")
     List<FarmerUserDTO2> fetchBasicFarmerData();
 
-
-
-
-
-
     @Query(
-            value= "SELECT + s.user_seq AS userSeq, COUNT(ubd.user_buy_detail_seq) AS buyCount "+
-                    "FROM user_buy_detail ubd" +
-                    "JOIN stock s ON ubd.stock_seq = s.stock_seq" +
-                    "GROUP BY s.user_seq" +
-                    "ORDER BY buyCount DESC",nativeQuery = true)
+            value = """
+        SELECT new web.mvc.dto.OrderByBuyCountDTO(
+            s.farmerUser.userSeq, COUNT(ubd.userBuySeq)
+        )
+        FROM UserBuyDetail ubd
+        JOIN ubd.stock s
+        GROUP BY s.farmerUser.userSeq
+        ORDER BY COUNT(ubd.userBuySeq) DESC
+    """
+    )
     List<OrderByBuyCountDTO> OrderbyBuyCount();
+
+    @Query("""
+    SELECT new web.mvc.dto.FarmerUserDTO2(
+        u.userSeq, 
+        u.name, 
+        f.path, 
+        r.intro
+    )
+    FROM FarmerUser u
+    JOIN File f ON f.managementUser.userSeq = u.userSeq
+    JOIN Review r ON r.managementUser.userSeq = u.userSeq
+    LEFT JOIN UserBuyDetail ubd ON ubd.stock.farmerUser.userSeq = u.userSeq
+    GROUP BY u.userSeq
+    ORDER BY COUNT(ubd.userBuySeq) DESC
+""")
+    List<FarmerUserDTO2> fetchSortedFarmerData();
+
+
 
 }
