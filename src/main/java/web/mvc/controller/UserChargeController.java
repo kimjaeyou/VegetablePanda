@@ -32,12 +32,10 @@ public class UserChargeController {
         String orderUid = userChargeService.generateOrderUid();
         userChargeDTO.setOrderUid(orderUid);
         log.info("orderUid={}", orderUid);
-        //UserCharge userCharge = userChargeDTO.toUserCharge(userChargeDTO);
         UserCharge usercharge = modelMapper.map(userChargeDTO, UserCharge.class);
         System.out.println(usercharge);
 
         UserChargeDTO result = modelMapper.map(userChargeService.order(usercharge), UserChargeDTO.class);
-        //return new ResponseEntity<>(result, HttpStatus.OK);
         System.out.println("orderUid dddddd = " + orderUid);
         return ResponseEntity.ok(orderUid);
     }

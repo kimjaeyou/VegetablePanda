@@ -8,12 +8,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // 모든 경로 허용
-                .allowedOrigins("http://localhost:5173","http://vegetablepanda.p-e.kr"
-                        ,"https://vegetablepanda.p-e.kr","http://http://3.34.22.12") // React 앱 주소
-                .allowedMethods("GET", "POST", "PUT", "DELETE") // 모든 HTTP 메서드 허용
-                .allowedHeaders("*") // 모든 헤더 허용
-                .allowCredentials(true);
+        registry.addMapping("/**")
+                .allowedOrigins(
+                        "http://localhost:5173",
+                        "http://www.vegetablepanda.p-e.kr",
+                        "http://vegetablepanda.p-e.kr",
+                        "https://vegetablepanda.p-e.kr",
+                        "https://www.vegetablepanda.p-e.kr"
+                )
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // OPTIONS 메서드 추가
+                .allowedHeaders("*")  // 모든 헤더 허용
+                .allowCredentials(true)  // 인증 정보 허용
+                .maxAge(3600);  // preflight 캐시 시간
     }
 }
 
