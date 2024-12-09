@@ -12,6 +12,7 @@ import web.mvc.repository.LikeRepository;
 import web.mvc.repository.StockRepository;
 import web.mvc.repository.StreamingRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,5 +69,12 @@ public class LikeServiceImpl implements LikeService {
         Long userSeq = likeDTO.getUserSeq();
         Boolean state = likeRepository.likeState(farmerSeq, userSeq);
         return state;
+    }
+
+    // 구독 중인 판매자 목록
+    public List<LikeDTO> getLikeFarmer (Long userSeq) {
+        List<Likes> list = likeRepository.findAllLikesByUserSeq(userSeq);
+        List<LikeDTO> likeDTOList=new ArrayList<>();
+        return null;
     }
 }

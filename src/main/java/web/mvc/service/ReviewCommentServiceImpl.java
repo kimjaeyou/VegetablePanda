@@ -194,6 +194,7 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     /**
      * 하나의 재고에 대한 리뷰 개수와 평균점수 가져오기
      */
+    @Override
     public ReviewCommentStatisticsDTO getStockReviewStatistics (Long stockSeq) {
 
         return reviewCommentRepository.findStockReviewStatistics(stockSeq);

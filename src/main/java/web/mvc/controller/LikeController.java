@@ -51,4 +51,10 @@ public class LikeController {
         System.out.println("여기 : "+likeDTO);
         return new ResponseEntity<>(likeService.likeState(likeDTO) ,HttpStatus.OK);
     }
+
+    // 구독중인 판매자 목록 가져오기
+    @GetMapping("/like/list")
+    public ResponseEntity<?> likeList() {
+        return null;
+    }
 }
