@@ -114,8 +114,6 @@ public class PaymentServiceImpl implements PaymentService {
                     if ("user".equals(userM.getContent())) {
 
                         User user = userRepository.findByUserSeq(userM.getUserSeq());
-//                    requestPayDTO = RequestPayDTO.builder().buyerName(user.get(0).getName()).buyerEmail(user.get(0).getEmail()).buyerAddr(user.get(0).getAddress())
-//                            .itemName(userBuyDetailRepository.findByBuySeq(userBuy.getBuySeq())).paymentPrice((long)(userBuy.getTotalPrice())).orderUid(orderUid).build();
                         List<String> items = userBuyDetailRepository.findproductNameByBuySeq(userBuy.get(0).getBuySeq());
                         log.info("List<String> items : {}", items);
                         requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
@@ -136,22 +134,17 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         log.info("findRequestDto userM : {}", userM);
-        //User user;
-        //ManagementUser user = managementRepository.findById(userCharge.getManagementUser().getUserSeq()).orElseThrow(()-> new MemberAuthenticationException(ErrorCode.NOTFOUND_USER));
-
-        // ManagementUser에서 각 사용자 꺼내기
-        // 아니면 쿼리문 사용 (select m.user_seq, u.name, c.com_name, f.name, u.email, c.email, f.email, u.address, c.address, f.address from management_user m left join user u on m.user_seq = u.user_seq left join company_user c on m.user_seq = c.user_seq left join farmer_user f on m.user_seq = f.user_seq;)
 
         return requestPayDTO;
     }
 
+    // 포인트 결제 검증
     @Override
     public IamportResponse<Payment> paymentByChargeCallback(PaymentReq request) {
         try {
             // 결제 단건 조회
             IamportResponse<Payment> iamportResponse = iamportClient.paymentByImpUid(request.getPaymentUid());
             // 주문내역 조회
-            //UserCharge userCharge = userChargeRepository.findByOrderUid(request.getOrderUid()).get(0);
             UserCharge userCharge = userChargeRepository.findOrderAndPayment(request.getOrderUid()).orElseThrow(()-> new UserChargeException(ErrorCode.ORDER_NOTFOUND));
             log.info("usercharge : {}", userCharge);
 
@@ -196,6 +189,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     }
 
+    // 상품 결제 검증
     @Override
     public IamportResponse<Payment> paymentByCallback(PaymentReq request) {
         try {
@@ -232,9 +226,6 @@ public class PaymentServiceImpl implements PaymentService {
 
                 throw new UserChargeException(ErrorCode.ORDER_CANCELED);
             }
-
-            // 검증 후 포인트 충전
-            // chargeWallet(price, userCharge.getManagementUser().getUserSeq());
 
             // 검증 후 주문상태 변경
             UserBuy result = changeOrder(userBuy.getBuySeq());

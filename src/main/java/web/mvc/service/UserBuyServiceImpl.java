@@ -51,8 +51,7 @@ public class UserBuyServiceImpl implements UserBuyService {
         UserBuy result = userBuyRepository.save(userBuy);
 
         // 임시 결제내역 생성
-        Payment payment = Payment.builder().price(userBuy.getTotalPrice()).status(PaymentStatus.READY)//.usercharge(UserCharge.builder().userChargeSeq())
-                //.userBuy(UserBuy.builder().buySeq(result.getBuySeq()).build())
+        Payment payment = Payment.builder().price(userBuy.getTotalPrice()).status(PaymentStatus.READY)
                 .build();
         paymentRepository.save(payment);
 
