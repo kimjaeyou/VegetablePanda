@@ -1,7 +1,10 @@
 package web.mvc.dto;
 
 import lombok.*;
+import web.mvc.domain.File;
+import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
+import web.mvc.domain.UserBuyDetail;
 
 import java.time.LocalDateTime;
 
@@ -31,8 +34,9 @@ public class ReviewCommentDTO {
                 .score(reviewComment.getScore())
                 .userSeq(reviewComment.getUserBuyDetail().getUserBuy().getManagementUser().getUserSeq())
                 .regDate(reviewComment.getDate())
-                .reviewSeq(reviewComment.getReview().getReviewSeq()) // 게시판 ID 설정
+                .reviewSeq(reviewComment.getReview().getReviewSeq())
                 .userBuyDetailSeq(reviewComment.getUserBuyDetail().getUserBuySeq())
+                .file(reviewComment.getFile() != null ? new FileDTO(reviewComment.getFile()) : null) // null-safe 처리
                 .build();
     }
 
@@ -44,11 +48,14 @@ public class ReviewCommentDTO {
     }
 
     // DTO를 엔티티로 변환하는 메서드
-    public ReviewComment toEntity() {
+    public ReviewComment toEntity(File file, UserBuyDetail userBuyDetail, Review review) {
         return ReviewComment.builder()
                 .reviewCommentSeq(reviewCommentSeq)
                 .content(content)
                 .score(score)
+                .file(file) // 파일 매핑
+                .userBuyDetail(userBuyDetail) // 구매 내역 매핑
+                .review(review) // 리뷰 매핑
                 .build();
     }
 }
