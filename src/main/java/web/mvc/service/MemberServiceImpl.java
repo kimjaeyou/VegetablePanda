@@ -157,8 +157,6 @@ public class MemberServiceImpl implements MemberService {
     public List<FarmerUserDTO2> getCombinedFarmerData() {
         // 첫 번째 쿼리 결과 가져오기
         List<FarmerUserDTO2> basicData = farmerMyPageRepository.fetchSortedFarmerData();
-        List<OrderByBuyCountDTO> orderRank=farmerMyPageRepository.OrderbyBuyCount();
-
         return basicData;
     }
 }
