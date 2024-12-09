@@ -3,14 +3,10 @@ package web.mvc.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.mvc.controller.NotificationController;
 import web.mvc.domain.FarmerUser;
 import web.mvc.domain.Likes;
 import web.mvc.domain.Stock;
 import web.mvc.dto.LikeDTO;
-import web.mvc.dto.StreamingDTO;
-import web.mvc.exception.DMLException;
-import web.mvc.exception.ErrorCode;
 import web.mvc.repository.FarmerUserRepository;
 import web.mvc.repository.LikeRepository;
 import web.mvc.repository.StockRepository;
@@ -67,14 +63,10 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public int likeState(LikeDTO likeDTO) {
+    public Boolean likeState(LikeDTO likeDTO) {
         Long farmerSeq = likeDTO.getFarmerSeq();
         Long userSeq = likeDTO.getUserSeq();
         Boolean state = likeRepository.likeState(farmerSeq, userSeq);
-        if (state){
-            return 1;
-        } else {
-            return 0;
-        }
+        return state;
     }
 }

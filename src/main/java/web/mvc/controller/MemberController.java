@@ -60,6 +60,6 @@ public class MemberController {
     // 판매자 명단
     @GetMapping("/farmer")
     public ResponseEntity<?> farmer(){
-        return new ResponseEntity<> (memberService.farmer(), HttpStatus.OK);
+        return new ResponseEntity<> (memberService.getCombinedFarmerData(), HttpStatus.OK);
     }
 }

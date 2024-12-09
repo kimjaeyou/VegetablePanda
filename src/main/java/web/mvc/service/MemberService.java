@@ -14,4 +14,5 @@ public interface MemberService {
     void signUp(GetAllUserDTO member, MultipartFile image);
 
     List<FarmerUserDTO2> farmer();
+    List<FarmerUserDTO2> getCombinedFarmerData();
 }

@@ -22,6 +22,7 @@ public class FarmerUserDTO2 {
     private String account;
     private String path;
     private String intro;
+    private Integer count;
 
     public FarmerUserDTO2(Long userSeq,
                           String farmerId,
@@ -54,5 +55,13 @@ public class FarmerUserDTO2 {
         this.name = name;
         this.path = path;
         this.intro = intro;
+    }
+
+    public FarmerUserDTO2 (Long userSeq, String name, String path , String intro,Integer count) {
+        this.userSeq = userSeq;
+        this.name = name;
+        this.path = path;
+        this.intro = intro;
+        this.count = count;
     }
 }

@@ -9,5 +9,5 @@ public interface LikeService {
     Likes like(LikeDTO likeDTO);
     List<Long> getLikeUserSeq(Long userSeq);
 
-    int likeState( LikeDTO likeDTO);
+    Boolean likeState(LikeDTO likeDTO);
 }
