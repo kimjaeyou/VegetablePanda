@@ -73,8 +73,8 @@ public class LikeServiceImpl implements LikeService {
 
     // 구독 중인 판매자 목록
     public List<LikeDTO> getLikeFarmer (Long userSeq) {
-        List<Likes> list = likeRepository.findAllLikesByUserSeq(userSeq);
-        List<LikeDTO> likeDTOList=new ArrayList<>();
-        return null;
+//        List<Likes> list = likeRepository.findAllLikesByUserSeq(userSeq);
+        List<LikeDTO> likeDTOList = likeRepository.findAllLikesByUserSeq(userSeq);
+        return likeDTOList;
     }
 }

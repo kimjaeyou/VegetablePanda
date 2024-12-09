@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import web.mvc.domain.FarmerUser;
 import web.mvc.domain.Likes;
 import web.mvc.dto.LikeDTO;
+import web.mvc.dto.UserLikeDTO;
+
 import java.util.List;
 import java.util.List;
 import java.util.Optional;

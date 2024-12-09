@@ -18,6 +18,8 @@ import web.mvc.service.LikeService;
 import web.mvc.service.LikeServiceImpl;
 import web.mvc.service.NotificationService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -54,7 +56,8 @@ public class LikeController {
 
     // 구독중인 판매자 목록 가져오기
     @GetMapping("/like/list")
-    public ResponseEntity<?> likeList() {
-        return null;
+    public ResponseEntity<?> likeList(Long userSeq) {
+        List<LikeDTO> list = likeService.getLikeFarmer(userSeq);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }
