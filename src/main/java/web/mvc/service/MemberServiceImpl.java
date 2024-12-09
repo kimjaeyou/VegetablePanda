@@ -9,11 +9,15 @@ import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.*;
 import web.mvc.dto.FarmerUserDTO2;
 import web.mvc.dto.GetAllUserDTO;
+import web.mvc.dto.OrderByBuyCountDTO;
 import web.mvc.exception.ErrorCode;
 import web.mvc.exception.MemberAuthenticationException;
 import web.mvc.repository.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -147,5 +151,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<FarmerUserDTO2> farmer() {
         return farmerMyPageRepository.farmer();
+    }
+
+    @Override
+    public List<FarmerUserDTO2> getCombinedFarmerData() {
+        // 첫 번째 쿼리 결과 가져오기
+        List<FarmerUserDTO2> basicData = farmerMyPageRepository.fetchSortedFarmerData();
+        return basicData;
     }
 }

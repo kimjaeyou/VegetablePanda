@@ -43,11 +43,12 @@ public class LikeController {
             }
 
         }
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(like,HttpStatus.CREATED);
     }
 
-    @GetMapping("/likeState")
+    @PostMapping("/likeState")
     public ResponseEntity<?> likeState(@RequestBody LikeDTO likeDTO) {
+        System.out.println("여기 : "+likeDTO);
         return new ResponseEntity<>(likeService.likeState(likeDTO) ,HttpStatus.OK);
     }
 }
