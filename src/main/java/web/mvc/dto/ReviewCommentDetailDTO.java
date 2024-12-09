@@ -21,5 +21,17 @@ public class ReviewCommentDetailDTO {
     private String name ;
     private LocalDateTime regDate;
     private String path;
+    private String profilePath;
+
+    public ReviewCommentDetailDTO(Long reviewCommentSeq, Long userSeq, String productName, String content, Integer score, String name, LocalDateTime regDate, String path) {
+        this.reviewCommentSeq = reviewCommentSeq;
+        this.userSeq = userSeq;
+        this.productName = productName;
+        this.content = content;
+        this.score = score;
+        this.name = name;
+        this.regDate = regDate;
+        this.path = path;
+    }
 
 }

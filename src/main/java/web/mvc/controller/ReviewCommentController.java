@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import web.mvc.domain.*;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.ReviewCommentDetailDTO;
+import web.mvc.dto.ReviewCommentStatisticsDTO;
 import web.mvc.dto.StockDTO;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
@@ -149,5 +150,29 @@ public class ReviewCommentController {
     private Long getAuthenticatedUserSeq() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return Long.parseLong(authentication.getName());
+    }
+
+    /**
+     * 하나의 재고에 대한 리뷰 목록 가져오기
+     */
+    @GetMapping("/stock/review")
+    public ResponseEntity<?> getStockReviewList (Long stockSeq) {
+        log.info("리뷰 목록 조회 시작");
+        List<ReviewCommentDetailDTO> list = reviewCommentService.getStockReviewList(stockSeq);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    /**
+     * 하나의 재고에 대한 리뷰 개수와 평균점수 가져오기
+     */
+    @GetMapping("/stock/reviewStatistics")
+    public ResponseEntity<?> getStockReviewAverage (Long stockSeq) {
+        log.info("리뷰 통계 조회");
+        ReviewCommentStatisticsDTO result = reviewCommentService.getStockReviewStatistics(stockSeq);
+        if(result.getReviewCount() == 0) {
+            result.setReviewCount(0);
+            result.setAverageRating(0.0);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

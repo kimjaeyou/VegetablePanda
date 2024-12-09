@@ -6,6 +6,7 @@ import web.mvc.domain.ReviewComment;
 import web.mvc.domain.UserBuyDetail;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.ReviewCommentDetailDTO;
+import web.mvc.dto.ReviewCommentStatisticsDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,4 +30,10 @@ public interface ReviewCommentService {
 
 
     Optional<Review> findByFarmerUserId(Long userSeq);
+
+    // 상품 리뷰 정보 조회
+    public List<ReviewCommentDetailDTO> getStockReviewList (Long stockSeq);
+
+    // 상품 리뷰 통계 조회
+    public ReviewCommentStatisticsDTO getStockReviewStatistics (Long stockSeq);
 }

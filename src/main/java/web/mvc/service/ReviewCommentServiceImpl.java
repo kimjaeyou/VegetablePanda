@@ -10,6 +10,7 @@ import web.mvc.domain.*;
 import web.mvc.dto.FileDTO;
 import web.mvc.dto.ReviewCommentDTO;
 import web.mvc.dto.ReviewCommentDetailDTO;
+import web.mvc.dto.ReviewCommentStatisticsDTO;
 import web.mvc.exception.DMLException;
 import web.mvc.exception.ErrorCode;
 import web.mvc.repository.ManagementRepository;
@@ -18,7 +19,6 @@ import web.mvc.repository.ReviewRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -182,4 +182,21 @@ public class ReviewCommentServiceImpl implements ReviewCommentService {
     private void deleteFileFromS3(File file) {
         s3ImageService.deleteImageFromS3(file.getPath());
     }
+
+    /**
+     * 하나의 재고에 대한 리뷰 목록 가져오기
+     */
+    @Override
+    public List<ReviewCommentDetailDTO> getStockReviewList (Long stockSeq) {
+        return reviewCommentRepository.findByStockReview(stockSeq);
+    }
+
+    /**
+     * 하나의 재고에 대한 리뷰 개수와 평균점수 가져오기
+     */
+    public ReviewCommentStatisticsDTO getStockReviewStatistics (Long stockSeq) {
+
+        return reviewCommentRepository.findStockReviewStatistics(stockSeq);
+    }
+
 }
