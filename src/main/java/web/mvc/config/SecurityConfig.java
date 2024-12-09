@@ -18,6 +18,7 @@ import web.mvc.jwt.JWTFilter;
 import web.mvc.jwt.JWTUtil;
 import web.mvc.jwt.LoginFilter;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -54,11 +55,14 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration configuration = new CorsConfiguration();
 
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
-                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                        configuration.setAllowedOrigins(Arrays.asList(
+                                "https://vegetablepanda.p-e.kr",
+                                "https://www.vegetablepanda.p-e.kr",
+                                "http://localhost:5173"
+                                ));
+                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                        configuration.setAllowedHeaders(Arrays.asList("*"));
                         configuration.setAllowCredentials(true);
-
-                        configuration.setAllowedHeaders(Collections.singletonList("*"));
                         configuration.setMaxAge(3600L);
 
                         configuration.addExposedHeader("Set-Cookie");

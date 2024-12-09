@@ -64,12 +64,10 @@ public class PaymentController {
         userChargeDTO.setChargeDate(date);
 
         UserCharge userCharge = modelMapper.map(userChargeDTO, UserCharge.class);
-        //UserChargeDTO result = modelMapper.map(paymentService.chargePoint(userCharge), UserChargeDTO.class);
         int result = paymentService.saveCharge(userCharge);
         Map<Object, Object> map = new HashMap<>();
         if(result > 0){
             map.put("cnt", 1);
-            //map.put(("userChargeSeq",))
             UserCharge charge = paymentService.getLastCharge();
             map.put("userChargeSeq", charge.getUserChargeSeq());
             map.put("chargePrice", charge.getPrice());
