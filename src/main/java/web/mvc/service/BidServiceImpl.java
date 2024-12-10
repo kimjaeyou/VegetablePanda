@@ -10,10 +10,7 @@ import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
-import web.mvc.domain.Bid;
-import web.mvc.domain.ManagementUser;
-import web.mvc.domain.User;
-import web.mvc.domain.UserWallet;
+import web.mvc.domain.*;
 import web.mvc.dto.*;
 import web.mvc.exception.BidException;
 import web.mvc.exception.ErrorCode;
@@ -56,11 +53,9 @@ public class BidServiceImpl implements BidService {
     @Override
     public Bid bid(BidDTO BidderDTO, HighestBidDTO highestBid, UserTempWalletDTO newBidderTempWallet) {
         Bid bid =modelMapper.map(BidderDTO, Bid.class);
-        bid.setManagementUser(managementRepository.findById(BidderDTO.getUserSeq()).orElse(null));
-        bid.setAuction(auctionRepository.findById(BidderDTO.getAuctionSeq()).orElse(null));
-
+        bid.setManagementUser(ManagementUser.builder().userSeq(BidderDTO.getUserSeq()).build());
+        bid.setAuction(Auction.builder().auctionSeq(BidderDTO.getAuctionSeq()).build());
         bid = bidRepository.save(bid);
-        BidDTO newBidderDTO = modelMapper.map(bid, BidDTO.class);
 
         redisTemplate.execute(new SessionCallback<List<Object>>() {
             @Override
@@ -71,32 +66,46 @@ public class BidServiceImpl implements BidService {
                     operations.watch("highestBid:" + highestBid.getAuctionSeq());
                     // 트랜잭션 시작
                     operations.multi();
-                    ManagementUser user = managementRepository.findById(newBidderDTO.getUserSeq()).orElse(null);
+                    ManagementUser user = managementRepository.findById(BidderDTO.getUserSeq()).orElse(null);
+                    System.out.println("최고가 입찰 유저번호"+highestBid.getUserSeq());
                     // 입찰자 존재 시 가상 지갑에 포인트 돌려주기
                     if (highestBid.getUserSeq() != 0) {
-                        UserTempWalletDTO oldBidderWallet = redisUtils.getData("userTempWallet:" + highestBid.getUserSeq(), UserTempWalletDTO.class).orElse(null);
-                        if (oldBidderWallet != null) {
-                            if(user.getContent().equals("user")) {
-                                oldBidderWallet.setPoint(oldBidderWallet.getPoint() + highestBid.getPrice()); // 기존 입찰자에게 포인트 돌려주기
-                            }else{
-                                oldBidderWallet.setPoint(oldBidderWallet.getPoint() + (int)(highestBid.getPrice()*0.1)); // 기존 입찰자에게 포인트 돌려주기
-                            }
-                            redisUtils.saveData("userTempWallet:" + highestBid.getUserSeq(), oldBidderWallet);
+                        System.out.println("지갑돈 돌려주기 !!");
+                        UserTempWalletDTO oldBidderWallet = redisUtils.getData("userTempWallet:" + highestBid.getUserSeq(), UserTempWalletDTO.class).orElseGet(()-> {
+                            System.out.println("유저 가상 정보가 없어요~");
+                            UserWallet userWallet = walletRepository.findByUserSeq(highestBid.getUserSeq());
+                            UserTempWalletDTO  wallet  = UserTempWalletDTO.builder()
+                                    .userWalletSeq(userWallet.getUserWalletSeq())
+                                    .userSeq((userWallet.getManagementUser().getUserSeq()))
+                                    .point(userWallet.getPoint())
+                                    .build();
+                            redisUtils.saveData("userTempWallet:"+wallet.getUserWalletSeq(),wallet);
+                            return wallet;
+                        });
+                        if(user.getContent().equals("user")) {
+                            System.out.println("유저한테 돈  돌려주기 !!");
+                            oldBidderWallet.setPoint(oldBidderWallet.getPoint() + highestBid.getPrice()); // 기존 입찰자에게 포인트 돌려주기
+                        }else{
+                            System.out.println("업체돈 돌려주기 !!");
+                            oldBidderWallet.setPoint(oldBidderWallet.getPoint() + (int)(highestBid.getPrice()*0.1)); // 기존 입찰자에게 포인트 돌려주기
                         }
+                        redisUtils.saveData("userTempWallet:" + highestBid.getUserSeq(), oldBidderWallet);
+
+                        System.out.println(oldBidderWallet.getPoint());
                     }
 
                     // 유저 가상지갑에서 금액 차감 및 상위 입찰 정보 수정
 
                     if(user.getContent().equals("user")) {
-                        newBidderTempWallet.setPoint(newBidderTempWallet.getPoint() - newBidderDTO.getPrice());
+                        newBidderTempWallet.setPoint(newBidderTempWallet.getPoint() - BidderDTO.getPrice());
                     }else{
-                        newBidderTempWallet.setPoint(newBidderTempWallet.getPoint() - (int)(newBidderDTO.getPrice()*0.1));
+                        newBidderTempWallet.setPoint(newBidderTempWallet.getPoint() - (int)(BidderDTO.getPrice()*0.1));
                     }
 
                     Long beforeHigh=highestBid.getUserSeq();
 
 
-                    highestBid.setPrice(newBidderDTO.getPrice());
+                    highestBid.setPrice(BidderDTO.getPrice());
 
                     highestBid.setUserSeq(newBidderTempWallet.getUserSeq());
                     Optional<User> beforeUserOpt= normalUserRepository.findById(beforeHigh);
