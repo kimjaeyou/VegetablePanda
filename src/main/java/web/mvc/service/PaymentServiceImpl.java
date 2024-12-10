@@ -251,6 +251,13 @@ public class PaymentServiceImpl implements PaymentService {
         int dbPoint = wallet.getPoint();
         int finalPoint = dbPoint + (int)point;
         wallet.setPoint(finalPoint);
+        System.out.println("userSeq 번호"+userSeq);
+        UserTempWalletDTO userTempWallet = redisUtils.getData("userTempWallet:"+userSeq,UserTempWalletDTO.class).orElse(null);
+        if(userTempWallet != null) {
+            userTempWallet.setPoint(userTempWallet.getPoint() + point);
+            redisUtils.saveData("userTempWallet:"+userSeq,userTempWallet);
+            System.out.println("충전완료");
+        }
         return wallet;
     }
 
