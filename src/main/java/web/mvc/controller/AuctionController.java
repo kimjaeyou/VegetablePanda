@@ -48,12 +48,13 @@ public class AuctionController {
 
     // 경매 취소 : 삭제가 아닌 취소 상태로 바꾼다?
     // 경매 종료 : highestBidDTO를 레디스에서 꺼내서
-    @PatchMapping("/auction/{auctionSeq}")
-    public ResponseEntity<?> update(@PathVariable Long auctionSeq) {
+    @PatchMapping("/auction/{auctionSeq}/{farmerSeq}")
+    public ResponseEntity<?> update(@PathVariable Long auctionSeq,@PathVariable Long farmerSeq) {
         log.info("경매 종료~~");
-        int n=auctionService.updateAuction(auctionSeq);
+        int n=auctionService.updateAuction(auctionSeq,farmerSeq);
         if(n==1){
-            notificationService.sendMessageToTopic("/end/notifications","1");
+            System.out.println("anchor!!!!!+end BId!!!!!!!!!!!!");
+            notificationService.sendMessageToTopic("/end/notifications", "1");
         }
         return new ResponseEntity<>("1", HttpStatus.OK);
 

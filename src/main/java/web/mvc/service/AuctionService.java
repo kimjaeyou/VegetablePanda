@@ -15,7 +15,7 @@ public interface AuctionService {
     /**
      * 경매 취소 : 경매번호를 받아 경매 취소 신청
      */
-    public int updateAuction(long auctionSeq);
+    public int updateAuction(long auctionSeq, long farmerSeq);
 
     Auction getAuction(Long userSeq);
 

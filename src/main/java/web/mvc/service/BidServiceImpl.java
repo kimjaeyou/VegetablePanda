@@ -37,6 +37,8 @@ public class BidServiceImpl implements BidService {
 
     private final NormalUserRepository normalUserRepository;
 
+    private final CompanyUserRepository companyUserRepository;
+
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
@@ -95,34 +97,48 @@ public class BidServiceImpl implements BidService {
                     }
 
                     // 유저 가상지갑에서 금액 차감 및 상위 입찰 정보 수정
-
+                    Long beforeHigh=highestBid.getUserSeq();
                     if(user.getContent().equals("user")) {
+                        Optional<User> beforeUserOpt= normalUserRepository.findById(beforeHigh);
                         newBidderTempWallet.setPoint(newBidderTempWallet.getPoint() - BidderDTO.getPrice());
+                        beforeUserOpt.ifPresentOrElse(
+                                beforeUser -> {
+                                    notificationService.sendMessageToUser(
+                                            beforeHigh.toString(),
+                                            beforeUser.getName()+"님 "+
+                                                    "최고 입찰자가 변경되었습니다.\n" +
+                                                    "최고 입찰금액 : " + highestBid.getPrice()
+                                    );
+                                },
+                                () -> {
+                                    System.out.println("해당 ID를 가진 사용자가 존재하지 않습니다: " + beforeHigh);
+                                }
+                        );
                     }else{
+                        Optional<CompanyUser> CompanyUser= companyUserRepository.findById(beforeHigh);
                         newBidderTempWallet.setPoint(newBidderTempWallet.getPoint() - (int)(BidderDTO.getPrice()*0.1));
+                        CompanyUser.ifPresentOrElse(
+                                beforeUser -> {
+                                    notificationService.sendMessageToUser(
+                                            beforeHigh.toString(),
+                                            beforeUser.getComName()+"님 "+
+                                                    "최고 입찰자가 변경되었습니다.\n" +
+                                                    "최고 입찰금액 : " + highestBid.getPrice()
+                                    );
+                                },
+                                () -> {
+                                    System.out.println("해당 ID를 가진 사용자가 존재하지 않습니다: " + beforeHigh);
+                                }
+                        );
                     }
 
-                    Long beforeHigh=highestBid.getUserSeq();
 
 
                     highestBid.setPrice(BidderDTO.getPrice());
 
                     highestBid.setUserSeq(newBidderTempWallet.getUserSeq());
-                    Optional<User> beforeUserOpt= normalUserRepository.findById(beforeHigh);
 
-                    beforeUserOpt.ifPresentOrElse(
-                            beforeUser -> {
-                                notificationService.sendMessageToUser(
-                                        beforeHigh.toString(),
-                                        beforeUser.getName()+"님 "+
-                                        "최고 입찰자가 변경되었습니다.\n" +
-                                                "최고 입찰금액 : " + highestBid.getPrice()
-                                );
-                            },
-                            () -> {
-                                System.out.println("해당 ID를 가진 사용자가 존재하지 않습니다: " + beforeHigh);
-                            }
-                    );
+
 
                     System.out.println("redis에 변경사항 저장");
                     // 변경된 데이터를 Redis 트랜잭션 내에서 저장
