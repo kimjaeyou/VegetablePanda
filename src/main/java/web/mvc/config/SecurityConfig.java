@@ -58,9 +58,10 @@ public class SecurityConfig {
                         configuration.setAllowedOrigins(Arrays.asList(
                                 "https://vegetablepanda.p-e.kr",
                                 "https://www.vegetablepanda.p-e.kr",
-                                "http://localhost:5173"
+                                "http://localhost:5173",
+                                "http://localhost:5000"
                                 ));
-                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
                         configuration.setAllowedHeaders(Arrays.asList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setMaxAge(3600L);

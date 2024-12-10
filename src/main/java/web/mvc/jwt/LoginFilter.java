@@ -57,14 +57,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         log.info("로그인 성공 ......");
         //UserDetailsS
         CustomMemberDetails customMemberDetails = (CustomMemberDetails) authentication.getPrincipal();
-        ServletContext app = request.getServletContext();
 
-        /*
-        하나의 유저가 여러개의 권한을 가질수 있기 때문에 collection으로 반환됨
-        기본 제너릭이 GrantedAuthority이고 GrantedAuthority를 상속받은 자식들이 Role 이 된다
-        이렇게 해서 Role을 만들어준다...MemberServiceImpl signUp에서 Role Setting(member.setRole("ROLE_USER"))
-        우리는 하나의 권한만 지정했다..ROLE_USER
-        */
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
@@ -86,12 +80,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter{ //폼값 
         map.put("phone", user.getPhone());
         map.put("address", user.getAddress());
         map.put("state", user.getState());
-        Map<Long, Set<Long>> notiUserMap =(Map<Long,Set<Long>>)app.getAttribute("notiUserMap");
-        if(role.equals("ROLE_FARMER")){
-            if(!notiUserMap.containsKey(user.getUserSeq())) {
-                notiUserMap.put(user.getUserSeq(), new HashSet<Long>());
-            }
-        }
+
         Gson gson= new Gson();
         String arr = gson.toJson(map);
         response.getWriter().print(arr);

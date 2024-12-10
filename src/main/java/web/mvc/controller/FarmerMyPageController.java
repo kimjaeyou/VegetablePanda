@@ -107,6 +107,7 @@ public class FarmerMyPageController {
      */
     @GetMapping("/review/List/{seq}")
     public ResponseEntity<?> reviewList(@PathVariable Long seq) {
+        System.out.println("\n\n\n"+farmerMyPageService.reviewList(seq).stream().toList());
         return new ResponseEntity<>(farmerMyPageService.reviewList(seq), HttpStatus.OK);
     }
 
