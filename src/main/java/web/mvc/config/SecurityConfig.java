@@ -60,12 +60,12 @@ public class SecurityConfig {
                                 "https://www.vegetablepanda.p-e.kr",
                                 "http://localhost:5173"
                                 ));
-                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
                         configuration.setAllowedHeaders(Arrays.asList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setMaxAge(3600L);
 
-                        configuration.addExposedHeader("Set-Cookie");
+                        configuration.addExposedHeader("Set-Cookie" );
                         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
                         return configuration;
                     }
