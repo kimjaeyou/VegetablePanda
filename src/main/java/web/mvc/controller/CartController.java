@@ -22,77 +22,26 @@ public class CartController {
     public ResponseEntity<?> addToCart(
             @RequestParam Long stockSeq,
             @RequestParam Integer quantity,
-            @RequestParam Long userSeq,
-            HttpServletRequest request,
-            HttpServletResponse response
+            @RequestParam Long userSeq
     ) {
         try {
-            cartService.addToCart(request, response, stockSeq, quantity, userSeq);
-            return ResponseEntity.ok().body(Map.of(
-                    "message", "장바구니에 추가되었습니다.",
-                    "cartItems", cartService.getCartItems(request, userSeq)
-            ));
+            CartItemDTO cartItem = cartService.addToCart(stockSeq, quantity, userSeq);
+            return ResponseEntity.ok(cartItem);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
-    @GetMapping
-    public ResponseEntity<List<CartItemDTO>> getCart(
-            @RequestParam Long userSeq,
-            HttpServletRequest request
-    ) {
-        return ResponseEntity.ok(cartService.getCartItems(request, userSeq));
-    }
-
-    @DeleteMapping("/{stockSeq}")
-    public ResponseEntity<?> removeFromCart(
+    @GetMapping("/validate/{stockSeq}")
+    public ResponseEntity<?> validateStock(
             @PathVariable Long stockSeq,
-            @RequestParam Long userSeq,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        cartService.removeFromCart(request, response, stockSeq, userSeq);
-        return ResponseEntity.ok(Map.of(
-                "message", "상품이 장바구니에서 제거되었습니다.",
-                "cartItems", cartService.getCartItems(request, userSeq)
-        ));
-    }
-
-    @DeleteMapping
-    public ResponseEntity<?> clearCart(
-            @RequestParam Long userSeq,
-            HttpServletResponse response
-    ) {
-        cartService.clearCart(response, userSeq);
-        return ResponseEntity.ok("장바구니가 비워졌습니다.");
-    }
-
-    @PutMapping("/{stockSeq}")
-    public ResponseEntity<?> updateQuantity(
-            @PathVariable Long stockSeq,
-            @RequestParam Integer quantity,
-            @RequestParam Long userSeq,
-            HttpServletRequest request,
-            HttpServletResponse response
+            @RequestParam Integer quantity
     ) {
         try {
-            cartService.updateQuantity(request, response, stockSeq, quantity, userSeq);
-            return ResponseEntity.ok(Map.of(
-                    "message", "수량이 업데이트되었습니다.",
-                    "cartItems", cartService.getCartItems(request, userSeq)
-            ));
+            cartService.validateStock(stockSeq, quantity);
+            return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
-    }
-
-    @GetMapping("/total")
-    public ResponseEntity<Integer> getCartTotal(
-            @RequestParam Long userSeq,
-            HttpServletRequest request
-    ) {
-        List<CartItemDTO> cartItems = cartService.getCartItems(request, userSeq);
-        return ResponseEntity.ok(cartService.calculateTotal(cartItems));
     }
 }
