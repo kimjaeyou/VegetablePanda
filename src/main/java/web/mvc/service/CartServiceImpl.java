@@ -102,12 +102,13 @@ public class CartServiceImpl implements CartService {
             cookie.setPath("/");
             cookie.setMaxAge(3 * 24 * 60 * 60);
             cookie.setDomain("");
-            cookie.setSecure(false);
+            cookie.setSecure(true);
             cookie.setHttpOnly(false);
 
             response.addCookie(cookie);
             response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+//            response.setHeader("Access-Control-Allow-Origin", "https://vegetablepanda.p-e.kr");
         } catch (Exception e) {
             throw new RuntimeException("장바구니 저장 실패", e);
         }

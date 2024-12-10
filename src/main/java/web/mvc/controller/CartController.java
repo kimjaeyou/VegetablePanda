@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.mvc.dto.CartItemDTO;
+import web.mvc.service.CartService;
 import web.mvc.service.CartServiceImpl;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
 @RequestMapping("/api/cart")
 @RequiredArgsConstructor
 public class CartController {
-    private final CartServiceImpl cartService;
+    private final CartService cartService;
 
     @PostMapping("/add")
     public ResponseEntity<?> addToCart(
