@@ -10,4 +10,6 @@ public interface LikeService {
     List<Long> getLikeUserSeq(Long userSeq);
 
     Boolean likeState(LikeDTO likeDTO);
+
+    public List<LikeDTO> getLikeFarmer (Long userSeq);
 }

@@ -61,12 +61,13 @@ public class SecurityConfig {
                                 "http://localhost:5173",
                                 "http://localhost:5000"
                                 ));
-                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
+                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
+
                         configuration.setAllowedHeaders(Arrays.asList("*"));
                         configuration.setAllowCredentials(true);
                         configuration.setMaxAge(3600L);
 
-                        configuration.addExposedHeader("Set-Cookie");
+                        configuration.addExposedHeader("Set-Cookie" );
                         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
                         return configuration;
                     }

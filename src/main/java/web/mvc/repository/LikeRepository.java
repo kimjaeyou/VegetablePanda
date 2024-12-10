@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import web.mvc.domain.FarmerUser;
 import web.mvc.domain.Likes;
 import web.mvc.dto.LikeDTO;
+import web.mvc.dto.UserLikeDTO;
+
 import java.util.List;
 import java.util.List;
 import java.util.Optional;
@@ -34,5 +36,9 @@ public interface LikeRepository extends JpaRepository<Likes, Long> {
 
     @Query("select l.state from Likes l where l.farmerUser.userSeq = ?1 and l.managementUser.userSeq = ?2")
     Boolean likeState(Long farmerSeq, Long userSeq);
+
+    @Query("select new web.mvc.dto.LikeDTO(l.managementUser.userSeq, l.farmerUser.userSeq, m.file.path, l.farmerUser.name) from Likes l " +
+            "join ManagementUser m on l.farmerUser.userSeq = m.userSeq where l.managementUser.userSeq = ?1 and l.state = true")
+    List<LikeDTO> findAllLikesByUserSeq(Long userSeq);
 }
 
