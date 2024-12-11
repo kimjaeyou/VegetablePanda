@@ -14,6 +14,7 @@ import web.mvc.domain.*;
 import web.mvc.dto.*;
 import web.mvc.exception.BidException;
 import web.mvc.exception.ErrorCode;
+import web.mvc.exception.UserBuyException;
 import web.mvc.redis.RedisUtils;
 import web.mvc.repository.*;
 
@@ -58,7 +59,9 @@ public class BidServiceImpl implements BidService {
         bid.setManagementUser(ManagementUser.builder().userSeq(BidderDTO.getUserSeq()).build());
         bid.setAuction(Auction.builder().auctionSeq(BidderDTO.getAuctionSeq()).build());
         bid = bidRepository.save(bid);
-
+        if(newBidderTempWallet.getPoint()<highestBid.getPrice()){
+            throw new UserBuyException(ErrorCode.HIGH_BIDDER);
+        }
         redisTemplate.execute(new SessionCallback<List<Object>>() {
             @Override
             public List<Object> execute(RedisOperations operations) throws DataAccessException {
@@ -95,6 +98,7 @@ public class BidServiceImpl implements BidService {
 
                         System.out.println(oldBidderWallet.getPoint());
                     }
+
 
                     // 유저 가상지갑에서 금액 차감 및 상위 입찰 정보 수정
                     Long beforeHigh=highestBid.getUserSeq();
