@@ -2,13 +2,17 @@ package web.mvc.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import web.mvc.domain.Payment;
 import web.mvc.domain.UserCharge;
 import web.mvc.domain.UserWallet;
+import web.mvc.dto.UserTempWalletDTO;
 import web.mvc.payment.PaymentStatus;
+import web.mvc.redis.RedisUtils;
 import web.mvc.repository.PaymentRepository;
 import web.mvc.repository.UserChargeRepository;
 import web.mvc.repository.WalletRepository;
@@ -26,6 +30,12 @@ public class UserChargeServiceImpl implements UserChargeService {
     private final UserChargeRepository userChargeRepository;
     private final PaymentRepository paymentRepository;
     private final WalletRepository walletRepository;
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private RedisUtils redisUtils;
 
     @Override
     public UserCharge order(UserCharge userCharge) {

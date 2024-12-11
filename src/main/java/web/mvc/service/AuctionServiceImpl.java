@@ -118,7 +118,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public int updateAuction(long auctionSeq) {
+    public int updateAuction(long auctionSeq, long farmerSeq) {
         Optional<AuctionDTO> auctionDTO = redisUtils.getData("auction:"+auctionSeq, AuctionDTO.class);
         AuctionDTO auction = auctionDTO.orElse(null);
         auction.setStatus(1);
@@ -155,6 +155,7 @@ public class AuctionServiceImpl implements AuctionService {
             // 가상지갑상태을 db에 반영한다., 경매 팔린만큼 재고 감소시킨다.
             UserTempWalletDTO userTempWalletDTO = redisUtils.getData("userTempWallet:"+highestBidDTO.getUserSeq(),UserTempWalletDTO.class).orElse(null);
             userWalletRepository.updateWallet(userTempWalletDTO.getUserSeq(),userTempWalletDTO.getPoint());
+            userWalletRepository.updateWallet(farmerSeq, (long) (highestBidDTO.getPrice()));
             Stock stock = stockRepository.findById(auction.getStockSeq()).orElse(null);
             stock.setCount(stock.getCount()-auction.getCount());
             redisUtils.deleteData("highestBid:"+highestBidDTO.getAuctionSeq());
@@ -185,6 +186,7 @@ public class AuctionServiceImpl implements AuctionService {
             // 가상지갑상태을 db에 반영한다., 경매 팔린만큼 재고 감소시킨다.
             UserTempWalletDTO userTempWalletDTO = redisUtils.getData("userTempWallet:"+highestBidDTO.getUserSeq(),UserTempWalletDTO.class).orElse(null);
             userWalletRepository.updateWallet(userTempWalletDTO.getUserSeq(),userTempWalletDTO.getPoint());
+            userWalletRepository.updateWallet(farmerSeq, (long) (highestBidDTO.getPrice()*0.1));
             Stock stock = stockRepository.findById(auction.getStockSeq()).orElse(null);
             stock.setCount(stock.getCount()-auction.getCount());
 

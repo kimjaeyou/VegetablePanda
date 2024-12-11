@@ -29,8 +29,9 @@ public class BidController {
     // 입찰
     @PostMapping("/bid")
     public ResponseEntity<?> userBid(@RequestBody BidDTO newBidder) {
-        log.info("입찰 등록 : {}", newBidder);
+        log.info("입찰 등록 : {}", newBidder.getUserSeq());
         HighestBidDTO highestBidDTO = bidService.checkHighestBid(newBidder.getAuctionSeq(),newBidder.getUserSeq());
+        System.out.println(highestBidDTO.getPrice()+"가격 "+ highestBidDTO.getUserSeq()+"옥션번호"+highestBidDTO.getAuctionSeq());
         UserTempWalletDTO userTempWalletDTO = bidService.checkUserTempWallet(newBidder.getUserSeq());
         BidDTO result = modelMapper.map(bidService.bid(newBidder,highestBidDTO,userTempWalletDTO), BidDTO.class);
         if(result!=null){
