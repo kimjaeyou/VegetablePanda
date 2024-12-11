@@ -16,7 +16,8 @@ public interface UserMyPageRepository extends JpaRepository<User, Long> {
 
     // 수정할 회원정보 조회 값 출력
     @Query("SELECT new web.mvc.dto.UserDTO(u.userSeq, u.id, u.name, u.address,u.email,u.phone,u.gender,u.regDate, f.path) " +
-            "FROM User u LEFT JOIN File f ON u.id = f.name " +
+            "FROM User u LEFT JOIN ManagementUser m ON m.userSeq = u.userSeq " +
+            "Left JOIN File f on f.fileSeq = m.file.fileSeq " +
             "WHERE u.userSeq = ?1")
     UserDTO selectUser(Long seq);
 

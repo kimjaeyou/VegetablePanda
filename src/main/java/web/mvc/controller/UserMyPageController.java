@@ -13,7 +13,6 @@ import web.mvc.service.UserMyPageService;
 
 import java.util.List;
 
-
 @RequiredArgsConstructor
 @RestController
 @Slf4j
@@ -97,7 +96,6 @@ public class UserMyPageController {
         }
         return new ResponseEntity<>(userMyPageService.update(getAllUserDTO, seq), HttpStatus.OK);
     }
-
 
     /**
      * 탈퇴 (계정 상태 변경)

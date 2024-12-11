@@ -59,8 +59,7 @@ public class UserMyPageServiceImpl implements UserMyPageService {
      */
     @Override
     public UserDTO selectUser(Long seq) {
-        UserDTO user = userMyPageRepository.selectUser(seq);
-        return user;
+        return userMyPageRepository.selectUser(seq);
     }
 
     /**
