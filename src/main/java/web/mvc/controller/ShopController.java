@@ -124,4 +124,9 @@ public class ShopController {
         List<ShopLikeResponseDTO> likedShops = shopService.getLikedShopsByUser(userSeq);
         return ResponseEntity.ok(likedShops);
     }
+
+    @PostMapping("/shopItems/item/{seq}")
+    public ResponseEntity<ShopListDTO> getRecItems(@PathVariable Long seq){
+        return ResponseEntity.ok(shopService.findRecShop(seq));
+    }
 }

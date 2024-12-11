@@ -44,5 +44,7 @@ public interface ShopService {
     ShopLike getShopLike(Long userSeq, Long shopSeq);
 
     List<ShopLikeResponseDTO> getLikedShopsByUser(Long userSeq);
+
+    ShopListDTO findRecShop(Long stockSeq);
 }
 

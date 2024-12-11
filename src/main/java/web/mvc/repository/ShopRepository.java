@@ -162,7 +162,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     Optional<Shop> findByStockSeq(@Param("stockSeq") Long stockSeq);
 
     @Query("SELECT new web.mvc.dto.ShopListDTO( " +
-            "s.shopSeq, " +
+            "st.stockSeq, " +
             "p.productName, " +
             "f.path, " +
             "s.price," +
@@ -179,7 +179,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
 
 
     @Query("SELECT new web.mvc.dto.ShopListDTO( " +
-            "s.shopSeq, " +
+            "st.stockSeq, " +
             "p.productName, " +
             "f.path, " +
             "s.price" +
@@ -192,19 +192,12 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     ShopListDTO getShopItemRecommendations(@Param("shopSeq") Long shopSeq);
 
 
-    @Query("SELECT new web.mvc.dto.ShopListDTO( " +
-            "s.shopSeq, " +
-            "p.productName, " +
-            "f.path, " +
-            "s.price" +
-            ") " +
+    @Query("SELECT s.shopSeq " +
             "FROM Shop s " +
             "JOIN s.stock st " +
-            "JOIN st.product p " +
-            "LEFT JOIN st.file f " +
-            "JOIN UserBuyDetail ubd ON ubd.stock.stockSeq = st.stockSeq " +
-            "WHERE ubd.userBuy.managementUser.userSeq=:userSeq")
-    List<ShopListDTO> getUserData(@Param("userSeq") Long userSeq);
+            "JOIN UserBuyDetail ubd ON ubd.stock = st " +
+            "WHERE ubd.userBuy.managementUser.userSeq = :userSeq")
+    List<Long> getUserData(@Param("userSeq") Long userSeq);
 
 
     @Query(value = "select r.user_seq from review r " +
@@ -222,5 +215,21 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
             "LEFT JOIN s.file f "+
             "WHERE s.farmerUser.userSeq =:userSeq")
     List<ShopListDTO> getScoreRec(@Param("userSeq") Long userSeq);
+
+
+    @Query("SELECT new web.mvc.dto.ShopListDTO(s.shopSeq, s.stock.stockSeq, s.stock.content, " +
+            "s.price, s.stock.count, " +
+            "CAST(s.insertDate AS string), " +
+            "s.stock.product.productName, " +
+            "s.stock.stockGrade.grade, " +
+            "s.stock.stockOrganic.organicStatus, " +
+            "s.stock.file.path," +
+            "s.stock.product.productCategory.content," +
+            "s.stock.farmerUser.name)" +
+            "FROM Shop s " +
+            "LEFT JOIN s.stock.file " +
+            "WHERE s.stock.status = 3 AND s.stock.stockSeq=:stockSeq"
+            )
+    ShopListDTO findRecShop(@Param("stockSeq")Long stockSeq);
 
 }

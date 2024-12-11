@@ -1,15 +1,14 @@
 package web.mvc.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import web.mvc.dto.GetProData;
 import web.mvc.dto.ShopListDTO;
-import web.mvc.repository.ReviewCommentRepository;
-import web.mvc.repository.ShopRepository;
-import web.mvc.repository.UserBuyRepository;
-import web.mvc.repository.UserRepository;
+import web.mvc.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +17,23 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class RecommendServiceImpl implements RecommendService {
+
     private final ShopRepository shopRepository;
     private final UserBuyRepository buyRepository;
     private final ReviewCommentRepository reviewCommentRepository;
+    private final StockRepository stockRepository;
 
     private List<ShopListDTO> items = new ArrayList<>();
+
+    @Override
+    public GetProData getProData(Long stockSeq) {
+        List<Object[]> result = stockRepository.findGetProData(stockSeq);
+        if (result.isEmpty()) {
+            throw new EntityNotFoundException("Data not found");
+        }
+        Object[] row = result.get(0);
+        return new GetProData((Long)row[0], (String) row[1], (Integer) row[2], (Integer) row[3], (String) row[4], (String) row[5],(String) row[6]);
+    }
 
     @Override
     public int isRec(long user_seq){
@@ -42,12 +53,8 @@ public class RecommendServiceImpl implements RecommendService {
     @Override
     public List<Long> shopList(long user_seq) {
         List<Long> seqList = new ArrayList<>();
-        List<ShopListDTO> list=shopRepository.getUserData(user_seq);
-        for(ShopListDTO l:list){
-            seqList.add(l.getShopSeq());
-        }
-
-        return seqList;
+        List<Long> list=shopRepository.getUserData(user_seq);
+        return list;
     }
 
     @Override
@@ -71,12 +78,11 @@ public class RecommendServiceImpl implements RecommendService {
         List<ShopListDTO> shopList = new ArrayList<>();
         long fUserSeq;
         for(Long seq:seqList){
-            System.out.println("!!!!!!!!!!!!!!!!!!!anchor:"+seq);
             fUserSeq=shopRepository.getFarmerUserSeq(seq);
-            System.out.println("!!!!!!!!!!!fUserSeq:"+fUserSeq);
             shopList.addAll(shopRepository.getScoreRec(fUserSeq));
-            System.out.println("!!!!!!!size :"+shopList.size());
         }
         return shopList;
     }
+
+
 }

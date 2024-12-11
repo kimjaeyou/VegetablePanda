@@ -52,6 +52,8 @@ public class AuctionServiceImpl implements AuctionService {
 
     private final ShopRepository shopRepository;
 
+    private final NotificationService notificationService;
+
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -204,7 +206,7 @@ public class AuctionServiceImpl implements AuctionService {
 
         return 1;
     }
-
+    //경매 1분마다 남은시간 0 된거 찾아서 종료
     //@Scheduled(cron = "0 * * * * ?")
     public void exitAuction() {
         LocalDateTime now = LocalDateTime.now();
@@ -281,7 +283,10 @@ public class AuctionServiceImpl implements AuctionService {
                 streamingService.exitRoomById(streaming.getStreamingSeq());
                 stock.setStatus(4);
             }
-
+            if(highestBidDTO.getUserSeq()!=null){
+                notificationService.sendMessageToUser(
+                        highestBidDTO.getUserSeq().toString(),"낙찰되셨습니다.");
+            }
         }
     }
     @Scheduled(cron = "0 0 18 * * ?")

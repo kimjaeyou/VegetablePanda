@@ -53,7 +53,7 @@ public class AuctionController {
         log.info("경매 종료~~");
         int n=auctionService.updateAuction(auctionSeq,farmerSeq);
         if(n==1){
-            System.out.println("anchor!!!!!+end BId!!!!!!!!!!!!");
+
             notificationService.sendMessageToTopic("/end/notifications", "1");
         }
         return new ResponseEntity<>("1", HttpStatus.OK);

@@ -1,5 +1,6 @@
 package web.mvc.service;
 
+import web.mvc.dto.GetProData;
 import web.mvc.dto.ShopListDTO;
 
 import java.util.List;
@@ -15,4 +16,7 @@ public interface RecommendService {
     List<ShopListDTO> overRecommend(List<Long> seqList);
     //3건 이상 구매 고객 and 리뷰 2건 이상 평가o
     List<ShopListDTO> overScoreRecommend(List<Long> seqList);
+    //상품 이동
+    GetProData getProData(Long seq);
+
 }

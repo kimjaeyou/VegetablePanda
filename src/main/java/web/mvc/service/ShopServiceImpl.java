@@ -158,4 +158,8 @@ public class ShopServiceImpl implements ShopService {
     public List<ShopLikeResponseDTO> getLikedShopsByUser(Long userSeq) {
         return shopLikeRepository.findLikedShopsByUserSeq(userSeq);
     }
+    @Override
+    public ShopListDTO findRecShop(Long stockSeq){
+        return shopRepository.findRecShop(stockSeq);
+    }
 }

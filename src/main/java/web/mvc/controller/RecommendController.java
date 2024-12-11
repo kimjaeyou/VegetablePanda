@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import web.mvc.dto.GetProData;
 import web.mvc.dto.ShopListDTO;
 import web.mvc.service.RecommendService;
 
@@ -17,7 +18,21 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RecommendController {
     private final RecommendService recommendService;
+
     private List<ShopListDTO> items=new ArrayList<>();
+
+    @PostMapping("recommend/product/{seq}")
+    public ResponseEntity<?> getProductData(@PathVariable Long seq){
+        System.out.println("WWWWWWWWW!!!!!");
+        GetProData get=recommendService.getProData(seq);
+        if(get==null)
+            throw new RuntimeException("Data error");
+        else{
+            System.out.println(get);
+        }
+        return ResponseEntity.ok(get);
+    }
+
 
     @PostMapping("recommend/{seq}")
     public ResponseEntity<?> getData(@PathVariable Long seq){
@@ -32,8 +47,9 @@ public class RecommendController {
             List<Long>seqList= recommendService.shopList(seq);
             Map<String, Object> requestBody = new HashMap<>();
             for(Long seqs:seqList){
-                if(n==4) break;
-                requestBody.put("shop_seq", seqList.get(Math.toIntExact(n)));
+                System.out.println("여기"+seqs);
+                if(n==2) break;
+                requestBody.put("shop_seq", seqs);
                 items.addAll(getShopRecommendations(requestBody));
                 n++;
             }
@@ -42,7 +58,6 @@ public class RecommendController {
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("user_seq",seq);
             items.addAll(getRecommendations(requestBody));
-            System.out.println("컨트롤러 도착 : "+items.size());
         }
 
         return ResponseEntity.ok(items);

@@ -53,16 +53,16 @@ public class ShopListDTO {
         this.file = file;
     }
 
-    public ShopListDTO(Long shopSeq,String productName,String file,Integer price,Long shopCount) {
-        this.shopSeq = shopSeq;
+    public ShopListDTO(Long stockSeq,String productName,String file,Integer price,Long shopCount) {
+        this.stockSeq = stockSeq;
         this.price = price;
         this.productName = productName;
         this.file = file;
         this.shopCount=shopCount;
     }
 
-    public ShopListDTO(Long shopSeq,String productName,String file,Integer price) {
-        this.shopSeq = shopSeq;
+    public ShopListDTO(Long stockSeq,String productName,String file,Integer price) {
+        this.stockSeq = stockSeq;
         this.price = price;
         this.productName = productName;
         this.file = file;

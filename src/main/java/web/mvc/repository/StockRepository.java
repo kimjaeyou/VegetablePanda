@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import web.mvc.domain.Product;
 import web.mvc.domain.Stock;
 import web.mvc.dto.AllStockDTO;
+import web.mvc.dto.GetProData;
 import web.mvc.dto.StockInfoDTO;
 import web.mvc.dto.StockUserSeqDTO;
 
@@ -54,4 +55,20 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     List<Stock> findStocksBeforeYesterday(@Param("yesterday") LocalDateTime yesterday);
 
     Optional<Stock> findFirstByProductOrderByStockSeqDesc(Product product);
+
+//    @Query(value = "select product_name, status ,count,stock_grade_seq,stock_organic_seq from stock s " +
+//            "join product p on p.product_seq=s.product_seq " +
+//            "where stock_seq=:stockSeq",nativeQuery = true)
+//    GetProData findGetProData(@Param("stockSeq") Long stockSeq);
+@Query(value = "select s.stock_seq as stockSeq, p.product_name as productName, s.status as status, s.count as count, " +
+        "sg.grade as stockGradeSeq, so.organic_status as stockOrganicSeq, f.path as path " +
+        "from stock s " +
+        "join product p on p.product_seq = s.product_seq " +
+        "join file f on f.file_seq = s.file_seq " +
+        "join stock_grade sg on s.stock_grade_seq = sg.stock_grade_seq " +
+        "join stock_organic so on s.stock_organic_seq = so.stock_organic " +
+        "where s.stock_seq = :stockSeq", nativeQuery = true)
+List<Object[]> findGetProData(@Param("stockSeq") Long stockSeq);
+
+
 }
