@@ -3,6 +3,7 @@ package web.mvc.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import web.mvc.domain.Review;
 import web.mvc.domain.ReviewComment;
 import web.mvc.dto.ReviewCommentDTO;
@@ -38,4 +39,7 @@ public interface ReviewCommentRepository extends JpaRepository<ReviewComment, Lo
             "join UserBuyDetail ubd on r.userBuyDetail.userBuySeq = ubd.userBuySeq " +
             "join Stock s on ubd.stock.stockSeq = s.stockSeq where s.stockSeq = ?1")
     ReviewCommentStatisticsDTO findStockReviewStatistics (Long stockSeq);
+
+    @Query("select count(u) from ReviewComment u where u.managementUser.userSeq=:seq")
+    int isRecReview(@Param("seq") Long stockSeq);
 }

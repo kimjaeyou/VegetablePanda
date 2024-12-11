@@ -160,4 +160,69 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
 
     @Query("SELECT s FROM Shop s WHERE s.stock.stockSeq = :stockSeq")
     Optional<Shop> findByStockSeq(@Param("stockSeq") Long stockSeq);
+
+    @Query("SELECT new web.mvc.dto.ShopListDTO( " +
+            "s.shopSeq, " +
+            "p.productName, " +
+            "f.path, " +
+            "s.price," +
+            "count(s.stock.stockSeq)" +
+            ") " +
+            "FROM Shop s " +
+            "JOIN s.stock st " +
+            "JOIN st.product p " +
+            "LEFT JOIN st.file f " +
+            "JOIN UserBuyDetail ubd ON ubd.stock.stockSeq = st.stockSeq " +
+            "WHERE st.status = 3 " +
+            "GROUP BY s.stock.stockSeq ORDER BY count(s.stock.stockSeq) desc ")
+    List<ShopListDTO> getShopRecommendations();
+
+
+    @Query("SELECT new web.mvc.dto.ShopListDTO( " +
+            "s.shopSeq, " +
+            "p.productName, " +
+            "f.path, " +
+            "s.price" +
+            ") " +
+            "FROM Shop s " +
+            "JOIN s.stock st " +
+            "JOIN st.product p " +
+            "LEFT JOIN st.file f " +
+            "WHERE st.status = 3 and s.shopSeq=:shopSeq")
+    ShopListDTO getShopItemRecommendations(@Param("shopSeq") Long shopSeq);
+
+
+    @Query("SELECT new web.mvc.dto.ShopListDTO( " +
+            "s.shopSeq, " +
+            "p.productName, " +
+            "f.path, " +
+            "s.price" +
+            ") " +
+            "FROM Shop s " +
+            "JOIN s.stock st " +
+            "JOIN st.product p " +
+            "LEFT JOIN st.file f " +
+            "JOIN UserBuyDetail ubd ON ubd.stock.stockSeq = st.stockSeq " +
+            "WHERE ubd.userBuy.managementUser.userSeq=:userSeq")
+    List<ShopListDTO> getUserData(@Param("userSeq") Long userSeq);
+
+
+    @Query(value = "select r.user_seq from review r " +
+            "join farmer_user fu on r.user_seq=fu.user_seq " +
+            "where r.review_seq=:reviewSeq",nativeQuery = true)
+    Long getFarmerUserSeq(@Param("reviewSeq") Long reviewSeq);
+
+    @Query("SELECT new web.mvc.dto.ShopListDTO( " +
+            "s.shopSeq, " +
+            "p.productName, " +
+            "f.path, " +
+            "s.price" +
+            ") " +
+            "FROM Shop s " +
+            "JOIN s.stock st " +
+            "JOIN st.product p " +
+            "LEFT JOIN st.file f "+
+            "WHERE s.stock.farmerUser.userSeq       =:userSeq")
+    List<ShopListDTO> getScoreRec(@Param("userSeq") Long userSeq);
+
 }

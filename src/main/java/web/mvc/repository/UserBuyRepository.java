@@ -2,6 +2,7 @@ package web.mvc.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import web.mvc.domain.UserBuy;
 import web.mvc.dto.AdjustmentDTO;
 import web.mvc.dto.BidAuctionDTO;
@@ -54,4 +55,7 @@ public interface UserBuyRepository extends JpaRepository<UserBuy, Long> {
             "WHERE u.managementUser.userSeq = ?1 " +
             "AND u.state = 1")
     List<BidAuctionDTO> successfulBidList(Long seq);
+
+    @Query("select count(u) from UserBuy u where u.managementUser.userSeq=:seq")
+    int isRec(@Param("seq") Long stockSeq);
 }
