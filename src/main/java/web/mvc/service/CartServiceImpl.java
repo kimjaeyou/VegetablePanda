@@ -55,6 +55,7 @@ public class CartServiceImpl implements CartService {
                 .imageUrl(stock.getFile() != null ? stock.getFile().getPath() : null)
                 .build();
     }
+
     @Override
     public void validateStock(Long stockSeq, Integer quantity) {
         Stock stock = stockRepository.findById(stockSeq)
