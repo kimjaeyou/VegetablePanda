@@ -1,13 +1,11 @@
 package web.mvc.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class ShopListDTO {
     private Long shopSeq;
     private Long stockSeq;
@@ -21,6 +19,7 @@ public class ShopListDTO {
     private String file;
     private String productCategoryContent;
     private String farmerName;
+    private Long shopCount;
 
     public ShopListDTO(Long shopSeq, Long stockSeq, String content, Integer price,
                        Integer count, String insertDate, String productName,
@@ -53,4 +52,20 @@ public class ShopListDTO {
         this.stockOrganic = stockOrganic;
         this.file = file;
     }
+
+    public ShopListDTO(Long shopSeq,String productName,String file,Integer price,Long shopCount) {
+        this.shopSeq = shopSeq;
+        this.price = price;
+        this.productName = productName;
+        this.file = file;
+        this.shopCount=shopCount;
+    }
+
+    public ShopListDTO(Long shopSeq,String productName,String file,Integer price) {
+        this.shopSeq = shopSeq;
+        this.price = price;
+        this.productName = productName;
+        this.file = file;
+    }
+
 }
