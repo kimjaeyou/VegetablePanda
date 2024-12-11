@@ -22,7 +22,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         System.out.println(" registerStompEndpoints(StompEndpointRegistry registry...");
         registry.addEndpoint("/ws") // WebSocket 엔드포인트
                 .setAllowedOrigins("https://vegetablepanda.p-e.kr",
-                        "https://www.vegetablepanda.p-e.kr");
+                        "https://www.vegetablepanda.p-e.kr",
+                        "http://localhost:5173");
         //.withSockJS(); // SockJS를 통한 WebSocket fallback 지원
     }
 

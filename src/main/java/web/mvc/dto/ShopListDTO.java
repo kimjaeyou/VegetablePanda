@@ -68,4 +68,10 @@ public class ShopListDTO {
         this.file = file;
     }
 
+    public ShopListDTO(Long stockSeq,String productName,String file) {
+        this.stockSeq=stockSeq;
+        this.productName = productName;
+        this.file = file;
+    }
+
 }

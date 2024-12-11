@@ -75,6 +75,7 @@ public class RecommendServiceImpl implements RecommendService {
             fUserSeq=shopRepository.getFarmerUserSeq(seq);
             System.out.println("!!!!!!!!!!!fUserSeq:"+fUserSeq);
             shopList.addAll(shopRepository.getScoreRec(fUserSeq));
+            System.out.println("!!!!!!!size :"+shopList.size());
         }
         return shopList;
     }

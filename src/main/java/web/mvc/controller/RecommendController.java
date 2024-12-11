@@ -42,6 +42,7 @@ public class RecommendController {
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("user_seq",seq);
             items.addAll(getRecommendations(requestBody));
+            System.out.println("컨트롤러 도착 : "+items.size());
         }
 
         return ResponseEntity.ok(items);

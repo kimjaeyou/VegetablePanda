@@ -213,16 +213,14 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     Long getFarmerUserSeq(@Param("reviewSeq") Long reviewSeq);
 
     @Query("SELECT new web.mvc.dto.ShopListDTO( " +
-            "s.shopSeq, " +
+            "s.stockSeq, " +
             "p.productName, " +
-            "f.path, " +
-            "s.price" +
+            "f.path " +
             ") " +
-            "FROM Shop s " +
-            "JOIN s.stock st " +
-            "JOIN st.product p " +
-            "LEFT JOIN st.file f "+
-            "WHERE s.stock.farmerUser.userSeq       =:userSeq")
+            "FROM Stock s " +
+            "JOIN s.product p " +
+            "LEFT JOIN s.file f "+
+            "WHERE s.farmerUser.userSeq =:userSeq")
     List<ShopListDTO> getScoreRec(@Param("userSeq") Long userSeq);
 
 }
