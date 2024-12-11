@@ -116,8 +116,13 @@ public class PaymentServiceImpl implements PaymentService {
                         User user = userRepository.findByUserSeq(userM.getUserSeq());
                         List<String> items = userBuyDetailRepository.findproductNameByBuySeq(userBuy.get(0).getBuySeq());
                         log.info("List<String> items : {}", items);
-                        requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
-                                .itemName(items.get(0)).paymentPrice((long) (userBuy.get(0).getTotalPrice())).orderUid(orderUid).build();
+                        if(items.size() > 1) {
+                            requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
+                                    .itemName(items.get(0)+" 외").paymentPrice((long) (userBuy.get(0).getTotalPrice())).orderUid(orderUid).build();
+                        } else {
+                            requestPayDTO = RequestPayDTO.builder().buyerName(user.getName()).buyerEmail(user.getEmail()).buyerAddr(user.getAddress())
+                                    .itemName(items.get(0)).paymentPrice((long) (userBuy.get(0).getTotalPrice())).orderUid(orderUid).build();
+                        }
 
                     } else if ("company".equals(userM.getContent())) { // 업체 사용자 일반 물품 구매 불가
 
