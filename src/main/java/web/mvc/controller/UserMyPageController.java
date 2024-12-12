@@ -45,6 +45,26 @@ public class UserMyPageController {
         }
     }
 
+    @GetMapping("/companyBuyList/{seq}")
+    public ResponseEntity<List<UserBuyListForReivewDTO>> companyAuctionBuyList(@PathVariable Long seq) {
+        log.info("업체 경매 구매 내역 조회 컨트롤러 시작 - companySeq: {}", seq);
+
+        try {
+            List<UserBuyListForReivewDTO> list = userMyPageService.companyAuctionBuyList(seq);
+            log.info("업체 경매 구매 내역 조회 결과 - 건수: {}", list.size());
+            log.info("업체 경매 구매 내역 상세: {}", list);
+
+            if (list.isEmpty()) {
+                log.info("업체 경매 구매 내역이 없습니다 - companySeq: {}", seq);
+            }
+
+            return ResponseEntity.ok(list);
+        } catch (Exception e) {
+            log.error("업체 경매 구매 내역 조회 중 오류 발생 - companySeq: {}", seq, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     /**
      * 회원의 정보 조회
      */

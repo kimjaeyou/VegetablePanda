@@ -11,6 +11,9 @@ public interface UserMyPageService {
 
     // 주문내역 조회
     List<UserBuyListForReivewDTO> buyList(Long seq);
+    
+    //업체유저 주문내역 조회
+    List<UserBuyListForReivewDTO> companyAuctionBuyList(Long seq);
 
     // 회원정보 출력
     UserDTO selectUser(Long seq);

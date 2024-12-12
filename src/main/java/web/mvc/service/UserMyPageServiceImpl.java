@@ -54,6 +54,28 @@ public class UserMyPageServiceImpl implements UserMyPageService {
         }
     }
 
+    @Override
+    public List<UserBuyListForReivewDTO> companyAuctionBuyList(Long seq) {
+        log.info("업체 경매 구매 내역 조회 서비스 시작 - companySeq: {}", seq);
+
+        try {
+            log.info("buyMyPageRepository.selectAuctionBuyByCompanySeq 호출 시작");
+            List<UserBuyListForReivewDTO> result = buyMyPageRepository.selectAuctionBuyByCompanySeq(seq);
+
+            log.info("업체 경매 구매 내역 조회 결과 - 건수: {}", result != null ? result.size() : 0);
+            if (result == null || result.isEmpty()) {
+                log.info("업체 경매 구매 내역이 없습니다 - companySeq: {}", seq);
+            } else {
+                log.info("조회된 업체 경매 구매 내역: {}", result);
+            }
+
+            return result;
+        } catch (Exception e) {
+            log.error("업체 경매 구매 내역 조회 중 오류 발생 - companySeq: {}", seq, e);
+            throw e;
+        }
+    }
+
     /**
      * 회원정보 가져오기
      */

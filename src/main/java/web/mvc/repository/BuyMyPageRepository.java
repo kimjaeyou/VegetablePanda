@@ -23,6 +23,17 @@ public interface BuyMyPageRepository extends JpaRepository<UserBuy, Long>, JpaSp
            "JOIN Review r ON r.managementUser.userSeq = d.stock.farmerUser.userSeq " +
            "WHERE d.userBuy.managementUser.userSeq = ?1 AND d.userBuy.state IN (2,5,7,9) order by d.userBuy.buyDate DESC " )
    List<UserBuyListForReivewDTO> selectShopBuyByUserSeq(Long seq);
+
+   /**
+    * 주문내역 업체유저, 경매 구매대기(결제 완료)3, 잔금 결제 완료4
+    * */
+   @Query("SELECT new web.mvc.dto.UserBuyListForReivewDTO(d.userBuySeq, d.stock.product.productName, d.count, d.price, d.userBuy.buyDate, d.userBuy.state, r.reviewSeq) " +
+           "FROM UserBuyDetail d " +
+           "JOIN Review r ON r.managementUser.userSeq = d.stock.farmerUser.userSeq " +
+           "WHERE d.userBuy.managementUser.userSeq = ?1 AND d.userBuy.state IN (3,4) " +
+           "ORDER BY d.userBuy.buyDate DESC")
+   List<UserBuyListForReivewDTO> selectAuctionBuyByCompanySeq(Long seq);
+
    /**
     * 주문내역 일반유저, 일반 경매 구매1, 승인대기 6 승인완료 10전체 조회
     */
