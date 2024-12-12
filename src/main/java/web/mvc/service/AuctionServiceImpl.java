@@ -212,6 +212,8 @@ public class AuctionServiceImpl implements AuctionService {
 
         return 1;
     }
+
+    @Scheduled(cron = "0 * * * * ?")
     //경매 1분마다 남은시간 0 된거 찾아서 종료
     @Scheduled(cron = "0 * * * * ?")
     public void exitAuction() {
