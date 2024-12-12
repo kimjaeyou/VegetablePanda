@@ -168,7 +168,7 @@ public class AuctionServiceImpl implements AuctionService {
                 streamingService.exitRoomById(streaming.getStreamingSeq());
                 stock.setStatus(4);
             }
-        }else{
+    }else{
             UserBuy userBuy =userBuyRepository.save(
                     UserBuy.builder()
                             .managementUser(user)
@@ -200,14 +200,20 @@ public class AuctionServiceImpl implements AuctionService {
                 streamingService.exitRoomById(streaming.getStreamingSeq());
                 stock.setStatus(4);
             }
+
         }
 
-
+        if(highestBidDTO.getUserSeq()!=null){
+            System.out.println("여기 종료!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            notificationService.sendMessageToUser(
+                    highestBidDTO.getUserSeq().toString(),"낙찰되셨습니다.");
+            notificationService.sendMessageToTopic("/end/notifications", "1");
+        }
 
         return 1;
     }
     //경매 1분마다 남은시간 0 된거 찾아서 종료
-    //@Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 * * * * ?")
     public void exitAuction() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -286,6 +292,7 @@ public class AuctionServiceImpl implements AuctionService {
             if(highestBidDTO.getUserSeq()!=null){
                 notificationService.sendMessageToUser(
                         highestBidDTO.getUserSeq().toString(),"낙찰되셨습니다.");
+                notificationService.sendMessageToTopic("/end/notifications", "1");
             }
         }
     }
