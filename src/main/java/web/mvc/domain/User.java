@@ -46,7 +46,6 @@ public class User {
     @Column(name = "reg_date", nullable = false)
     private LocalDateTime regDate;
 
-
     private String role;
 
     public User(Long user_seq,String userId,String name, String pw,
@@ -64,5 +63,4 @@ public class User {
         this.role = role;
         this.regDate = LocalDateTime.now();
     }
-
 }

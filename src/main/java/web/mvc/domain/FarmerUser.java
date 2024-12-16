@@ -1,5 +1,7 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,13 +12,15 @@ import java.util.List;
 @Table(name = "farmer_user")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"farmerGrade", "likes", "streaming"})
 public class FarmerUser {
     @Id
     @Column(name = "user_seq")
-    private Long user_seq;
+    private Long userSeq;
 
     @Column(name = "farmer_id", nullable = false, length = 60, unique = true)
     private String farmerId;
@@ -51,20 +55,34 @@ public class FarmerUser {
 
     private String role;
 
-    @Column(name = "fammer_grade", nullable = false)
-    private int fammerGrade;
+    @ManyToOne(fetch = FetchType.LAZY)  // Lazy loading을 EAGER로 변경
+    @JoinColumn(name="farmer_grade_seq")
+    private FarmerGrade farmerGrade;
 
     @OneToMany(mappedBy = "farmerUser",fetch = FetchType.LAZY)
     private List<Likes> likes;
 
 
-    public FarmerUser(Long user_seq,String farmerId,String name, String pw,
-                      String address,String code,String account,String phone,
-                      String email,int state,String role) {
-        this.user_seq = user_seq;
+    @JsonIgnore  // streaming 관계에만 JsonIgnore 추가
+    @OneToOne(mappedBy = "farmerUser")
+    private Streaming streaming;
+
+
+    public FarmerUser(Long userSeq,
+                      String farmerId,
+                      String pw,
+                      String name,
+                      String address,
+                      String code,
+                      String account,
+                      String phone,
+                      String email,
+                      int state,
+                      String role) {
+        this.userSeq = userSeq;
         this.farmerId = farmerId;
-        this.name = name;
         this.pw = pw;
+        this.name = name;
         this.address = address;
         this.code = code;
         this.account = account;
@@ -72,7 +90,11 @@ public class FarmerUser {
         this.email = email;
         this.state = state;
         this.role = role;
-        this.fammerGrade= 0;
+        this.farmerGrade = new FarmerGrade(1L);
         this.regDate = LocalDateTime.now();
+    }
+
+    public FarmerUser (long farmerSeq){
+        this.userSeq = farmerSeq;
     }
 }

@@ -1,30 +1,50 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "user_buy_detail")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class UserBuyDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_buy_detail_seq")
-    private Integer userBuySeq;
+    private Long userBuySeq;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_buy_seq", nullable = false)
     private UserBuy userBuy;
-
-    @Column(name = "content", length = 60)
-    private String content;
 
     @Column(name = "price")
     private Integer price;
 
     @Column(name = "count")
     private Integer count;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stock_seq", nullable = false)
+    private Stock stock;
+
+    @OneToOne(mappedBy = "userBuyDetail")
+    private ReviewComment reviewComment;
+
+
+    public UserBuyDetail (Long buySeq, int price, int count, Long stockSeq) {
+        this.userBuy = new UserBuy(buySeq);
+        this.price = price;
+        this.count = count;
+        this.stock = new Stock(stockSeq);
+    }
+
+    public UserBuyDetail (Long userBuySeq) {
+        this.userBuySeq = userBuySeq;
+    }
+
 }

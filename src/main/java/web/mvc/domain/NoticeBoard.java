@@ -1,9 +1,8 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -11,11 +10,14 @@ import java.time.LocalDateTime;
 @Table(name = "notice_board")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class NoticeBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_no_seq")
-    private Integer boardNoSeq;
+    private Long boardNoSeq;
 
     @Column(name = "subject", nullable = false, length = 45)
     private String subject;
@@ -24,12 +26,33 @@ public class NoticeBoard {
     private String content;
 
     @Column(name = "readnum", nullable = false, length = 45)
-    private String readnum;
+    private int readnum;
 
+    @CreationTimestamp
     @Column(name = "reg_date", nullable = false)
     private LocalDateTime regDate;
 
     @OneToOne
-    @JoinColumn(name = "file_file_seq", nullable = false)
+    @JoinColumn(name = "file_seq")
     private File file;
+
+
+    NoticeBoard(NoticeBoard noticeBoard) {
+
+        this.subject = subject;
+        this.content = content;
+        this.readnum = readnum;
+        this.regDate = regDate;
+        this.file = file;
+
+    }
+
+    public void updateFrom(NoticeBoard other) {
+        this.subject = other.getSubject();
+        this.content = other.getContent();
+    }
+
+    public void increaseReadnum() {
+        this.readnum++;
+    }
 }

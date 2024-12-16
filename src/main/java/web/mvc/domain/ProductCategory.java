@@ -1,9 +1,8 @@
 package web.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,15 +10,23 @@ import java.util.List;
 @Table(name = "product_category")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_category_seq")
-    private Integer productCategorySeq;
+    private Long productCategorySeq;
 
     @Column(name = "content", nullable = false, length = 45)
     private String content;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "productCategory",fetch = FetchType.LAZY)
     private List<Product> products;
+
+    public ProductCategory(Long productCategorySeq) {
+        this.productCategorySeq = productCategorySeq;
+    }
 }

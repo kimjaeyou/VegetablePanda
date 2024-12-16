@@ -24,9 +24,8 @@ public class ManagementUser {
     @Column(name = "user_id", nullable = false, length = 50, unique = true)
     private String id;
 
-
-    @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
-    private List<Review> reviews;
+    @OneToOne(mappedBy = "managementUser")
+    private Review review;
 
     @OneToOne(mappedBy = "managementUser")
     private UserWallet userWallet;
@@ -43,9 +42,34 @@ public class ManagementUser {
     @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
     private List<CalcPoint> calcPoints;
 
+    @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
+    private List<QaBoard> qaBoard;
 
-    public ManagementUser(String id,String content) {
+    @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
+    private List<ReviewComment> reviewCommentList;
+
+    @OneToMany(mappedBy = "managementUser",fetch = FetchType.LAZY)
+    private List<ShopLike> shopLikes;
+
+
+    @OneToOne
+    @JoinColumn(name = "file_seq")
+    private File file;
+
+    public ManagementUser(String id, String content) {
         this.id = id;
         this.content = content;
     }
+
+    public ManagementUser(String id, String content, File file) {
+        this.id = id;
+        this.content = content;
+        this.file = file;
+    }
+
+
+    public ManagementUser(Long userSeq) {
+        this.userSeq = userSeq;
+    };
+
 }

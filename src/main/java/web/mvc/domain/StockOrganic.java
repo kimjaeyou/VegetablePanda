@@ -1,9 +1,9 @@
 package web.mvc.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,15 +11,22 @@ import java.util.List;
 @Table(name = "stock_organic")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StockOrganic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "stock_organic")
-    private Integer productOrganic;
+    private Long stockOrganicSeq;
 
-    @Column(name = "oranic_status", nullable = false, length = 45)
-    private String oranicStatus;
+    @Column(name = "organic_status", nullable = false, length = 45)
+    private String organicStatus;
 
     @OneToMany(mappedBy = "stockOrganic",fetch = FetchType.LAZY)
     private List<Stock> stocks;
+
+    public StockOrganic(Long stockOrganicSeq) {
+        this.stockOrganicSeq = stockOrganicSeq;
+    }
 }
