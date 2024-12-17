@@ -68,5 +68,6 @@ Kosta 286기 3차 Final Project
 ![actor2](https://github.com/user-attachments/assets/02b8d4e6-9a48-494a-a5fd-475624278f49)  
 
 ### -시퀀스 & 프로우 차트-  
+![경매 시퀀스 차트](https://github.com/user-attachments/assets/57d0f671-caa0-4a59-b4fe-d1ebb8580115)
 
 ## 프로젝트 결과물  
