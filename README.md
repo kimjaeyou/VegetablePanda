@@ -28,31 +28,31 @@ Kosta 286기 3차 Final Project
 
 ### Version Control:
 - ![Git](https://img.shields.io/badge/git-%23F05032?style=for-the-badge&logo=git&logoColor=white)
-- ![GitHub](https://img.shields.io/badge/github-%23181717?style=for-the-badge&logo=github)
+![GitHub](https://img.shields.io/badge/github-%23181717?style=for-the-badge&logo=github)
 
 ### Project Management:
 - ![Jira](https://img.shields.io/badge/jira-%230052CC?style=for-the-badge&logo=jira)
-- ![Notion](https://img.shields.io/badge/notion-%23000000?style=for-the-badge&logo=notion)
+![Notion](https://img.shields.io/badge/notion-%23000000?style=for-the-badge&logo=notion)
 
 ### OS:
 - ![Windows 11](https://img.shields.io/badge/window11-blue?style=for-the-badge)
 
 ### Tools:
 - ![IntelliJ IDEA](https://img.shields.io/badge/intellij-%23000000?style=for-the-badge&logo=intellijidea)
-- ![VSCode](https://img.shields.io/badge/VSCode-%232F80ED?style=for-the-badge)
-- ![Spyder](https://img.shields.io/badge/spyder-%238C0000?style=for-the-badge&logo=spyderide)
+![VSCode](https://img.shields.io/badge/VSCode-%232F80ED?style=for-the-badge)
+![Spyder](https://img.shields.io/badge/spyder-%238C0000?style=for-the-badge&logo=spyderide)
 
 ### Architect:
 - ![ERDCLOUD](https://img.shields.io/badge/ERDCLOUD-black?style=for-the-badge&logo=icloud&logoColor=white)
-- ![Draw.io](https://img.shields.io/badge/DrawIO-%23F08705?style=for-the-badge&logo=diagramsdotnet&logoColor=white)
-- ![Figma](https://img.shields.io/badge/figma-%23F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+![Draw.io](https://img.shields.io/badge/DrawIO-%23F08705?style=for-the-badge&logo=diagramsdotnet&logoColor=white)
+![Figma](https://img.shields.io/badge/figma-%23F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 
 ### Infrastructure:
 - ![AWS](https://img.shields.io/badge/AWS-%23232F3E?style=for-the-badge&logo=amazonwebservices&logoColor=white)
 
 ### Testing:
 - ![Postman](https://img.shields.io/badge/postman-%23FF6C37?style=for-the-badge&logo=postman&logoColor=white)
-- ![JUnit5](https://img.shields.io/badge/junit5-%2325A162?style=for-the-badge&logo=junit5&logoColor=white)
+![JUnit5](https://img.shields.io/badge/junit5-%2325A162?style=for-the-badge&logo=junit5&logoColor=white)
 
 ---
 
