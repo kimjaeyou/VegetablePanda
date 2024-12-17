@@ -98,4 +98,4 @@ Kosta 286기 3차 Final Project
 ![결제화면](https://github.com/user-attachments/assets/d7b38040-9cf5-47f0-bd6d-29413d93420f)   
 
 ### -최종 결과물-
--![경매등록알림](https://github.com/user-attachments/assets/04ea78c1-4722-4ea2-8ab4-242cce8cdc73)
+<img src = "https://github.com/user-attachments/assets/04ea78c1-4722-4ea2-8ab4-242cce8cdc73" width="800" alt = "경매등록알림"/>
