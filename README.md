@@ -50,6 +50,11 @@ Kosta 286기 3차 Final Project
 ![Static Badge](https://img.shields.io/badge/postman-%23FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/junit5-%2325A162?style=for-the-badge&logo=junit5&logoColor=white)
 
+
+## aws 인프라
+![aws최종](https://github.com/user-attachments/assets/74297328-f392-404e-9cce-0514579263c3)
+
+
 ## 레퍼런스 사이트  
 
 ## 사용 API  
@@ -58,8 +63,6 @@ Kosta 286기 3차 Final Project
 ### -ERD-  
 ![ERD](https://github.com/user-attachments/assets/5fbab0ff-a8ad-4655-b5a2-a282f4eb2309) 
 
-## aws 인프라
-![aws최종](https://github.com/user-attachments/assets/74297328-f392-404e-9cce-0514579263c3)
 
 
 ### -유스케이스-  
