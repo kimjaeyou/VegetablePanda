@@ -94,7 +94,10 @@ Kosta 286기 3차 Final Project
 
 ### Recommendation Model + RestAPI Server  
 ![추천 기술](https://github.com/user-attachments/assets/18fa660d-a6de-4348-92cb-009f57b8db7c)
-
+ - Python단에서 학습한 추천 모델을 사용하기 위해 Flask서버 기반의 응답용 내부 RestAPI서버 구축
+ - Pandas, Numpy등을 활용한 데이터 전처리  
+ - Scikit Learn라이브러리를 활용한 CosineSimilarity 모델과 TruncateSVD 모델 사용  
+ - 사용자 구매와 리뷰를 통한 평가 데이터를 기반으로 추천 모델을 각각 적용   
 ### IVS (Broadcasting Technology)  
 ![IVS](https://github.com/user-attachments/assets/022cf312-6106-42ad-9892-05d0106a7048)
 
