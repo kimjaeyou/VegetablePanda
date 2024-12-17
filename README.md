@@ -48,4 +48,7 @@ Kosta 286기 3차 Final Project
 ### -ERD-  
 ![ERD](https://github.com/user-attachments/assets/5fbab0ff-a8ad-4655-b5a2-a282f4eb2309)  
 
+### -유스케이스-  
+
+
 ## 프로젝트 결과물  
