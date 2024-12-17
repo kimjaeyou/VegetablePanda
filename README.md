@@ -69,5 +69,6 @@ Kosta 286기 3차 Final Project
 
 ### -시퀀스 & 프로우 차트-  
 ![경매 시퀀스 차트](https://github.com/user-attachments/assets/57d0f671-caa0-4a59-b4fe-d1ebb8580115)
+![경매 플로우차트](https://github.com/user-attachments/assets/1a7b5c26-9006-43b9-8091-bb8bec688f48)
 
 ## 프로젝트 결과물  
