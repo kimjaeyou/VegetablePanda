@@ -45,6 +45,7 @@ Kosta 286기 3차 Final Project
 ## 사용 API  
 
 ## 프로젝트 산출물
-![ERD](https://github.com/user-attachments/assets/5fbab0ff-a8ad-4655-b5a2-a282f4eb2309)
+###ERD  
+![ERD](https://github.com/user-attachments/assets/5fbab0ff-a8ad-4655-b5a2-a282f4eb2309)  
 
 ## 프로젝트 결과물  
