@@ -53,4 +53,6 @@ Kosta 286기 3차 Final Project
 - Test :
 ![Static Badge](https://img.shields.io/badge/postman-%23FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/junit5-림
+
+최종 결과물
 -![경매등록알림](https://github.com/user-attachments/assets/04ea78c1-4722-4ea2-8ab4-242cce8cdc73)
