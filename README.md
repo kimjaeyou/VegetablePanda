@@ -111,7 +111,7 @@ Kosta 286기 3차 Final Project
 - **Real-Time Data Updates & Highest Bidder Notifications**  
 ![입찰및 알림](https://github.com/user-attachments/assets/dd79c8fd-68fd-4f62-a38a-8fdc54374eaa)
 
-- **Winning Bid Notification**  
+- **sale off and Winning Bid Notification**  
 ![낙찰및 알림](https://github.com/user-attachments/assets/af4c6291-399d-42b7-b2c2-fdfcf20c81bd)
 
 - **Streaming off**  
