@@ -45,6 +45,6 @@ Kosta 286기 3차 Final Project
 ## 사용 API  
 
 ## 프로젝트 산출물
-<img width="400" alt ="erd" src="https://github.com/kimjaeyou/VegetablePanda/issues/1#issue-2743733982.png">
+![ERD](https://github.com/user-attachments/assets/5fbab0ff-a8ad-4655-b5a2-a282f4eb2309)
 
 ## 프로젝트 결과물  
