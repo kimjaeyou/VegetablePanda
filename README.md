@@ -82,7 +82,11 @@ Kosta 286기 3차 Final Project
 ### -레이아웃 정의서-
 - [레이아웃 정의서](https://www.figma.com/design/VS3O9n5gdeCGlE01srZnjg/finalProject_%ED%94%BC%EA%B7%B8%EB%A7%88?node-id=0-1&t=Ne12ajC3fU63yYDc-1)
 
-## 핵심기술  
+## 사용 기술  
+![기술력](https://github.com/user-attachments/assets/8ef9b9a3-4a9b-4edc-87e6-f6f58c0499a8)  
+
+### -핵심 기술-  
+
 
 ## 프로젝트 결과물  
 ### -경매 기능-  
