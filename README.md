@@ -90,7 +90,11 @@ Kosta 286기 3차 Final Project
 ![Websocket_Redis](https://github.com/user-attachments/assets/e9f0e4c9-ffc7-4c5d-bb6c-e1c56312c6c2)  
 ![Redis속도](https://github.com/user-attachments/assets/31ba141e-951c-4021-9458-29156da89a25)
 
-#### -추천 모델 + RestAPI서버-    
+#### -추천 모델 + RestAPI서버  
+![추천 기술](https://github.com/user-attachments/assets/18fa660d-a6de-4348-92cb-009f57b8db7c)  
+
+#### -IVS(방송 기술)  
+
 
 ## 프로젝트 결과물  
 ### -경매 기능 및 알림 기능-  
