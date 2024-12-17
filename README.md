@@ -12,10 +12,14 @@ Kosta 286기 3차 Final Project
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6?style=for-the-badge&logo=css3)
 ![Static Badge](https://img.shields.io/badge/IVS-%23ec7211?style=for-the-badge&logoColor=white)
+![Static Badge](https://img.shields.io/badge/javascript-black?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 
 - Back-end :
 ![Static Badge](https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&color=white)
+![Static Badge](https://img.shields.io/badge/java-%23e14a3a?style=for-the-badge)
 ![Static Badge](https://img.shields.io/badge/flask-%23000000?style=for-the-badge&logo=flask&logoColor=white)
+![Static Badge](https://img.shields.io/badge/python-%233776AB?style=for-the-badge&logo=python&logoColor=white)
+
 - Database :
 ![Static Badge](https://img.shields.io/badge/mysql-%234479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/s3-%23569A31?style=for-the-badge&logo=amazons3&logoColor=white)
@@ -56,8 +60,11 @@ Kosta 286기 3차 Final Project
 
 
 ## 레퍼런스 사이트  
+- [KAFB2B - 농수산물 온라인 도매시장](https://kafb2b.or.kr/client/mn/main/main.do)
 
 ## 사용 API  
+- [가락시장 데이터](https://data.seoul.go.kr/dataList/OA-2662/S/1/datasetView.do)
+- [결제시스템 - 포트원](https://portone.io/)
 
 ## 프로젝트 산출물
 ### -ERD-  
