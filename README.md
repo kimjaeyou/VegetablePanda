@@ -86,7 +86,7 @@ Kosta 286기 3차 Final Project
 ![기술력](https://github.com/user-attachments/assets/8ef9b9a3-4a9b-4edc-87e6-f6f58c0499a8)  
 
 ### -핵심 기술-  
-#### -WebSocket + Redis-  
+#### -WebSocket + Redis
 ![Websocket_Redis](https://github.com/user-attachments/assets/e9f0e4c9-ffc7-4c5d-bb6c-e1c56312c6c2)  
 ![Redis속도](https://github.com/user-attachments/assets/31ba141e-951c-4021-9458-29156da89a25)
 
