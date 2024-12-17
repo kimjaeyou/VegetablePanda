@@ -65,22 +65,7 @@ Kosta 286기 3차 Final Project
   
 ## 사용 API  
 - [가락시장 데이터](https://data.seoul.go.kr/dataList/OA-2662/S/1/datasetView.do)
-- [결제시스템 - 포트원](https://portone.io/)
-  
-## 프로젝트 산출물
-### -ERD-  
-![ERD](https://github.com/user-attachments/assets/5fbab0ff-a8ad-4655-b5a2-a282f4eb2309) 
-
-### -유스케이스-  
-![actor1](https://github.com/user-attachments/assets/60c5da99-bb22-4296-a23a-6fe5941bc852)  
-![actor2](https://github.com/user-attachments/assets/02b8d4e6-9a48-494a-a5fd-475624278f49)  
-
-### -시퀀스 & 프로우 차트-  
-![경매 시퀀스 차트](https://github.com/user-attachments/assets/57d0f671-caa0-4a59-b4fe-d1ebb8580115)
-![경매 플로우차트](https://github.com/user-attachments/assets/1a7b5c26-9006-43b9-8091-bb8bec688f48)
-
-### -레이아웃 정의서-
-- [레이아웃 정의서](https://www.figma.com/design/VS3O9n5gdeCGlE01srZnjg/finalProject_%ED%94%BC%EA%B7%B8%EB%A7%88?node-id=0-1&t=Ne12ajC3fU63yYDc-1)
+- [결제시스템 - 포트원](https://portone.io/)  
 
 ## 사용 기술  
 ![기술력](https://github.com/user-attachments/assets/8ef9b9a3-4a9b-4edc-87e6-f6f58c0499a8)  
@@ -122,4 +107,21 @@ Kosta 286기 3차 Final Project
 ![결제화면](https://github.com/user-attachments/assets/d7b38040-9cf5-47f0-bd6d-29413d93420f)   
 
 ### -최종 결과물-
-<img src = "https://github.com/user-attachments/assets/04ea78c1-4722-4ea2-8ab4-242cce8cdc73" width="800" alt = "경매등록알림"/>
+<img src = "https://github.com/user-attachments/assets/04ea78c1-4722-4ea2-8ab4-242cce8cdc73" width="800" alt = "경매등록알림"/>  
+  
+## 프로젝트 산출물
+### -ERD-  
+![ERD](https://github.com/user-attachments/assets/5fbab0ff-a8ad-4655-b5a2-a282f4eb2309) 
+
+### -유스케이스-  
+![actor1](https://github.com/user-attachments/assets/60c5da99-bb22-4296-a23a-6fe5941bc852)  
+![actor2](https://github.com/user-attachments/assets/02b8d4e6-9a48-494a-a5fd-475624278f49)  
+
+### -시퀀스 & 프로우 차트-  
+![경매 시퀀스 차트](https://github.com/user-attachments/assets/57d0f671-caa0-4a59-b4fe-d1ebb8580115)
+![경매 플로우차트](https://github.com/user-attachments/assets/1a7b5c26-9006-43b9-8091-bb8bec688f48)
+
+### -레이아웃 정의서-
+- [레이아웃 정의서](https://www.figma.com/design/VS3O9n5gdeCGlE01srZnjg/finalProject_%ED%94%BC%EA%B7%B8%EB%A7%88?node-id=0-1&t=Ne12ajC3fU63yYDc-1)
+
+
