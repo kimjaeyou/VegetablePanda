@@ -11,13 +11,14 @@ Kosta 286기 3차 Final Project
 ![React](https://img.shields.io/badge/react-black?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6?style=for-the-badge&logo=css3)
+![Static Badge](https://img.shields.io/badge/IVS-%23ec7211?style=for-the-badge&logoColor=white)
 
 - Back-end :
 ![Static Badge](https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&color=white)
 ![Static Badge](https://img.shields.io/badge/flask-%23000000?style=for-the-badge&logo=flask&logoColor=white)
 - Database :
 ![Static Badge](https://img.shields.io/badge/mysql-%234479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Static Badge](https://img.shields.io/badge/amazons3-%23569A31?style=for-the-badge&logo=amazons3&logoColor=white)
+![Static Badge](https://img.shields.io/badge/s3-%23569A31?style=for-the-badge&logo=amazons3&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/rds-%23527FFF?style=for-the-badge&logo=amazonrds&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/redis-%23d82a20?style=for-the-badge)
 
@@ -37,8 +38,17 @@ Kosta 286기 3차 Final Project
 ![Static Badge](https://img.shields.io/badge/VSCode-%232F80ED?style=for-the-badge)
 ![Static Badge](https://img.shields.io/badge/spyder-%238C0000?style=for-the-badge&logo=spyderide)
 
+- Architect :
+![Static Badge](https://img.shields.io/badge/ERDCLOUD-black?style=for-the-badge&logo=icloud&logoColor=white)
+![Static Badge](https://img.shields.io/badge/DrawIO-%23F08705?style=for-the-badge&logo=diagramsdotnet&logoColor=white)
+![Static Badge](https://img.shields.io/badge/figma-%23F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+
 - Infra :
 ![Static Badge](https://img.shields.io/badge/AWS-%23232F3E?style=for-the-badge&logo=amazonwebservices&logoColor=white)
+
+- Test :
+![Static Badge](https://img.shields.io/badge/postman-%23FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+![Static Badge](https://img.shields.io/badge/junit5-%2325A162?style=for-the-badge&logo=junit5&logoColor=white)
 
 ## 레퍼런스 사이트  
 
