@@ -46,6 +46,10 @@ Kosta 286기 3차 Final Project
 
 ## 프로젝트 산출물
 ### -ERD-  
-![ERD](https://github.com/user-attachments/assets/5fbab0ff-a8ad-4655-b5a2-a282f4eb2309)  
+![ERD](https://github.com/user-attachments/assets/5fbab0ff-a8ad-4655-b5a2-a282f4eb2309) 
+
+## aws 인프라
+![aws최종](https://github.com/user-attachments/assets/74297328-f392-404e-9cce-0514579263c3)
+
 
 ## 프로젝트 결과물  
