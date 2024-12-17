@@ -14,8 +14,7 @@ Kosta 286기 3차 Final Project
 ## 💻 개발 환경
 
 ### Front-end:
-- ![React](https://img.shields.io/badge/react-black?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-- ![HTML5](https://img.shields.io/badge/html5-%23E34F26?style=for-the-badge&logo=html5&logoColor=white)
+- ![React](https://img.shields.io/badge/react-black?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![HTML5](https://img.shields.io/badge/html5-%23E34F26?style=for-the-badge&logo=html5&logoColor=white)
 - ![CSS3](https://img.shields.io/badge/css3-%231572B6?style=for-the-badge&logo=css3)
 - ![JavaScript](https://img.shields.io/badge/javascript-black?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 - ![IVS](https://img.shields.io/badge/IVS-%23ec7211?style=for-the-badge&logoColor=white)
