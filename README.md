@@ -22,9 +22,9 @@ Kosta 286기 3차 Final Project
 
 ### Database:
 - ![MySQL](https://img.shields.io/badge/mysql-%234479A1?style=for-the-badge&logo=mysql&logoColor=white)
-- ![AWS S3](https://img.shields.io/badge/s3-%23569A31?style=for-the-badge&logo=amazons3&logoColor=white)
-- ![AWS RDS](https://img.shields.io/badge/rds-%23527FFF?style=for-the-badge&logo=amazonrds&logoColor=white)
-- ![Redis](https://img.shields.io/badge/redis-%23d82a20?style=for-the-badge)
+![AWS S3](https://img.shields.io/badge/s3-%23569A31?style=for-the-badge&logo=amazons3&logoColor=white)
+![AWS RDS](https://img.shields.io/badge/rds-%23527FFF?style=for-the-badge&logo=amazonrds&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23d82a20?style=for-the-badge)
 
 ### Version Control:
 - ![Git](https://img.shields.io/badge/git-%23F05032?style=for-the-badge&logo=git&logoColor=white)
