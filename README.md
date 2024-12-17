@@ -151,5 +151,3 @@ Kosta 286기 3차 Final Project
 - [레이아웃 정의서](https://www.figma.com/design/VS3O9n5gdeCGlE01srZnjg/finalProject_%ED%94%BC%EA%B7%B8%EB%A7%88?node-id=0-1&t=Ne12ajC3fU63yYDc-1)
 
 ---
-
-이렇게 각 섹션을 적절히 나누고, 이미지를 포함하여 시각적으로 보기 좋게 꾸밀 수 있습니다.
