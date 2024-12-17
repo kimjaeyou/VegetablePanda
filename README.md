@@ -65,7 +65,9 @@ Kosta 286기 3차 Final Project
   
 ## 사용 API  
 - [가락시장 데이터](https://data.seoul.go.kr/dataList/OA-2662/S/1/datasetView.do)
-- [결제시스템 - 포트원](https://portone.io/)  
+- [결제시스템 - 포트원](https://portone.io/)
+
+## 서비스  
 
 ## 사용 기술  
 ![기술력](https://github.com/user-attachments/assets/8ef9b9a3-4a9b-4edc-87e6-f6f58c0499a8)  
