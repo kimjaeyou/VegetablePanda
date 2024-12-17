@@ -88,7 +88,8 @@ Kosta 286기 3차 Final Project
 ![WebSocket + Redis](https://github.com/user-attachments/assets/e9f0e4c9-ffc7-4c5d-bb6c-e1c56312c6c2)  
 ![Redis속도](https://github.com/user-attachments/assets/31ba141e-951c-4021-9458-29156da89a25)  
  - 실시간 다중 사용자 환경에서의 발전된 경매 서비스를 제공하기 위해 사용  
- - Redis를 통한 캐시 기반의 빠른 경매 데이터 사용 및 공유  
+ - Redis를 통한 캐시 기반의 빠른 경매 데이터 사용 및 공유
+ - 안정적인 경매 환경제어를 위한 Redis Transaction기능 사용 
  - WebSocket과 Redis의 조합을 통한 다중 서버 환경에서의 알림 및 상태 공유 반영  
  - WebSocket과 Stomop라이브러리를 통한 구독 형태의 메세지 알림 구현 
 
@@ -119,8 +120,6 @@ Kosta 286기 3차 Final Project
 - **Winning Bid Notification**  
 ![낙찰및 알림](https://github.com/user-attachments/assets/af4c6291-399d-42b7-b2c2-fdfcf20c81bd)
 
-- **Streaming off**  
-![방송종료알림](https://github.com/user-attachments/assets/19b51d41-76ab-427f-880b-ab13c404edc6)
 ---
 
 ### Notification Features  
