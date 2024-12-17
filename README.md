@@ -40,3 +40,8 @@ Kosta 286기 3차 Final Project
 - Infra :
 ![Static Badge](https://img.shields.io/badge/AWS-%23232F3E?style=for-the-badge&logo=amazonwebservices&logoColor=white)
 
+## 레퍼런스 사이트  
+
+## 사용 API  
+
+## 프로젝트 결과물  
