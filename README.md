@@ -87,7 +87,7 @@ Kosta 286기 3차 Final Project
 
 ### -핵심 기술-  
 #### -WebSocket + Redis-  
-
+![Websocket_Redis](https://github.com/user-attachments/assets/e9f0e4c9-ffc7-4c5d-bb6c-e1c56312c6c2)
 #### -추천 모델 + RestAPI서버-    
 
 ## 프로젝트 결과물  
