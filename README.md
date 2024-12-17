@@ -84,7 +84,7 @@ Kosta 286기 3차 Final Project
 
 ## 프로젝트 결과물  
 ### -경매 기능-  
-![경매화면](https://github.com/user-attachments/assets/dc096e51-fffa-479c-803f-eb056feb52f8)
+![경매등록알림](https://github.com/user-attachments/assets/52c63b58-22e9-477f-be7d-b4c44adf2489)
 
 ### -알림 기능-  
 ![알림1](https://github.com/user-attachments/assets/a8093ef5-dea1-4067-a145-46513b1152a5)  
