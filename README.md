@@ -86,7 +86,9 @@ Kosta 286기 3차 Final Project
 ![기술력](https://github.com/user-attachments/assets/8ef9b9a3-4a9b-4edc-87e6-f6f58c0499a8)  
 
 ### -핵심 기술-  
+#### -WebSocket + Redis-  
 
+#### -추천 모델 + RestAPI서버-    
 
 ## 프로젝트 결과물  
 ### -경매 기능 및 알림 기능-  
