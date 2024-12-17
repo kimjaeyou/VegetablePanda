@@ -55,18 +55,18 @@ Kosta 286기 3차 Final Project
 - Test :
 ![Static Badge](https://img.shields.io/badge/postman-%23FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/junit5-%2325A162?style=for-the-badge&logo=junit5&logoColor=white)
-
+  
 ## aws 인프라
 ![aws최종](https://github.com/user-attachments/assets/74297328-f392-404e-9cce-0514579263c3)
-
+  
 
 ## 레퍼런스 사이트  
 - [KAFB2B - 농수산물 온라인 도매시장](https://kafb2b.or.kr/client/mn/main/main.do)
-
+  
 ## 사용 API  
 - [가락시장 데이터](https://data.seoul.go.kr/dataList/OA-2662/S/1/datasetView.do)
 - [결제시스템 - 포트원](https://portone.io/)
-
+  
 ## 프로젝트 산출물
 ### -ERD-  
 ![ERD](https://github.com/user-attachments/assets/5fbab0ff-a8ad-4655-b5a2-a282f4eb2309) 
@@ -94,8 +94,8 @@ Kosta 286기 3차 Final Project
 ![추천 기술](https://github.com/user-attachments/assets/18fa660d-a6de-4348-92cb-009f57b8db7c)  
 
 #### -IVS(방송 기술)  
-![IVS](https://github.com/user-attachments/assets/022cf312-6106-42ad-9892-05d0106a7048)
-
+![IVS](https://github.com/user-attachments/assets/022cf312-6106-42ad-9892-05d0106a7048)  
+  
 ## 프로젝트 결과물  
 ### -경매 기능 및 알림 기능-  
   -경매 등록 및 구독 알림-  
