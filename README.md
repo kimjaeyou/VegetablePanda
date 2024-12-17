@@ -50,6 +50,8 @@ Kosta 286기 3차 Final Project
 
 ### -유스케이스-  
 ![actor1](https://github.com/user-attachments/assets/60c5da99-bb22-4296-a23a-6fe5941bc852)  
+![actor2](https://github.com/user-attachments/assets/02b8d4e6-9a48-494a-a5fd-475624278f49)  
+
 
 
 ## 프로젝트 결과물  
