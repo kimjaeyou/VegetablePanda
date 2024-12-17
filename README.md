@@ -96,6 +96,11 @@ Kosta 286기 3차 Final Project
 ### IVS (Broadcasting Technology)  
 ![IVS](https://github.com/user-attachments/assets/022cf312-6106-42ad-9892-05d0106a7048)
 
+- AWS IVS는 트위치 방송 플랫폼의 라이브 스트리밍 서비스
+- 사용자는 서버를 직접 관리할 필요없이 AWS에서 제공하는 Stream Key를 받아와서 OBS Studio 방송 프로그램에 입력하면 간편하게 사용 가능
+- WebSocket 기반의 실시간 채팅기능 또한 ChatRoom_URL을 받아서 입장과 동시에 생성
+- 사용자가 채팅 메세지 입력 시 API gateway로 HTTP 전송 후 Lambda를 통해 유저를 구분하여 메세지를 전달 및 출력
+
 ### API Application  
 ![가락시장](https://github.com/user-attachments/assets/f164e508-d3f1-4b06-b992-b06e0bd9affe)  
 ![portone](https://github.com/user-attachments/assets/18f429af-98c7-47af-8447-f45a573e168e)
