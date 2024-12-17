@@ -91,7 +91,7 @@ Kosta 286기 3차 Final Project
 ## 프로젝트 결과물  
 ### -경매 기능 및 알림 기능-  
   -경매 등록 및 구독 알림-  
-![경매등록알림](https://github.com/user-attachments/assets/52c63b58-22e9-477f-be7d-b4c44adf2489)
+![경매등록알림](https://github.com/user-attachments/assets/52c63b58-22e9-477f-be7d-b4c44adf2489)  
   -아무 유저나 입찰 시도 시 변경된 데이터 실시간 변경 및 최고입찰자한테 알림
 ![입찰및 알림](https://github.com/user-attachments/assets/dd79c8fd-68fd-4f62-a38a-8fdc54374eaa)
 
