@@ -87,10 +87,10 @@ Kosta 286기 3차 Final Project
 ### WebSocket + Redis  
 ![WebSocket + Redis](https://github.com/user-attachments/assets/e9f0e4c9-ffc7-4c5d-bb6c-e1c56312c6c2)  
 ![Redis속도](https://github.com/user-attachments/assets/31ba141e-951c-4021-9458-29156da89a25)  
- -실시간 다중 사용자 환경에서의 발전된 경매 서비스를 제공하기 위해 사용  
- -Redis를 통한 캐시 기반의 빠른 경매 데이터 사용 및 공유  
- -WebSocket과 Redis의 조합을 통한 다중 서버 환경에서의 알림 및 상태 공유 반영  
- -WebSocket과 Stomop라이브러리를 통한 구독형태의 메세지 알림 구현 
+ - 실시간 다중 사용자 환경에서의 발전된 경매 서비스를 제공하기 위해 사용  
+ - Redis를 통한 캐시 기반의 빠른 경매 데이터 사용 및 공유  
+ - WebSocket과 Redis의 조합을 통한 다중 서버 환경에서의 알림 및 상태 공유 반영  
+ - WebSocket과 Stomop라이브러리를 통한 구독 형태의 메세지 알림 구현 
 
 ### Recommendation Model + RestAPI Server  
 ![추천 기술](https://github.com/user-attachments/assets/18fa660d-a6de-4348-92cb-009f57b8db7c)
