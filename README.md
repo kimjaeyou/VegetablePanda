@@ -94,7 +94,7 @@ Kosta 286기 3차 Final Project
 ![추천 기술](https://github.com/user-attachments/assets/18fa660d-a6de-4348-92cb-009f57b8db7c)  
 
 #### -IVS(방송 기술)  
-
+![IVS](https://github.com/user-attachments/assets/022cf312-6106-42ad-9892-05d0106a7048)
 
 ## 프로젝트 결과물  
 ### -경매 기능 및 알림 기능-  
