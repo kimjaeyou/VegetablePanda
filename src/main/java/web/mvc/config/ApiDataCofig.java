@@ -10,6 +10,10 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.ServletContextAware;
 import web.mvc.domain.Product;
 import web.mvc.domain.ProductCategory;
 import web.mvc.dto.*;
@@ -27,28 +31,34 @@ import java.util.*;
 
 
 @Configuration
-@WebListener
-public class ApiDataCofig implements ServletContextListener {
+@EnableScheduling
+@Component
+public class ApiDataConfig implements ServletContextAware {
 
     @Autowired
     private ProductRepository productRepository;
 
-
+    private ServletContext servletContext;
 
     private List<row> dataList = new ArrayList<>();
     private long num=1;
 
     @Override
-    public void contextInitialized(ServletContextEvent e) {
-        List<GarakTotalCost> dto=null;
-        ServletContext app=e.getServletContext();
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+        updateGarakData();
+    }
+
+    @Scheduled(cron = "0 0 13 * * *")
+    public void updateGarakData() {
+        List<GarakTotalCost> dto = null;
         try {
-            dto= calcGarakAvg();
-        }catch (Exception ex){
+            dto = calcGarakAvg();
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-        System.out.println(dto);
-        app.setAttribute("garakData",dto);
+        System.out.println("Scheduled task executed at 13:00. Updated Garak data: " + dto);
+        servletContext.setAttribute("garakData", dto);
     }
 
 
