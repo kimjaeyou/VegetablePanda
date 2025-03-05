@@ -1,6 +1,6 @@
 # Vegetable Panda Project  
 Kosta 286기 3차 Final Project  
-### Layout Definition  
+### GitHub URL  
 - [프론트](https://github.com/superuser1241/VegetablePanda-Front)
 - [추천Flask서버](https://github.com/kimjaeyou/VegetablePanda_Flask)  
   
